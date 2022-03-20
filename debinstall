@@ -12,6 +12,9 @@ LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
+sudo apt update; sudo apt upgrade
+sudo apt install stow
+
 #automated_script
 #ip link set wlan0 up
 #iwctl station wlan0 scan

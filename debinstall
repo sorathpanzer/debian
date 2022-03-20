@@ -8,7 +8,7 @@
 ############################################
 
 USER_NAME=""
-$LVM_PASSWORD
+LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
@@ -31,10 +31,10 @@ git config --global credential.helper store
 mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
-rm -R /home/$USER_NAME/.local/share/{applications,backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
 touch /home/$USER_NAME/.local/recently-used.xbel
 
 # Enable AppArmor notifications
+mkdir -p /home/${USER}/.config/autostart
 bash -c 'cat > /home/${USER}/.config/autostart/apparmor-notify.desktop' <<-'EOF'
 [Desktop Entry]
 Type=Application

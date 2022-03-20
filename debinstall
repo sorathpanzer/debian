@@ -3,7 +3,7 @@
 ############################################
 # Transfer documents to github
 # Mount second drive
-#Dejavu libexif dhcpcd5
+#Dejavu libexif dhcpcd5 ueberzug
 ## alacritty lazygit dust python-adblock
 ############################################
 
@@ -54,7 +54,7 @@ EOF
 ######################################################################################
 
 apt update; apt upgrade
-apt install flatpak doas xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils snapper firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq ueberzug fzf mpv wmctrl light patch syncthing unzip usbutils checkbashisms ffmpegthumbnailer libexif pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+apt install flatpak doas xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils snapper firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 
 echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd apt

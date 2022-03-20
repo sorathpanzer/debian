@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ############################################
 # Transfer documents to github
@@ -54,7 +54,7 @@ EOF
 ######################################################################################
 
 apt update; apt upgrade
-apt install flatpak doas xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils snapper firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+apt install flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils snapper firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 
 echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd apt
@@ -65,6 +65,8 @@ echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd mount
   permit nopass $USER_NAME cmd light" | tee /etc/doas.conf
 
+mkdir -p /sys/module/snd_hda_intel/parameters/
+mkdir -p /etc/polkit-1/rules.d/
 echo "vm.swappiness=10" > /etc/sysctl.d/99-sysctl.conf
 echo 1 | tee /sys/module/snd_hda_intel/parameters/power_save
 echo "blacklist ideapad_laptop" > /etc/modprobe.d/blacklist.conf

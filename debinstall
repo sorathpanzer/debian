@@ -7,6 +7,8 @@
 ## alacritty lazygit dust python-adblock
 ############################################
 
+#sudo usermod -d /newhome/username -m username
+
 USER_NAME=""
 LVM_PASSWORD=""
 GIT_USERNAME=""

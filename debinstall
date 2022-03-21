@@ -57,7 +57,7 @@ EOF
 ######################################################################################
 
 apt update; apt upgrade
-apt install flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils snapper firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+apt install flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 echo "deb [arch=amd64,arm64,armhf] http://deb.volian.org/volian/ scar main" | sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update && sudo apt install nala

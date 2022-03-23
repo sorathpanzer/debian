@@ -3,17 +3,18 @@
 ROOTPART="nvme0n1p3"
 
 umount -l /target
-# mount -o defaults,subvolid=5,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /mnt
-# mv /mnt/@rootfs /mnt/@
-# btrfs subvolume create /mnt/@home
-# btrfs subvolume create /mnt/@swap
-# mkdir -p /mnt/@/home
-# mkdir -p /mnt/@/swap
-# sed -i 's/btrfs   defaults,subvol=@rootfs/btrfs defaults,subvol=@,nossd,noatime,space_cache,compress=zstd/' /mnt/@/etc/fstab
-# echo "/dev/mapper/sda2_crypt /home btrfs defaults,subvol=@home,nossd,noatime,space_cache,compress=zstd 0 0" >> /mnt/@/etc/fstab
-# echo "/dev/mapper/sda2_crypt /swap btrfs defaults,subvol=@swap,nossd,noatime,space_cache,nodatacow 0 0" >> /mnt/@/etc/fstab
-# btrfs subvolume list /mnt
-# umount -l /mnt
-# mount -o defaults,subvolid=256,subvol=@,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /target
-# mount -o defaults,subvolid=258,subvol=@home,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /target/home
-# mount /dev/sda1 /target/boot
+mount -o defaults,subvolid=5,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /mnt
+mv /mnt/@rootfs /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@swap
+mkdir -p /mnt/@/home
+mkdir -p /mnt/@/swap
+sed -i 's/btrfs   defaults,subvol=@rootfs/btrfs defaults,subvol=@,nossd,noatime,space_cache,compress=zstd/' /mnt/@/etc/fstab
+echo "/dev/mapper/sda2_crypt /home btrfs defaults,subvol=@home,nossd,noatime,space_cache,compress=zstd 0 0" >> /mnt/@/etc/fstab
+echo "/dev/mapper/sda2_crypt /swap btrfs defaults,subvol=@swap,nossd,noatime,space_cache,nodatacow 0 0" >> /mnt/@/etc/fstab
+btrfs subvolume list /mnt
+umount -l /mnt
+mount -o defaults,subvolid=256,subvol=@,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /target
+mount -o defaults,subvolid=258,subvol=@home,nossd,noatime,space_cache,compress=zstd /dev/mapper/$ROOTPART_crypt /target/home
+mount /dev/sda2 /target/boot
+mount /dev/sda1 /target/boot/efi

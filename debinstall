@@ -198,3 +198,11 @@ $ sudo sed -i 's/#GRUB_BTRFS_SUBMENUNAME="Arch Linux snapshots"/GRUB_BTRFS_SUBME
 cd
 rm -r /home/$USER/timeshift-autosnap-apt
 rm -r /home/$USER/grub-btrfs
+
+sudo truncate -s 0 /swap/swapfile
+sudo chattr +C /swap/swapfile
+sudo fallocate -l 4G /swap/swapfile
+sudo chmod 0600 /swap/swapfile
+sudo mkswap /swap/swapfile
+sudo swapon /swap/swapfile
+echo "/swap/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab

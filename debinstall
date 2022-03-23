@@ -14,8 +14,10 @@ LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
+echo "deb http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
+wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update; sudo apt upgrade
-sudo apt install stow
+sudo apt install nala stow timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 
 #automated_script
 #ip link set wlan0 up
@@ -44,7 +46,7 @@ touch /home/$USER_NAME/.local/recently-used.xbel
 #fi
 
 sudo apt update; sudo apt upgrade
-sudo apt install flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+sudo apt install timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 echo "deb http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update && sudo apt install nala
@@ -182,3 +184,17 @@ EOF
  
 sudo systemctl enable --now  iwd.service transmission-daemon apparmor suspend@sorath.service firewalld
 #aa-enforce /etc/apparmor.d/*
+
+git clone https://github.com/wmutschl/timeshift-autosnap-apt.git /home/$USER/timeshift-autosnap-apt
+cd /home/$USER/timeshift-autosnap-apt
+sudo make install
+#sudo sed -i 's/snapshotEFI=true/snapshotEFI=false/' /etc/timeshift-autosnap-apt.conf
+
+git clone https://github.com/Antynea/grub-btrfs.git /home/$USER/grub-btrfs
+$ cd /home/$USER/grub-btrfs
+$ sudo make install
+$ sudo sed -i 's/#GRUB_BTRFS_SUBMENUNAME="Arch Linux snapshots"/GRUB_BTRFS_SUBMENUNAME="Debian GNU\/Linux snapshots"/' /etc/default/grub-btrfs/config
+
+cd
+rm -r /home/$USER/timeshift-autosnap-apt
+rm -r /home/$USER/grub-btrfs

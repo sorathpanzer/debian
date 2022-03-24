@@ -116,8 +116,8 @@ curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/default/g
 # Setting GRUB configuration file permissions
 sudo chmod 755 /etc/grub.d/*
 # Configure AppArmor Parser caching
-#sed -i 's/#write-cache/write-cache/g' /etc/apparmor/parser.conf
-#sed -i 's,#Include /etc/apparmor.d/,Include /etc/apparmor.d/#g' /etc/apparmor/parser.conf
+sudo sed -i 's/#write-cache/write-cache/g' /etc/apparmor/parser.conf
+sudo sed -i 's,#Include /etc/apparmor.d/,Include /etc/apparmor.d/#g' /etc/apparmor/parser.conf
 # Blacklisting kernel modules
 curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/modprobe.d/30_security-misc.conf | sudo tee -a /etc/modprobe.d/30_security-misc.conf
 sudo chmod 600 /etc/modprobe.d/*

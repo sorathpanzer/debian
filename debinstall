@@ -28,7 +28,7 @@ sudo apt install nala stow timeshift make flatpak doas curl xdg-user-dirs wirele
 #echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
 #mount /dev/mapper/Vault /root/disk
 
-rm .profile
+rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
 touch /home/$USER_NAME/.local/recently-used.xbel
@@ -191,8 +191,8 @@ sudo make install
 sudo sed -i 's/#GRUB_BTRFS_SUBMENUNAME="Arch Linux snapshots"/GRUB_BTRFS_SUBMENUNAME="Debian GNU\/Linux snapshots"/' /etc/default/grub-btrfs/config
 
 cd
-rm -r /home/$USER/timeshift-autosnap-apt
-rm -r /home/$USER/grub-btrfs
+sudo rm -r /home/$USER/timeshift-autosnap-apt
+sudo rm -r /home/$USER/grub-btrfs
 
 sudo truncate -s 0 /swap/swapfile
 sudo chattr +C /swap/swapfile

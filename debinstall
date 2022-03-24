@@ -28,6 +28,7 @@ sudo apt install nala stow timeshift make flatpak doas curl xdg-user-dirs wirele
 #echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
 #mount /dev/mapper/Vault /root/disk
 
+rm .profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
 touch /home/$USER_NAME/.local/recently-used.xbel

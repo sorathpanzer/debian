@@ -153,6 +153,8 @@ sudo mkdir -p /etc/systemd/system/transmission.service.d
 echo "[Service]
 User=$USER_NAME" | sudo tee /etc/systemd/system/transmission.service.d/username.conf
 
+sudo sed -i 's/ExecStart=.*/-\/usr\/bin\/agetty --autologin sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
+
 sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
 sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
 echo "[Service]

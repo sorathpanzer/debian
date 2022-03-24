@@ -46,12 +46,6 @@ touch /home/$USER_NAME/.local/recently-used.xbel
 #  rsync -avrop /root/disk/BackHome/* /home/$USER_NAME
 #fi
 
-sudo apt update; sudo apt upgrade
-sudo apt install timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
-echo "deb http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
-wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
-sudo apt update && sudo apt install nala
-
 echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd apt
   permit nopass $USER_NAME cmd nala

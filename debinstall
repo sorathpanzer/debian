@@ -153,6 +153,7 @@ sudo mkdir -p /etc/systemd/system/transmission.service.d
 echo "[Service]
 User=$USER_NAME" | sudo tee /etc/systemd/system/transmission.service.d/username.conf
 
+sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
 sudo sed -i 's/ExecStart=.*/ExecStart=-\/usr\/bin\/agetty --autologin sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
 
  echo "

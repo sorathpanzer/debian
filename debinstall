@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exec &> >(tee -a "install.log") 2>install.error
+
 ############################################
 # Transfer documents to github
 # Mount second drive
@@ -170,6 +172,11 @@ ExecStartPost=/usr/bin/sleep 1
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
  
 sudo systemctl enable --now  iwd.service transmission-daemon apparmor suspend@sorath.service firewalld
+#sudo systemctl enable btrfs-balance.timer
+#sudo systemctl enable btrfs-defrag.timer
+#sudo systemctl enable btrfs-scrub.timer
+#sudo systemctl enable btrfs-trim.timer
+
 #aa-enforce /etc/apparmor.d/*
 
 git clone https://github.com/wmutschl/timeshift-autosnap-apt.git /home/$USER/timeshift-autosnap-apt
@@ -193,3 +200,5 @@ sudo chmod 0600 /swap/swapfile
 sudo mkswap /swap/swapfile
 sudo swapon /swap/swapfile
 echo "/swap/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab
+
+cat install.error | grep error

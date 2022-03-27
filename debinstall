@@ -3,8 +3,7 @@
 exec &> >(tee -a "install.log") 2>install.error
 
 ############################################
-# Transfer documents to github
-# Mount second drive
+# Sudo for second drive mount?????
 # snd_hda can't create folder for powersave
 #Dejavu libexif dhcpcd5 ueberzug
 ## alacritty lazygit dust python-adblock
@@ -20,16 +19,13 @@ GIT_EMAIL=""
 echo "deb [arch=amd64] http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update; sudo apt upgrade
-sudo apt install build-essential python3-pip libxext-dev libxft-dev nala stow timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+sudo apt install lxappearance materia-gtk-theme rfkill emacs tig build-essential libc6-dev libmlib2-dev libexif-dev python3-pip libxext-dev libxft-dev nala stow timeshift timeshift-gtk make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+#sudo apt install libc6 libc-bin libmlib2 
 
-#automated_script
-#ip link set wlan0 up
-#iwctl station wlan0 scan
-#iwctl station wlan0 connect Virus404 -P $WIFIPASS
-
-#echo "Open vault password:"
-#echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
-#mount /dev/mapper/Vault /root/disk
+echo "Open vault password:"
+sudo mkdir /media/Vault
+echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
+mount /dev/mapper/Vault /media/Vault
 
 rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
@@ -44,7 +40,7 @@ touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
-rsync -avrop /root/disk/BackHome/* /home/$USER_NAME
+rsync -avrop /media/Vault/BackHome/* /home/$USER_NAME
 chmod +x /home/$USER_NAME/.local/bin/lf
 cd ~/.config/suckless/st
 make clean; make install clean
@@ -140,10 +136,6 @@ echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 #vboxnetadp
 #vboxflt" > /etc/modules-load.d/virtualbox.conf
 
-sudo mkdir -p /etc/systemd/system/transmission.service.d
-echo "[Service]
-User=$USER_NAME" | sudo tee /etc/systemd/system/transmission.service.d/username.conf
-
 sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
 sudo sed -i 's/ExecStart=.*/ExecStart=-\/sbin\/agetty -a sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
 
@@ -160,7 +152,11 @@ ExecStartPost=/usr/bin/sleep 1
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
  
-sudo systemctl enable --now  iwd.service transmission-daemon apparmor suspend@sorath.service firewalld
+echo "source /etc/network/interfaces.d/*
+auto wlan0
+iface wlan0 inet dhcp" | sudo tee /etc/network/interfaces 
+ 
+sudo systemctl enable --now  iwd.service apparmor suspend@sorath.service firewalld
 #sudo systemctl enable btrfs-balance.timer
 #sudo systemctl enable btrfs-defrag.timer
 #sudo systemctl enable btrfs-scrub.timer
@@ -189,5 +185,20 @@ sudo chmod 0600 /swap/swapfile
 sudo mkswap /swap/swapfile
 sudo swapon /swap/swapfile
 echo "/swap/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab
+
+pip install adblock ueberzug
+echo 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+
+#automated_script
+sudo rfkill unblock all
+sudo ip link set wlan0 up
+iwctl station wlan0 scan
+iwctl station wlan0 connect Virus404 -P $WIFIPASS
 
 cat install.error | grep error

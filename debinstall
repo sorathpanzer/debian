@@ -10,7 +10,7 @@ exec &> >(tee -a "install.log") 2>install.error
 ## alacritty lazygit dust python-adblock
 ############################################
 
-# FIRST INSTALL GIT AND WGET
+# FIRST INSTALL GIT WGET BUILD-ESSENTIAL CURL SUDO
 
 USER_NAME=""
 LVM_PASSWORD=""
@@ -44,10 +44,8 @@ touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
-
-#if lsblk | grep -q 'nvme0n1'; then
-#  rsync -avrop /root/disk/BackHome/* /home/$USER_NAME
-#fi
+rsync -avrop /root/disk/BackHome/* /home/$USER_NAME
+chmod +x /home/$USER_NAME/.local/bin/lf
 
 echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd apt

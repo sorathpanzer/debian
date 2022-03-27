@@ -202,4 +202,6 @@ sudo ip link set wlan0 up
 iwctl station wlan0 scan
 iwctl station wlan0 connect Virus404 -P $WIFIPASS
 
+sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+
 cat install.error | grep error

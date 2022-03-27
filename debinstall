@@ -10,7 +10,7 @@ exec &> >(tee -a "install.log") 2>install.error
 ## alacritty lazygit dust python-adblock
 ############################################
 
-# FIRST INSTALL GIT WGET BUILD-ESSENTIAL CURL SUDO
+# FIRST INSTALL GIT WGET CURL SUDO
 
 USER_NAME=""
 LVM_PASSWORD=""
@@ -20,7 +20,7 @@ GIT_EMAIL=""
 echo "deb [arch=amd64] http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update; sudo apt upgrade
-sudo apt install python3-pip libxext-dev libxft-dev nala stow timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+sudo apt install build-essential python3-pip libxext-dev libxft-dev nala stow timeshift make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick transmission-cli xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 
 #automated_script
 #ip link set wlan0 up
@@ -46,6 +46,9 @@ touch /home/$USER_NAME/.local/recently-used.xbel
 
 rsync -avrop /root/disk/BackHome/* /home/$USER_NAME
 chmod +x /home/$USER_NAME/.local/bin/lf
+cd ~/.config/suckless/st
+make clean; make install clean
+cd
 
 echo "permit persist $USER_NAME as root
   permit nopass $USER_NAME cmd apt

@@ -20,6 +20,7 @@ echo "deb [arch=amd64] http://deb.volian.org/volian/ scar main" | sudo tee -a /e
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update; sudo apt upgrade
 sudo apt install dnsmasq libblockdev-crypto2 zstd firefox-esr-l10n-pt-pt firefox-esr libxinerama-dev keepassxc lxappearance materia-gtk-theme rfkill emacs tig build-essential libc6-dev libmlib2-dev libexif-dev python3-pip libxext-dev libxft-dev nala stow timeshift timeshift-gtk make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
+#sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y
 #sudo apt install libc6 libc-bin libmlib2 
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
@@ -203,5 +204,8 @@ iwctl station wlan0 scan
 iwctl station wlan0 connect Virus404 -P $WIFIPASS
 
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+
+sudo virsh net-autostart default
+sudo virsh net-start default
 
 cat install.error | grep error

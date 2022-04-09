@@ -16,6 +16,11 @@ LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
+echo 'APT::Get::Install-Recommends "false";
+APT::Get::Install-Suggests "false";
+APT::AutoRemove::RecommendsImportant "false";
+APT::AutoRemove::SuggestsImportant "false";' | sudo tee /etc/apt/apt.conf
+
 echo "deb [arch=amd64] http://deb.volian.org/volian/ scar main" | sudo tee -a /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 sudo apt update; sudo apt upgrade

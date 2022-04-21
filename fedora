@@ -23,7 +23,7 @@ sudo rpm-ostree upgrade
 sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx pamix picom pipewire pulseaudio pulseaudio-utils \
 scrot stow toolbox trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
 youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git
-sudo rpm-ostree override remove zezere-ignition
+sudo rpm-ostree override remove zezere-ignition audit-libs python3-audit
 
 #sudo apt install dnsmasq libblockdev-crypto2 zstd firefox-esr-l10n-pt-pt firefox-esr libxinerama-dev keepassxc lxappearance materia-gtk-theme rfkill tig build-essential libc6-dev libmlib2-dev libexif-dev libxext-dev libxft-dev nala stow timeshift timeshift-gtk make flatpak doas curl xdg-user-dirs wireless-tools iwd wireguard-tools zsh zsh-syntax-highlighting zsh-autosuggestions dash git bc pulseaudio xorg dosfstools hsetroot alsa-utils firewalld apparmor ntfs-3g ripgrep mediainfo bat pass xdotool highlight imagemagick xclip numlockx scrot rsync zathura zathura-pdf-poppler neovim udiskie stow trash-cli dunst youtube-dl physlock picom jq fzf mpv wmctrl light patch syncthing unzip usbutils ffmpeg ffmpegthumbnailer pulsemixer rkhunter clamav qutebrowser libreoffice libreoffice-l10n-pt 
 #sudo apt install python-setuptools udisks2 python3-pip python3-yaml libgio2.0 gobject-introspection libgtk2.0-0 libnotify4 gettext gir1.2-notify-0.7

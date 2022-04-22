@@ -115,40 +115,6 @@ EnableNetworkConfiguration=true
 [Settings]
 AutoConnect=true" | sudo tee /etc/iwd/main.conf
 
-# Enabling CPU Mitigations
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/default/grub.d/40_cpu_mitigations.cfg | sudo tee /etc/grub.d/40_cpu_mitigations
-# Distrusting the CPU
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/default/grub.d/40_distrust_cpu.cfg | sudo tee /etc/grub.d/40_distrust_cpu
-# Enabling IOMMU
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/default/grub.d/40_enable_iommu.cfg | sudo tee /etc/grub.d/40_enable_iommu
-# Setting GRUB configuration file permissions
-sudo chmod 755 /etc/grub.d/*
-# Configure AppArmor Parser caching
-sudo sed -i 's/#write-cache/write-cache/g' /etc/apparmor/parser.conf
-sudo sed -i 's,#Include /etc/apparmor.d/,Include /etc/apparmor.d/#g' /etc/apparmor/parser.conf
-# Blacklisting kernel modules
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/modprobe.d/30_security-misc.conf | sudo tee -a /etc/modprobe.d/30_security-misc.conf
-sudo chmod 600 /etc/modprobe.d/*
-# Security kernel settings.
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/sysctl.d/30_security-misc.conf | sudo tee -a /etc/sysctl.d/30_security-misc.conf
-sudo sed -i 's/kernel.yama.ptrace_scope=2/kernel.yama.ptrace_scope=3/g' /etc/sysctl.d/30_security-misc.conf
-curl https://raw.githubusercontent.com/Whonix/security-misc/master/etc/sysctl.d/30_silent-kernel-printk.conf | sudo tee -a /etc/sysctl.d/30_silent-kernel-printk.conf
-sudo chmod 600 /etc/sysctl.d/*
-# Disable coredump
-echo "* hard core 0" | sudo tee /etc/security/limits.conf
-# Disable su for non-wheel users
-sudo bash -c 'cat > /etc/pam.d/su' <<-'EOF'
-#%PAM-1.0
-auth		sufficient	pam_rootok.so
-# Uncomment the following line to implicitly trust users in the "wheel" group.
-#auth		sufficient	pam_wheel.so trust use_uid
-# Uncomment the following line to require a user to be in the "wheel" group.
-auth		required	pam_wheel.so use_uid
-auth		required	pam_unix.so
-account		required	pam_unix.so
-session		required	pam_unix.so
-EOF
-
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 
 sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
@@ -171,7 +137,7 @@ echo "source /etc/network/interfaces.d/*
 auto wlan0
 iface wlan0 inet dhcp" | sudo tee /etc/network/interfaces 
  
-sudo systemctl enable --now  iwd.service apparmor suspend@sorath.service firewalld
+sudo systemctl enable --now  iwd.service suspend@sorath.service firewalld
 #sudo systemctl enable btrfs-balance.timer
 #sudo systemctl enable btrfs-defrag.timer
 #sudo systemctl enable btrfs-scrub.timer
@@ -221,7 +187,5 @@ sudo virsh net-autostart default
 sudo virsh net-start default
 
 sudo usermod -a -G plugdev $USER
-
-pip install adblock ueberzug
 
 cat install.error | grep error

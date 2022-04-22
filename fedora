@@ -11,7 +11,7 @@ exec &> >(tee -a "install.log") 2>install.error
 
 #TOOLBOX
 #sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
-#sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel -y
+#sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
 #sudo dnf groupinstall "Development Libraries" -y
 
 # FIRST INSTALL GIT WGET CURL SUDO

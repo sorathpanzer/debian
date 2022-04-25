@@ -184,5 +184,6 @@ sudo virsh net-autostart default
 sudo virsh net-start default
 
 sudo usermod -a -G plugdev $USER
+sudo usermod -s /usr/bin/zsh $USER
 
 cat install.error | grep error

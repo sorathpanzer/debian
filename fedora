@@ -9,12 +9,6 @@ exec &> >(tee -a "install.log") 2>install.error
 ## alacritty lazygit dust python-adblock
 ############################################
 
-#TOOLBOX
-toolbox create
-toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-devel -y
-toolbox run sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
-toolbox run pip install --user ueberzug
-
 # FIRST INSTALL GIT WGET CURL SUDO
 
 USER_NAME=""
@@ -28,9 +22,14 @@ GIT_EMAIL=""
 sudo rpm-ostree upgrade
 sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx pamix picom pipewire pulseaudio pulseaudio-utils \
 scrot stow toolbox trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
-youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six
-sudo rpm-ostree override remove zezere-ignition python3-audit python3-policycoreutils policycoreutils-python-utils
+youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six git
+sudo rpm-ostree override remove zezere-ignition
 
+#TOOLBOX
+toolbox create
+toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-devel -y
+toolbox run sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
+toolbox run pip install --user ueberzug
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 #echo "Open vault password:"

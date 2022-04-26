@@ -22,7 +22,7 @@ GIT_EMAIL=""
 sudo rpm-ostree upgrade
 sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx pamix picom pipewire pulseaudio pulseaudio-utils \
 scrot stow toolbox trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
-youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six git
+youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six git flatpak
 sudo rpm-ostree override remove zezere-ignition
 
 #TOOLBOX

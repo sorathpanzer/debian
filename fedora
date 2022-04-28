@@ -186,4 +186,10 @@ sudo virsh net-start default
 sudo usermod -a -G plugdev $USER
 sudo usermod -s /usr/bin/zsh $USER
 
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+echo '[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+
 cat install.error | grep error

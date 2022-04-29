@@ -220,6 +220,7 @@ sudo virsh net-autostart default
 sudo virsh net-start default
 
 sudo usermod -a -G plugdev $USER
+sudo usermod -s /usr/bin/zsh $USER
 
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
 cat signal-desktop-keyring.gpg | sudo tee -a /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null

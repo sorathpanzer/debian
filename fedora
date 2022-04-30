@@ -31,6 +31,7 @@ toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-devel -y
 toolbox run sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
 #toolbox run pip install --user ueberzug
+toolbox run pip install --user adblock
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 #echo "Open vault password:"

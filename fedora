@@ -19,6 +19,18 @@ GIT_EMAIL=""
 sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 #sudo rpm-ostree install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
+echo "[copr:copr.fedorainfracloud.org:adamawoolley:signal-desktop]
+name=Copr repo for signal-desktop owned by adamawoolley
+baseurl=https://download.copr.fedorainfracloud.org/results/adamawoolley/signal-desktop/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/adamawoolley/signal-desktop/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1" | sudo tee /etc/yum.repos.d/signal-desktop.repo
+
+
 sudo rpm-ostree upgrade
 sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx picom pipewire pulseaudio-utils keepassxc lm_sensors qutebrowser syncthing \
 scrot stow trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset kitty libreoffice-calc signal-desktop \
@@ -157,5 +169,10 @@ sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
 echo '[Service]
 ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+
+echo "Defaults:sorath !authenticate
+sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/bin/ostree, /usr/sbin/reboot, /usr/sbin/poweroff" | sudo tee /etc/sudo.d/sorath
+
+echo "sorath" | sudo tee -a /etc/shutdown.allow
 
 cat install.error | grep error

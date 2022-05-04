@@ -16,28 +16,31 @@ LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
-#sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-#sudo dnf install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+#sudo rpm-ostree install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 sudo rpm-ostree upgrade
-sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx pamix picom pipewire pulseaudio pulseaudio-utils \
-scrot stow toolbox trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
-youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six flatpak audit
+sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx picom pipewire pulseaudio-utils keepassxc lm_sensors qutebrowser syncthing \
+scrot stow trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset kitty libreoffice-calc signal-desktop \
+youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six flatpak audit btrfs-progs feh ffmpeg ffmpegthumbnailer mpv ntfs-3g tig unzip
+
 sudo rpm-ostree override remove zezere-ignition ignition
 
-#TOOLBOX
-toolbox create
-toolbox run sudo dnf upgrade -y
-toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-devel -y
-toolbox run sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
-#toolbox run pip install --user ueberzug
-toolbox run pip install --user adblock
+# TOOLBOX
+sudo rpm-ostree install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel \
+python3-devel python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel
+
+#toolbox create
+#toolbox run sudo dnf upgrade -y
+#toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-devel -y
+#toolbox run sudo dnf install g++ python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
+
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-#echo "Open vault password:"
-#sudo mkdir /media/Vault
-#echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
-#mount /dev/mapper/Vault /media/Vault
+echo "Open vault password:"
+sudo mkdir /media/Vault
+echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
+mount /dev/mapper/Vault /media/Vault
 
 rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
@@ -52,21 +55,11 @@ touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
-#rsync -avrop /media/Vault/BackHome/* /home/$USER_NAME
-#chmod +x /home/$USER_NAME/.local/bin/lf
-#cd ~/.config/suckless/st
-#make clean; make install clean
-#cd
-
-#echo "permit persist $USER_NAME as root
-#  permit nopass $USER_NAME cmd apt
-#  permit nopass $USER_NAME cmd nala
-#  permit nopass $USER_NAME cmd journalctl
-#  permit nopass $USER_NAME cmd poweroff
-#  permit nopass $USER_NAME cmd reboot
-#  permit nopass $USER_NAME cmd udiskctl
-#  permit nopass $USER_NAME cmd mount
-#  permit nopass $USER_NAME cmd light" | sudo tee /etc/doas.conf
+rsync -avrop /media/Vault/BackHome/* /home/$USER_NAME
+chmod +x /home/$USER_NAME/.local/bin/lf
+cd ~/.config/suckless/st
+make clean; make install clean
+cd
 
 sudo mkdir -p /sys/module/snd_hda_intel/parameters/
 sudo mkdir -p /etc/polkit-1/rules.d/
@@ -104,8 +97,6 @@ echo '# UDISKS_FILESYSTEM_SHARED
 # See udisks(8)
 ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
 
-#sudo ln -sfT dash /usr/bin/sh
-
 sudo mkdir /etc/iwd
 
 echo "[General]
@@ -115,8 +106,8 @@ AutoConnect=true" | sudo tee /etc/iwd/main.conf
 
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 
-sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-sudo sed -i 's/ExecStart=.*/ExecStart=-\/sbin\/agetty -a sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
+#sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
+#sudo sed -i 's/ExecStart=.*/ExecStart=-\/sbin\/agetty -a sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
 
  echo "
 [Unit]
@@ -126,7 +117,7 @@ After=sleep.target
 User=%i
 Type=forking
 Environment=DISPLAY=:0
-ExecStart=/usr/bin/physlock
+ExecStart=/usr/bin/slock
 ExecStartPost=/usr/bin/sleep 1
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
@@ -136,34 +127,6 @@ auto wlan0
 iface wlan0 inet dhcp" | sudo tee /etc/network/interfaces 
  
 sudo systemctl enable --now  iwd.service suspend@sorath.service firewalld
-#sudo systemctl enable btrfs-balance.timer
-#sudo systemctl enable btrfs-defrag.timer
-#sudo systemctl enable btrfs-scrub.timer
-#sudo systemctl enable btrfs-trim.timer
-
-#aa-enforce /etc/apparmor.d/*
-
-#git clone https://github.com/wmutschl/timeshift-autosnap-apt.git /home/$USER/timeshift-autosnap-apt
-#cd /home/$USER/timeshift-autosnap-apt
-#sudo make install
-#sudo sed -i 's/snapshotEFI=true/snapshotEFI=false/' /etc/timeshift-autosnap-apt.conf
-
-#git clone https://github.com/Antynea/grub-btrfs.git /home/$USER/grub-btrfs
-#cd /home/$USER/grub-btrfs
-#sudo make install
-#sudo sed -i 's/#GRUB_BTRFS_SUBMENUNAME="Arch Linux snapshots"/GRUB_BTRFS_SUBMENUNAME="Debian GNU\/Linux snapshots"/' /etc/default/grub-btrfs/config
-
-#cd
-#sudo rm -r /home/$USER/timeshift-autosnap-apt
-#sudo rm -r /home/$USER/grub-btrfs
-
-#sudo truncate -s 0 /swap/swapfile
-#sudo chattr +C /swap/swapfile
-#sudo fallocate -l 4G /swap/swapfile
-#sudo chmod 0600 /swap/swapfile
-#sudo mkswap /swap/swapfile
-#sudo swapon /swap/swapfile
-#echo "/swap/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab
 
 echo 'Section "InputClass"
         Identifier "libinput touchpad catchall"
@@ -181,8 +144,8 @@ iwctl station wlan0 connect Virus404 -P $WIFIPASS
 
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 
-sudo virsh net-autostart default
-sudo virsh net-start default
+#sudo virsh net-autostart default
+#sudo virsh net-start default
 
 sudo usermod -a -G plugdev $USER
 sudo usermod -s /usr/bin/zsh $USER

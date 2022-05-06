@@ -123,16 +123,16 @@ echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 #sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
 #sudo sed -i 's/ExecStart=.*/ExecStart=-\/sbin\/agetty -a sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
 
- echo "
-[Unit]
-Description=User suspend actions
-After=sleep.target
+ echo "[Unit]
+Description=Lock X session using slock for user %i
+Before=sleep.target
+
 [Service]
 User=%i
-Type=forking
 Environment=DISPLAY=:0
+ExecStartPre=/usr/bin/xset dpms force suspend
 ExecStart=/usr/bin/slock
-ExecStartPost=/usr/bin/sleep 1
+
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
  

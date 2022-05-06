@@ -34,7 +34,8 @@ enabled_metadata=1" | sudo tee /etc/yum.repos.d/signal-desktop.repo
 sudo rpm-ostree upgrade
 sudo rpm-ostree install dunst fzf ImageMagick libXft light neovim numlockx picom pipewire pulseaudio-utils keepassxc lm_sensors qutebrowser syncthing \
 scrot stow trash-cli udiskie wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset kitty libreoffice-calc signal-desktop \
-youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six flatpak audit btrfs-progs feh ffmpeg ffmpegthumbnailer mpv ntfs-3g tig unzip
+youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git python3-six flatpak audit btrfs-progs feh ffmpeg ffmpegthumbnailer mpv ntfs-3g tig unzip \
+i3lock toolbox distrobox
 
 sudo rpm-ostree override remove zezere-ignition ignition
 
@@ -129,9 +130,10 @@ Before=sleep.target
 
 [Service]
 User=%i
+Type=forking
 Environment=DISPLAY=:0
 ExecStartPre=/usr/bin/xset dpms force suspend
-ExecStart=/usr/bin/slock
+ExecStart=/usr/bin/i3lock -c 000000
 
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service

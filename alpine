@@ -1,0 +1,134 @@
+#!/bin/bash
+
+exec &> >(tee -a "install.log") 2>install.error
+
+USER_NAME=""
+LVM_PASSWORD=""
+GIT_USERNAME=""
+GIT_EMAIL=""
+
+doas apk update; doas apk upgrade
+doas apk add dunst fzf imagemagick libxft light neovim picom pipewire pulseaudio-utils keepassxc lm_sensors qutebrowser syncthing \
+scrot stow trash-cli udiskie wireguard-tools xdotool xinput xrandr xrdb xset kitty libreoffice-calc \
+youtube-dl zsh zsh-autosuggestions zsh-syntax-highlighting git py3-six flatpak feh ffmpeg ffmpegthumbnailer mpv ntfs-3g tig unzip \
+i3lock gcc fontconfig-dev freetype-dev libxft-dev libx11-dev libxinerama-dev libexif-dev imlib2-dev giflib-dev \
+python3-dev py3-pip libxext-dev libxshmfence-dev py3-wheel build-base sx libuser
+
+doas setup-xorg-base
+
+doas flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+#echo "Open vault password:"
+#sudo mkdir /media/Vault
+#echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
+#mount /dev/mapper/Vault /media/Vault
+
+rm $HOME/.profile
+mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
+mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+touch /home/$USER_NAME/.local/recently-used.xbel
+git config --global user.name "$GIT_USERNAME"
+git config --global user.email "$GIT_EMAIL"
+git clone https://gitea.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+git config --global credential.helper store
+mkdir -p /home/$USER_NAME/.cache/zsh
+touch /home/$USER_NAME/.cache/zsh/history
+sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
+touch /home/$USER_NAME/.local/recently-used.xbel
+
+#rsync -avrop /media/Vault/BackHome/* /home/$USER_NAME
+#chmod +x /home/$USER_NAME/.local/bin/lf
+#cd ~/.config/suckless/st
+#make clean; make install clean
+#cd
+
+doas mkdir -p /sys/module/snd_hda_intel/parameters/
+doas mkdir -p /etc/polkit-1/rules.d/
+echo "vm.swappiness=10" | doas tee -a /etc/sysctl.d/99-sysctl.conf
+echo 1 | doas tee /sys/module/snd_hda_intel/parameters/power_save
+echo "blacklist ideapad_laptop" | doas tee /etc/modprobe.d/blacklist.conf
+
+echo "[udiskie]
+Identity=unix-group:plugdev
+Action=org.freedesktop.udisks.*
+ResultAny=yes" | doas tee /etc/polkit-1/localauthority/50-local.d/consolekit.pkla
+
+  echo '/* Allow members of the wheel group to execute any actions
+  * without password authentication, similar to "sudo NOPASSWD:"
+  */
+  polkit.addRule(function(action, subject) {
+  if (subject.isInGroup("wheel")) {
+    return polkit.Result.YES;
+  }
+});' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+echo 'polkit.addRule(function(action, subject) {
+if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+  action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
+  subject.local && subject.active && subject.isInGroup("wheel"))
+  {
+    return polkit.Result.YES;
+  }
+});' | doas tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+
+doas mkdir -p /media
+
+echo '# UDISKS_FILESYSTEM_SHARED
+# ==1: mount filesystem to a shared directory (/media/VolumeName)
+# ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
+# See udisks(8)
+ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | doas tee /etc/udev/rules.d/99-udisks2.rules
+
+sudo mkdir /etc/iwd
+
+#echo "[General]
+#EnableNetworkConfiguration=true
+#[Settings]
+#AutoConnect=true" | doas tee /etc/iwd/main.conf
+
+# echo "[Unit]
+#Description=Lock X session using slock for user %i
+#Before=sleep.target
+#[Service]
+#User=%i
+#Type=forking
+#Environment=DISPLAY=:0
+#ExecStartPre=/usr/bin/xset dpms force suspend
+#ExecStart=/usr/bin/i3lock -c 000000
+#[Install]
+#WantedBy=sleep.target" | doas tee /etc/systemd/system/suspend@.service
+ 
+#echo "source /etc/network/interfaces.d/*
+#auto wlan0
+#iface wlan0 inet dhcp" | doas tee /etc/network/interfaces 
+
+#doas rfkill unblock all
+#doas ip link set wlan0 up
+#iwctl station wlan0 scan
+#iwctl station wlan0 connect Virus404 -P $WIFIPASS
+
+#doas cp $HOME/Documentos/wg0.conf /etc/wireguard
+
+#doas systemctl enable --now  iwd.service suspend@sorath.service firewalld
+#echo "permit persist :wheel" | doas tee /etc/doas.conf
+
+echo "nameserver 1.1.1.1" | doas tee /etc/resolv.conf 
+
+echo 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+EndSection' | doas tee /etc/X11/xorg.conf.d/40-libinput.conf
+
+sudo usermod -a -G plugdev $USER
+sudo usermod -s /bin/zsh $USER
+
+doas touch /etc/login.defs
+doas mkdir /etc/default
+doas touch /etc/default/useradd
+lchsh $USER
+
+echo "sorath" | doas tee -a /etc/shutdown.allow
+
+cat install.error | grep error

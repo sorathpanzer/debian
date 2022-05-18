@@ -12,10 +12,11 @@ sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free
 #sudo rpm-ostree install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 sudo rpm-ostree upgrade
-sudo rpm-ostree install alacritty audit btrfs-progs crontabs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer firefox flatpak fzf git i3lock ImageMagick rsync \
-keepassxc kitty libXft light lm_sensors man mpv neovim NetworkManager-tui ntfs-3g numlockx picom pipewire pulseaudio-utils python3-six qemu qutebrowser \
-scrot stow syncthing tig tldr trash-cli udiskie unzip wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset youtube-dl \
+sudo rpm-ostree install alacritty audit btrfs-progs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer firefox flatpak fzf git i3lock ImageMagick rsync \
+kitty libXft light lm_sensors man mpv neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu qutebrowser \
+scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset youtube-dl \
 zsh zsh-autosuggestions zsh-syntax-highlighting
+# NetworkManager-tui numlockx crontabs keepassxc
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 

@@ -2,15 +2,6 @@
 
 exec &> >(tee -a "install.log") 2>install.error
 
-############################################
-# Sudo for second drive mount?????
-# snd_hda can't create folder for powersave
-#Dejavu libexif dhcpcd5 ueberzug
-## alacritty lazygit dust python-adblock
-############################################
-
-# FIRST INSTALL GIT WGET CURL SUDO
-
 USER_NAME=""
 LVM_PASSWORD=""
 GIT_USERNAME=""
@@ -31,6 +22,12 @@ sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 # TOOLBOX
 #sudo rpm-ostree install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel \
 #python3-devel python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel gcc
+
+toolbox create
+toolbox run sudo dnf upgrade -y
+toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
+toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
+#toolbox run pip install --user ueberzug
 
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install io.gitlab.librewolf-community net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop -y

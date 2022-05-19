@@ -1,7 +1,5 @@
 #!/bin/bash
 
-exec &> >(tee -a "install.log") 2>install.error
-
 USER_NAME=""
 LVM_PASSWORD=""
 GIT_USERNAME=""
@@ -11,12 +9,11 @@ GIT_EMAIL=""
 sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 #sudo rpm-ostree install https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
-sudo rpm-ostree upgrade
 sudo rpm-ostree install alacritty audit btrfs-progs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer firefox flatpak fzf git i3lock ImageMagick rsync \
-kitty libXft light lm_sensors man mpv neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu qutebrowser \
+kitty libXft light lm_sensors man mpv neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu qutebrowser numlockx toolbox \
 scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset youtube-dl \
 zsh zsh-autosuggestions zsh-syntax-highlighting
-# NetworkManager-tui numlockx crontabs keepassxc
+# NetworkManager-tui crontabs keepassxc
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
@@ -28,15 +25,15 @@ toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
 toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel -y
-#toolbox run pip install --user ueberzug
+toolbox run pip install --user ueberzug
 
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install io.gitlab.librewolf-community net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop -y
 
 echo "Open vault password:"
 sudo mkdir /media/Vault
-echo -n "$LVM_PASSWORD" | cryptsetup open --type luks /dev/sda1 Vault
-mount /dev/mapper/Vault /media/Vault
+echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+sudo mount /dev/mapper/Vault /media/Vault
 
 rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
@@ -52,10 +49,6 @@ sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
 rsync -avrop /media/Vault/Documentos/BackHome/* /home/$USER_NAME
-#chmod +x /home/$USER_NAME/.local/bin/lf
-cd ~/.config/suckless/st
-make clean; make install clean
-cd
 
 sudo mkdir -p /sys/module/snd_hda_intel/parameters/
 sudo mkdir -p /etc/polkit-1/rules.d/
@@ -93,18 +86,6 @@ echo '# UDISKS_FILESYSTEM_SHARED
 # See udisks(8)
 ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
 
-#sudo mkdir /etc/iwd
-
-#echo "[General]
-#EnableNetworkConfiguration=true
-#[Settings]
-#AutoConnect=true" | sudo tee /etc/iwd/main.conf
-
-#echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
-
-#sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-#sudo sed -i 's/ExecStart=.*/ExecStart=-\/sbin\/agetty -a sorath --noclear %I $TERM/' /usr/lib/systemd/system/getty@.service
-
  echo "[Unit]
 Description=Lock X session using slock for user %i
 Before=sleep.target
@@ -119,10 +100,6 @@ ExecStart=/usr/bin/i3lock -c 000000
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
  
-#echo "source /etc/network/interfaces.d/*
-#auto wlan0
-#iface wlan0 inet dhcp" | sudo tee /etc/network/interfaces 
- 
 sudo systemctl enable --now suspend@sorath.service #firewalld
 
 echo 'Section "InputClass"
@@ -132,12 +109,6 @@ echo 'Section "InputClass"
         Driver "libinput"
         Option "NaturalScrolling" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
-
-#automated_script
-#sudo rfkill unblock all
-#sudo ip link set wlan0 up
-#iwctl station wlan0 scan
-#iwctl station wlan0 connect Virus404 -P $WIFIPASS
 
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 
@@ -150,9 +121,7 @@ echo '[Service]
 ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-echo "Defaults:sorath !authenticate
-sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/bin/ostree, /usr/sbin/reboot, /usr/sbin/poweroff" | sudo tee /etc/sudo.d/sorath
+#echo "Defaults:sorath !authenticate
+$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/bin/ostree, /usr/sbin/reboot, /usr/sbin/poweroff" | sudo tee /etc/sudo.d/sorath
 
-echo "sorath" | sudo tee -a /etc/shutdown.allow
-
-cat install.error | grep error
+echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow

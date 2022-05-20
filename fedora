@@ -13,7 +13,7 @@ sudo rpm-ostree install audit git toolbox rsync flatpak
 sudo rpm-ostree ex apply-live
 
 sudo rpm-ostree install alacritty btrfs-progs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer firefox fzf i3lock ImageMagick youtube-dl \
-kitty libXft light lm_sensors man mpv neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu qutebrowser numlockx NetworkManager-tui \
+libXft light lm_sensors man mpv neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu qutebrowser numlockx NetworkManager-tui \
 scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
 zsh zsh-autosuggestions zsh-syntax-highlighting
 # crontabs keepassxc

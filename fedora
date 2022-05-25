@@ -15,7 +15,7 @@ sudo rpm-ostree ex apply-live
 sudo rpm-ostree install alacritty btrfs-progs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs \
 libXft light lm_sensors man neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu numlockx NetworkManager-tui keepassxc \
 scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools xdotool xinput xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset \
-zsh zsh-autosuggestions zsh-syntax-highlighting
+zsh zsh-autosuggestions zsh-syntax-highlighting xorg-x11-drv-intel
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 

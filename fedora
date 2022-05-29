@@ -39,7 +39,7 @@ mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,n
 touch /home/$USER_NAME/.local/recently-used.xbel
 git config --global user.name "$GIT_USERNAME"
 git config --global user.email "$GIT_EMAIL"
-git clone https://gitea.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
 git config --global credential.helper store
 mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history

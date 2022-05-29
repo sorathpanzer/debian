@@ -19,10 +19,6 @@ xorg-x11-drv-intel libva-vdpau-driver
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
-# TOOLBOX
-#sudo rpm-ostree install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel \
-#python3-devel python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel gcc
-
 toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y

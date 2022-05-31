@@ -127,6 +127,6 @@ ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
 #echo "Defaults:sorath !authenticate
-%wheel ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/bin/ostree, /usr/sbin/reboot, /usr/sbin/poweroff, /usr/bin/setleds" | sudo tee /etc/sudo.d/sorath
+sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/bin/ostree, /usr/sbin/reboot, /usr/sbin/poweroff, /usr/bin/setleds" | sudo tee /etc/sudo.d/sorath
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow

@@ -130,3 +130,6 @@ ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /e
 sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudo.d/sorath
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+
+#sudo dracut --force
+#rpm-ostree kargs --append=rd.driver.blacklist=nouveau --append=modprobe.blacklist=nouveau --append=nvidia-drm.modeset=1

@@ -92,7 +92,7 @@ Before=sleep.target
 [Service]
 User=%i
 Type=forking
-Environment=DISPLAY=:1
+Environment=DISPLAY=:0
 ExecStartPre=/usr/bin/xset dpms force suspend
 ExecStart=/usr/bin/i3lock -c 000000
 
@@ -110,9 +110,10 @@ echo 'Section "InputClass"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 
 echo 'Section "Device"
-  Identifier "Intel Graphics"
-  Driver "intel"
-  Option      "AccelMethod"  "sna"
+    Identifier "Intel Graphics"
+    Driver "intel"
+    Option "AccelMethod"  "sna"
+    Option "TearFree" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
@@ -131,5 +132,7 @@ sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sb
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
 
-#sudo dracut --force
-#rpm-ostree kargs --append=rd.driver.blacklist=nouveau --append=modprobe.blacklist=nouveau --append=nvidia-drm.modeset=1
+echo "options i915 enable_guc=3
+options i915 enable_fbc=1" | sudo tee /etc/modprobe.d/i915.conf
+
+sudo dracut --force

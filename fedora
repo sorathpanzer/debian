@@ -12,10 +12,9 @@ sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free
 sudo rpm-ostree install audit git toolbox rsync flatpak
 sudo rpm-ostree ex apply-live
 
-sudo rpm-ostree install btrfs-progs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs \
-libXft light lm_sensors neovim ntfs-3g picom pipewire pulseaudio-utils python3-six qemu NetworkManager-tui xorg-x11-server-Xorg \
-xorg-x11-xinit scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools xdotool xinput xrandr xrdb xset w3m zsh \
-xorg-x11-drv-intel libva-vdpau-driver
+sudo rpm-ostree install btrfs-progs dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs light lm_sensors w3m zsh neovim libXft \
+ntfs-3g picom pipewire pulseaudio-utils python3-six qemu NetworkManager-tui scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools dbus-x11 \
+xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel libva-vdpau-driver gstreamer1-vaapi intel-gpu-tools libva libva-utils 
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
@@ -132,7 +131,7 @@ sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sb
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
 
-echo "options i915 enable_guc=3
+echo "options i915 enable_guc=2
 options i915 enable_fbc=1" | sudo tee /etc/modprobe.d/i915.conf
 
 sudo dracut --force

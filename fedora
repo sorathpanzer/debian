@@ -14,7 +14,8 @@ sudo rpm-ostree ex apply-live
 
 sudo rpm-ostree install btrfs-progs dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs light lm_sensors w3m zsh neovim libXft \
 ntfs-3g picom pipewire pulseaudio-utils python3-six qemu NetworkManager-tui scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools dbus-x11 \
-xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel libva-vdpau-driver gstreamer1-vaapi intel-gpu-tools libva libva-utils 
+xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel 
+#libva-vdpau-driver gstreamer1-vaapi intel-gpu-tools libva libva-utils 
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
@@ -111,8 +112,6 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 echo 'Section "Device"
     Identifier "Intel Graphics"
     Driver "intel"
-    Option "AccelMethod"  "sna"
-    Option "TearFree" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard

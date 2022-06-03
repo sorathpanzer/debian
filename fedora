@@ -14,8 +14,7 @@ sudo rpm-ostree ex apply-live
 
 sudo rpm-ostree install btrfs-progs dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs light lm_sensors w3m zsh neovim libXft \
 ntfs-3g picom pipewire pulseaudio-utils python3-six qemu NetworkManager-tui scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools dbus-x11 \
-xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel 
-#libva-vdpau-driver gstreamer1-vaapi intel-gpu-tools libva libva-utils 
+xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
@@ -124,3 +123,4 @@ sudo touch /etc/sudoers.d/$USER_NAME
 echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+sudo grubby --update-kernel=ALL --args=quiet

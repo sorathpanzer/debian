@@ -23,7 +23,6 @@ toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
 toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh -y
-toolbox run pip install --user ueberzug
 
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \
@@ -48,6 +47,7 @@ sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
 rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
+toolbox run pip install --user ueberzug
 
 sudo mkdir -p /sys/module/snd_hda_intel/parameters/
 sudo mkdir -p /etc/polkit-1/rules.d/
@@ -109,11 +109,6 @@ echo 'Section "InputClass"
         Option "NaturalScrolling" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 
-echo 'Section "Device"
-    Identifier "Intel Graphics"
-    Driver "intel"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
-
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 
 sudo usermod -a -G plugdev $USER
@@ -125,12 +120,7 @@ echo '[Service]
 ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-#echo "Defaults:sorath !authenticate
-sorath ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudo.d/sorath
+sudo touch /etc/sudoers.d/$USER_NAME
+echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
 
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
-
-echo "options i915 enable_guc=2
-options i915 enable_fbc=1" | sudo tee /etc/modprobe.d/i915.conf
-
-sudo dracut --force

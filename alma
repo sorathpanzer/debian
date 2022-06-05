@@ -47,7 +47,9 @@ touch /home/$USER_NAME/.local/recently-used.xbel
 
 #rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
 toolbox run pip install --user ueberzug
-toolbox run dnf --installroot=/home/$USER_NAME/.local --releasever=/ install fzf stow -y
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+rm -r ~/.fzf
 
 sudo mkdir -p /sys/module/snd_hda_intel/parameters/
 sudo mkdir -p /etc/polkit-1/rules.d/

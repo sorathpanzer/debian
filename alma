@@ -8,6 +8,7 @@ GIT_EMAIL=""
 sudo dnf install --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm -y
 sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
 
+sudo dnf update -y
 sudo dnf install toolbox rsync flatpak git ffmpeg i3lock ImageMagick youtube-dl crontabs lm_sensors w3m zsh neovim libXft \
 ntfs-3g pipewire pulseaudio-utils python3-six qemu-img NetworkManager-tui syncthing tig unzip wireguard-tools dbus-x11 \
 xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit

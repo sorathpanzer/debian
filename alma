@@ -1,0 +1,130 @@
+#!/bin/bash
+
+USER_NAME=""
+LVM_PASSWORD=""
+GIT_USERNAME=""
+GIT_EMAIL=""
+
+sudo dnf install --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm -y
+sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+
+sudo dnf install toolbox rsync flatpak git ffmpeg i3lock ImageMagick youtube-dl crontabs lm_sensors w3m zsh neovim libXft \
+ntfs-3g pipewire pulseaudio-utils python3-six qemu-img NetworkManager-tui syncthing tig unzip wireguard-tools dbus-x11 \
+xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit
+
+echo '[general]
+distro = "fedora"
+release = "36" | sudo tee /etc/containers/toolbox.conf
+
+#btrfs-progs dunst feh ffmpegthumbnailer light picom scrot stow trash-cli udiskie xdotool xorg-x11-drv-intel
+toolbox create
+toolbox run sudo dnf upgrade -y
+toolbox run sudo dnf --installroot=/home/$USER_NAME/.local --releasever=/ install fzf -y
+toolbox run sudo dnf install stow gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
+toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh -y
+
+#sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \
+#io.mpv.Mpv org.gimp.GIMP org.qutebrowser.qutebrowser org.tribler.Tribler -y
+
+#echo "Open vault password:"
+#sudo mkdir /media/Vault
+#echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+#sudo mount /dev/mapper/Vault /media/Vault
+
+rm $HOME/.profile
+mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
+mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+touch /home/$USER_NAME/.local/recently-used.xbel
+git config --global user.name "$GIT_USERNAME"
+git config --global user.email "$GIT_EMAIL"
+git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+git config --global credential.helper store
+mkdir -p /home/$USER_NAME/.cache/zsh
+touch /home/$USER_NAME/.cache/zsh/history
+sh -c "cd /home/$USER_NAME/.config/dotgit; toolbox run stow -vt ~ dotfiles" ###Under toolbox
+touch /home/$USER_NAME/.local/recently-used.xbel
+
+#rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
+toolbox run pip install --user ueberzug
+
+sudo mkdir -p /sys/module/snd_hda_intel/parameters/
+sudo mkdir -p /etc/polkit-1/rules.d/
+echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+echo 1 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
+
+echo "[udiskie]
+Identity=unix-group:plugdev
+Action=org.freedesktop.udisks.*
+ResultAny=yes" | sudo tee /etc/polkit-1/localauthority/50-local.d/consolekit.pkla
+
+  echo '/* Allow members of the wheel group to execute any actions
+  * without password authentication, similar to "sudo NOPASSWD:"
+  */
+  polkit.addRule(function(action, subject) {
+  if (subject.isInGroup("wheel")) {
+    return polkit.Result.YES;
+  }
+});' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+echo 'polkit.addRule(function(action, subject) {
+if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+  action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
+  subject.local && subject.active && subject.isInGroup("wheel"))
+  {
+    return polkit.Result.YES;
+  }
+});' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+
+sudo mkdir -p /media
+
+echo '# UDISKS_FILESYSTEM_SHARED
+# ==1: mount filesystem to a shared directory (/media/VolumeName)
+# ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
+# See udisks(8)
+ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+
+ echo "[Unit]
+Description=Lock X session using slock for user %i
+Before=sleep.target
+[Service]
+User=%i
+Type=forking
+Environment=DISPLAY=:0
+ExecStartPre=/usr/bin/xset dpms force suspend
+ExecStart=/usr/bin/i3lock -c 000000
+[Install]
+WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+ 
+sudo systemctl enable --now suspend@sorath.service #firewalld
+
+echo 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+
+#echo 'Section "Device"
+#        Identifier "Intel Graphics"
+#        Driver "intel"
+#        Option "DRI" "False"
+#EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+
+sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+
+sudo usermod -a -G plugdev $USER
+sudo usermod -s /usr/bin/zsh $USER
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+echo '[Service]
+ExecStart=
+ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+
+sudo touch /etc/sudoers.d/$USER_NAME
+echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
+
+echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+#sudo grubby --update-kernel=ALL --args=quiet

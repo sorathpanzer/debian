@@ -21,6 +21,7 @@ release = "36"' | sudo tee /etc/containers/toolbox.conf
 toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf --installroot=/home/$USER_NAME/.local --releasever=/ install fzf stow -y
+toolbox run sudo dnf install stow -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
 toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh -y
 
@@ -33,7 +34,6 @@ toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python
 #echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
 #sudo mount /dev/mapper/Vault /media/Vault
 
-rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
 touch /home/$USER_NAME/.local/recently-used.xbel
@@ -43,7 +43,7 @@ git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/do
 git config --global credential.helper store
 mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
-sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
+sh -c "cd /home/$USER_NAME/.config/dotgit; toolbox run stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
 #rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME

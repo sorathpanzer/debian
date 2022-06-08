@@ -17,7 +17,7 @@ echo '[general]
 distro = "fedora"
 release = "36"' | sudo tee /etc/containers/toolbox.conf
 
-#btrfs-progs dunst feh ffmpegthumbnailer light picom scrot stow trash-cli udiskie xdotool xorg-x11-drv-intel
+#feh ffmpegthumbnailer scrot stow trash-cli xdotool btrfs-progs(?) picom(?) udiskie(?) dunst(?) xorg-x11-drv-intel(!!) 
 toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install stow -y

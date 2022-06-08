@@ -115,12 +115,6 @@ echo 'Section "InputClass"
         Option "NaturalScrolling" "true"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 
-#echo 'Section "Device"
-#        Identifier "Intel Graphics"
-#        Driver "intel"
-#        Option "DRI" "False"
-#EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
-
 sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 
 sudo usermod -a -G plugdev $USER

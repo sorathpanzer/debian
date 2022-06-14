@@ -12,9 +12,9 @@ sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free
 sudo rpm-ostree install audit git toolbox rsync flatpak
 sudo rpm-ostree ex apply-live
 
-sudo rpm-ostree install btrfs-progs dunst feh ffmpeg ffmpegthumbnailer fzf i3lock ImageMagick youtube-dl crontabs light lm_sensors w3m zsh neovim libXft \
-ntfs-3g picom pipewire pulseaudio-utils python3-six qemu NetworkManager-tui scrot stow syncthing tig trash-cli udiskie unzip wireguard-tools dbus-x11 \
-xdotool xinput xrandr xrdb xset xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-drv-intel
+sudo rpm-ostree install btrfs-progs crontabs dbus-x11 dunst feh ffmpeg ffmpegthumbnailer fzf groff i3lock ImageMagick libXft light lm_sensors ncdu neovim \
+ntfs-3g pandoc-pdf picom pipewire poppler-utils pulseaudio-utils python3-six qemu scrot sox stow syncthing tig trash-cli udiskie unzip w3m wireguard-tools \
+xdg-user-dirs xdotool xinput xorg-x11-drv-intel xorg-x11-server-Xorg xorg-x11-xinit xrandr xrdb xset youtube-dl zathura zathura-pdf-poppler zsh
 
 sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
@@ -111,6 +111,7 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 echo 'Section "Device"
         Identifier "Intel Graphics"
         Driver "intel"
+        Option "TearFree" "true"
         Option "DRI" "False"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 

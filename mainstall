@@ -1,0 +1,428 @@
+#!/bin/bash
+
+USER_NAME=""
+LVM_PASSWORD=""
+GIT_USERNAME=""
+GIT_EMAIL=""
+
+echo "Choose your Distro:"
+OS=$(echo "Fedora FedoraIOT Rhel Arch Void Alpine OpenSuse" | tr " " "\n" | fzf --reverse)
+clear
+
+NA=" " # Not Applicable
+
+# DISTRO="
+# 1.Fedora/IOT
+# 2.Rhel like systems
+# 3.Arch linux
+# 4.Void Linux
+# 5.Alpine Linux
+# 6.OpenSuse Linux"
+
+BTRFSPROGS="
+btrfs-progs
+NA
+btrfs-progs
+btrfs-progs
+btrfs-progs
+btrfsprogs"
+
+CRONTABS="
+crontabs
+crontabs
+NA
+NA
+NA
+crontabs"
+
+DBUSX11="
+dbus-x11
+dbus-x11
+dbus
+dbus-x11
+dbus-x11
+dbus-x11"
+
+DUNST="
+dunst
+NA
+dunst
+dunst
+dunst
+dunst"
+
+FEH="
+feh
+NA
+feh
+feh
+feh
+feh"
+
+FFMPEGTHUMBNAILER="
+ffmpegthumbnailer
+NA
+ffmpegthumbnailer
+ffmpegthumbnailer
+ffmpegthumbnailer
+FFmpegThumbnailer"
+
+FZF="
+fzf
+NA
+fzf
+fzf
+fzf
+fzf"
+
+IMAGEMAGICK="
+ImageMagick
+ImageMagick
+imagemagick
+ImageMagick
+imagemagick
+ImageMagick"
+
+LIBXFT="
+libXft
+libXft
+libxft
+libXft
+libxft
+libXft"
+
+LMSENSORS="
+lm_sensors
+lm_sensors
+lm_sensors
+lm_sensors
+lm-sensors
+lm_sensors"
+
+PANDOCPDF="
+pandoc-pdf
+pandoc-pdf
+pandoc
+pandoc
+pandoc
+pandoc"
+
+PICOM="
+picom
+NA
+picom
+picom
+picom
+picom"
+
+POPPLERUTILS="
+poppler-utils
+poppler
+poppler-utils
+poppler-utils
+poppler-utils
+poppler-utils"
+
+PULSEAUDIOUTILS="
+pulseaudio-utils
+pulseaudio-utils
+pulseaudio
+pulseaudio-utils
+pulseaudio-utils
+pulseaudio-utils"
+
+PYTHON3SIX="
+python3-six
+python-six
+python-six
+py3-six
+python3-six
+python3-six"
+
+QEMU="
+qemu
+qemu-img
+qemu-base
+qemu
+qemu
+qemu"
+
+SCROT="
+scrot
+NA
+scrot
+scrot
+scrot
+scrot"
+
+SOX="
+sox
+NA
+sox
+sox
+sox
+sox"
+
+STOW="
+stow
+NA
+stow
+stow
+stow
+stow"
+
+TIG="
+tig
+tig
+tig
+tig
+tig
+NA"
+
+TRASHCLI="
+trash-cli
+NA
+trash-cli
+trash-cli
+trash-cli
+trash-cli"
+
+UDISKIE="
+udiskie
+NA
+udiskie
+udiskie
+udiskie
+udiskie"
+
+XDOTOOL="
+xdotool
+NA
+xdotool
+xdotool
+xdotool
+xdotool"
+
+XINPUT="
+xinput
+xinput
+xorg-xinput
+xinput
+xinput
+xinput"
+
+XF86VIDEOINTEL="
+xorg-x11-drv-intel
+NA
+xf86-video-intel
+xf86-video-intel
+xf86-video-intel
+xf86-video-intel"
+
+XORGSERVER="
+xorg-x11-server-Xorg
+xorg-x11-server-Xorg
+xorg-server
+xorg-minimal
+xorg-server
+xorg-server"
+
+XINIT="
+xorg-x11-xinit
+xorg-x11-xinitxorg-xinit
+xinit
+xinit
+xinit
+xinit"
+
+XRANDR="
+xrandr
+xrandr
+xorg-xrandr
+xrandr
+xrandr
+xrandr"
+
+XRDB="
+xrdb
+xrdb
+xorg-xrdb
+xrdb
+xrdb
+xrdb"
+
+XSET="
+xset
+xset
+xorg-xset
+xset
+xset
+xset"
+
+ZATHURA="
+zathura
+NA
+zathura
+zathura
+zathura
+zathura"
+
+ZATHURAPDF="
+zathura-pdf-poppler
+NA
+zathura-pdf-poppler
+zathura-pdf-poppler
+zathura-pdf-poppler
+Zathura-PDF-Poppler"
+
+case "${OS}" in
+	"")         echo "No option was specified."; exit 1 ;;
+    Fedora|FedoraIOT)  POS="1" ;;
+    Rhel)               POS="2" ;;
+    Arch)               POS="3" ;;
+    Void)               POS="4" ;;
+    Alpine)             POS="5" ;;
+    OpenSuse)           POS="6" ;;
+esac
+SEL()
+{
+  for element in "$@"; do
+    echo "$element"
+  done | awk "NR==$POS
+}
+if [ $OS = "Fedora" ] || [ $OS = "Rhel" ]; then
+    PKGINSTALL="dnf install -y"
+fi
+if [ $OS = "Silverblue" ]; then
+    PKGINSTALL="rpm-ostree install --apply-live"
+fi
+if [ $OS = "Arch" ]; then
+    PKGINSTALL="pacman -S"
+fi
+
+# BASE="$(SEL $BASE)"
+
+
+#For Silverblue/Fedora systems
+sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+
+sudo $PKGINSTALL audit git toolbox rsync flatpak ffmpeg groff i3lock light ncdu neovim ntfs-3g pipewire syncthing unzip \
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh
+
+sudo $PKGINSTALL $(SEL $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT \
+$LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
+$UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
+
+sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
+
+toolbox create
+toolbox run sudo dnf upgrade -y
+toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
+toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh -y
+
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \
+io.mpv.Mpv org.gimp.GIMP org.qutebrowser.qutebrowser org.tribler.Tribler -y
+
+echo "Open vault password:"
+sudo mkdir /media/Vault
+echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+sudo mount /dev/mapper/Vault /media/Vault
+
+rm $HOME/.profile
+mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
+mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+touch /home/$USER_NAME/.local/recently-used.xbel
+git config --global user.name "$GIT_USERNAME"
+git config --global user.email "$GIT_EMAIL"
+git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+git config --global credential.helper store
+mkdir -p /home/$USER_NAME/.cache/zsh
+touch /home/$USER_NAME/.cache/zsh/history
+sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
+touch /home/$USER_NAME/.local/recently-used.xbel
+
+rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
+toolbox run pip install --user ueberzug
+
+sudo mkdir -p /sys/module/snd_hda_intel/parameters/
+sudo mkdir -p /etc/polkit-1/rules.d/
+echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+echo 1 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
+
+echo "[udiskie]
+Identity=unix-group:plugdev
+Action=org.freedesktop.udisks.*
+ResultAny=yes" | sudo tee /etc/polkit-1/localauthority/50-local.d/consolekit.pkla
+
+  echo '/* Allow members of the wheel group to execute any actions
+  * without password authentication, similar to "sudo NOPASSWD:"
+  */
+  polkit.addRule(function(action, subject) {
+  if (subject.isInGroup("wheel")) {
+    return polkit.Result.YES;
+  }
+});' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+echo 'polkit.addRule(function(action, subject) {
+if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+  action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
+  subject.local && subject.active && subject.isInGroup("wheel"))
+  {
+    return polkit.Result.YES;
+  }
+});' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+
+sudo mkdir -p /media
+
+echo '# UDISKS_FILESYSTEM_SHARED
+# ==1: mount filesystem to a shared directory (/media/VolumeName)
+# ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
+# See udisks(8)
+ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+
+ echo "[Unit]
+Description=Lock X session using slock for user %i
+Before=sleep.target
+[Service]
+User=%i
+Type=forking
+Environment=DISPLAY=:0
+ExecStartPre=/usr/bin/xset dpms force suspend
+ExecStart=/usr/bin/i3lock -c 000000
+[Install]
+WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+
+sudo systemctl enable --now suspend@sorath.service #firewalld
+
+echo 'Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+
+echo 'Section "Device"
+        Identifier "Intel Graphics"
+        Driver "intel"
+        Option "TearFree" "true"
+        Option "DRI" "False"
+EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+
+sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+
+sudo usermod -a -G plugdev $USER
+sudo usermod -s /usr/bin/zsh $USER
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+echo '[Service]
+ExecStart=
+ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+
+sudo touch /etc/sudoers.d/$USER_NAME
+echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
+
+echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+sudo grubby --update-kernel=ALL --args=quiet

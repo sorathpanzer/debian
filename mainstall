@@ -6,8 +6,8 @@ GIT_USERNAME=""
 GIT_EMAIL=""
 
 echo "Choose your Distro:"
-OS=$(echo "Fedora FedoraIOT Rhel Arch Void Alpine OpenSuse" | tr " " "\n" | fzf --reverse)
-clear
+echo "[Fedora FedoraIOT Rhel Arch Void Alpine OpenSuse]
+read OS
 
 NA=" " # Not Applicable
 
@@ -324,10 +324,10 @@ sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub
 sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \
 io.mpv.Mpv org.gimp.GIMP org.qutebrowser.qutebrowser org.tribler.Tribler -y
 
-echo "Open vault password:"
-sudo mkdir /media/Vault
-echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
-sudo mount /dev/mapper/Vault /media/Vault
+#echo "Open vault password:"
+#sudo mkdir /media/Vault
+#echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+#sudo mount /dev/mapper/Vault /media/Vault
 
 rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
@@ -342,7 +342,7 @@ touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 touch /home/$USER_NAME/.local/recently-used.xbel
 
-rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
+#rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
 toolbox run pip install --user ueberzug
 
 sudo mkdir -p /sys/module/snd_hda_intel/parameters/

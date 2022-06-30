@@ -330,10 +330,6 @@ toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python
 #echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
 #sudo mount /dev/mapper/Vault /media/Vault
 
-if [ $OS = "FedoraIOT" ]; then
-    rpm-ostree install --apply-live stow
-fi
-
 rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}

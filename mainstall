@@ -302,8 +302,6 @@ if [ $OS = "Arch" ]; then
     PKGINSTALL="pacman -S"
 fi
 
-# BASE="$(SEL $BASE)"
-
 #For Silverblue/Fedora systems
 sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
@@ -330,7 +328,7 @@ toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python
 #echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
 #sudo mount /dev/mapper/Vault /media/Vault
 
-rm $HOME/.profile
+#rm $HOME/.profile
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
 touch /home/$USER_NAME/.local/recently-used.xbel
@@ -341,7 +339,7 @@ git config --global credential.helper store
 mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
-touch /home/$USER_NAME/.local/recently-used.xbel
+#touch /home/$USER_NAME/.local/recently-used.xbel
 
 #rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
 #toolbox run pip install --user ueberzug

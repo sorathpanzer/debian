@@ -18,259 +18,259 @@ NA=" " # Not Applicable
 # 6.OpenSuse Linux"
 
 BTRFSPROGS="
-btrfs-progs
-$NA
-btrfs-progs
-btrfs-progs
-btrfs-progs
+btrfs-progs:\
+$NA:\
+btrfs-progs:\
+btrfs-progs:\
+btrfs-progs:\
 btrfsprogs"
 
 CRONTABS="
-crontabs
-crontabs
-$NA
-$NA
-$NA
+crontabs:\
+crontabs:\
+$NA:\
+$NA:\
+$NA:\
 crontabs"
 
 DBUSX11="
-dbus-x11
-dbus-x11
-dbus
-dbus-x11
-dbus-x11
+dbus-x11:\
+dbus-x11:\
+dbus:\
+dbus-x11:\
+dbus-x11:\
 dbus-x11"
 
 DUNST="
-dunst
-$NA
-dunst
-dunst
-dunst
+dunst:\
+$NA:\
+dunst:\
+dunst:\
+dunst:\
 dunst"
 
 FEH="
-feh
-$NA
-feh
-feh
-feh
+feh:\
+$NA:\
+feh:\
+feh:\
+feh:\
 feh"
 
 FFMPEGTHUMBNAILER="
-ffmpegthumbnailer
-$NA
-ffmpegthumbnailer
-ffmpegthumbnailer
-ffmpegthumbnailer
+ffmpegthumbnailer:\
+$NA:\
+ffmpegthumbnailer:\
+ffmpegthumbnailer:\
+ffmpegthumbnailer:\
 FFmpegThumbnailer"
 
 FZF="
-fzf
-$NA
-fzf
-fzf
-fzf
+fzf:\
+$NA:\
+fzf:\
+fzf:\
+fzf:\
 fzf"
 
 IMAGEMAGICK="
-ImageMagick
-ImageMagick
-imagemagick
-ImageMagick
-imagemagick
+ImageMagick:\
+ImageMagick:\
+imagemagick:\
+ImageMagick:\
+imagemagick:\
 ImageMagick"
 
 LIBXFT="
-libXft
-libXft
-libxft
-libXft
-libxft
+libXft:\
+libXft:\
+libxft:\
+libXft:\
+libxft:\
 libXft"
 
 LMSENSORS="
-lm_sensors
-lm_sensors
-lm_sensors
-lm_sensors
-lm-sensors
+lm_sensors:\
+lm_sensors:\
+lm_sensors:\
+lm_sensors:\
+lm-sensors:\
 lm_sensors"
 
 PANDOCPDF="
-pandoc-pdf
-pandoc-pdf
-pandoc
-pandoc
-pandoc
+pandoc-pdf:\
+pandoc-pdf:\
+pandoc:\
+pandoc:\
+pandoc:\
 pandoc"
 
 PICOM="
-picom
-$NA
-picom
-picom
-picom
+picom:\
+$NA:\
+picom:\
+picom:\
+picom:\
 picom"
 
 POPPLERUTILS="
-poppler-utils
-poppler
-poppler-utils
-poppler-utils
-poppler-utils
+poppler-utils:\
+poppler:\
+poppler-utils:\
+poppler-utils:\
+poppler-utils:\
 poppler-utils"
 
 PULSEAUDIOUTILS="
-pulseaudio-utils
-pulseaudio-utils
-pulseaudio
-pulseaudio-utils
-pulseaudio-utils
+pulseaudio-utils:\
+pulseaudio-utils:\
+pulseaudio:\
+pulseaudio-utils:\
+pulseaudio-utils:\
 pulseaudio-utils"
 
 PYTHON3SIX="
-python3-six
-python-six
-python-six
-py3-six
-python3-six
+python3-six:\
+python-six:\
+python-six:\
+py3-six:\
+python3-six:\
 python3-six"
 
 QEMU="
-qemu
-qemu-img
-qemu-base
-qemu
-qemu
+qemu:\
+qemu-img:\
+qemu-base:\
+qemu:\
+qemu:\
 qemu"
 
 SCROT="
-scrot
-$NA
-scrot
-scrot
-scrot
+scrot:\
+$NA:\
+scrot:\
+scrot:\
+scrot:\
 scrot"
 
 SOX="
-sox
-$NA
-sox
-sox
-sox
+sox:\
+$NA:\
+sox:\
+sox:\
+sox:\
 sox"
 
 STOW="
-stow
-$NA
-stow
-stow
-stow
+stow:\
+$NA:\
+stow:\
+stow:\
+stow:\
 stow"
 
 TIG="
-tig
-tig
-tig
-tig
-tig
+tig:\
+tig:\
+tig:\
+tig:\
+tig:\
 $NA"
 
 TRASHCLI="
-trash-cli
-$NA
-trash-cli
-trash-cli
-trash-cli
+trash-cli:\
+$NA:\
+trash-cli:\
+trash-cli:\
+trash-cli:\
 trash-cli"
 
 UDISKIE="
-udiskie
-$NA
-udiskie
-udiskie
-udiskie
+udiskie:\
+$NA:\
+udiskie:\
+udiskie:\
+udiskie:\
 udiskie"
 
 XDOTOOL="
-xdotool
-$NA
-xdotool
-xdotool
-xdotool
+xdotool:\
+$NA:\
+xdotool:\
+xdotool:\
+xdotool:\
 xdotool"
 
 XINPUT="
-xinput
-xinput
-xorg-xinput
-xinput
-xinput
+xinput:\
+xinput:\
+xorg-xinput:\
+xinput:\
+xinput:\
 xinput"
 
 XF86VIDEOINTEL="
-xorg-x11-drv-intel
-$NA
-xf86-video-intel
-xf86-video-intel
-xf86-video-intel
+xorg-x11-drv-intel:\
+$NA:\
+xf86-video-intel:\
+xf86-video-intel:\
+xf86-video-intel:\
 xf86-video-intel"
 
 XORGSERVER="
-xorg-x11-server-Xorg
-xorg-x11-server-Xorg
-xorg-server
-xorg-minimal
-xorg-server
+xorg-x11-server-Xorg:\
+xorg-x11-server-Xorg:\
+xorg-server:\
+xorg-minimal:\
+xorg-server:\
 xorg-server"
 
 XINIT="
-xorg-x11-xinit
-xorg-x11-xinitxorg-xinit
-xinit
-xinit
-xinit
+xorg-x11-xinit:\
+xorg-x11-xinitxorg-xinit:\
+xinit:\
+xinit:\
+xinit:\
 xinit"
 
 XRANDR="
-xrandr
-xrandr
-xorg-xrandr
-xrandr
-xrandr
+xrandr:\
+xrandr:\
+xorg-xrandr:\
+xrandr:\
+xrandr:\
 xrandr"
 
 XRDB="
-xrdb
-xrdb
-xorg-xrdb
-xrdb
-xrdb
+xrdb:\
+xrdb:\
+xorg-xrdb:\
+xrdb:\
+xrdb:\
 xrdb"
 
 XSET="
-xset
-xset
-xorg-xset
-xset
-xset
+xset:\
+xset:\
+xorg-xset:\
+xset:\
+xset:\
 xset"
 
 ZATHURA="
-zathura
-$NA
-zathura
-zathura
-zathura
+zathura:\
+$NA:\
+zathura:\
+zathura:\
+zathura:\
 zathura"
 
 ZATHURAPDF="
-zathura-pdf-poppler
-$NA
-zathura-pdf-poppler
-zathura-pdf-poppler
-zathura-pdf-poppler
+zathura-pdf-poppler:\
+$NA:\
+zathura-pdf-poppler:\
+zathura-pdf-poppler:\
+zathura-pdf-poppler:\
 Zathura-PDF-Poppler"
 
 case "${OS}" in
@@ -287,7 +287,7 @@ SEL()
 {
   for element in "$@"; do
     echo "$element"
-  done | awk "NR==$POS"
+  done | cut -d ':' -f $POS"
 }
 
 if [ $OS = "Fedora" ] || [ $OS = "Rhel" ]; then

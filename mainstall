@@ -287,7 +287,7 @@ SEL()
 {
   for element in "$@"; do
     echo "$element"
-  done | cut -d ':' -f $POS"
+  done | cut -d ':' -f $POS
 }
 
 if [ $OS = "Fedora" ] || [ $OS = "Rhel" ]; then

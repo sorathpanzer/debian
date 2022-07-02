@@ -29,6 +29,14 @@ NA=" " # Not Applicable
 # 6.OpenSuse Linux
 # 7.Debian"
 
+ANDROIDTOOLS="
+android-tools:\
+$NA
+android-tools:\
+android-tools:\
+android-tools:\
+android-tools"
+
 BTRFSPROGS="
 btrfs-progs:\
 $NA:\
@@ -334,9 +342,9 @@ sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-releas
 fi
 
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh android-tools xclip usbutils
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils
 
-sudo $PKGINSTALL $(SEL $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
+sudo $PKGINSTALL $(SEL $ANDROID-TOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 

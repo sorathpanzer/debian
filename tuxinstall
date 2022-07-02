@@ -302,7 +302,7 @@ SEL()
   done | cut -d ':' -f $POS
 }
 
-if [ $OS = "fedora" ] || [ $OS = "almalinux" ]; then
+if [ $OS = "fedora" ] || [ $OS = "rhel" ]; then
     PKGINSTALL="dnf install -y"
 fi
 
@@ -314,7 +314,7 @@ if [ $OS = "Arch" ]; then
     PKGINSTALL="pacman -S"
 fi
 
-if [ $OS = "almalinux" ]; then
+if [ $OS = "rhel" ]; then
     sudo dnf install epel-release
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm 
 fi

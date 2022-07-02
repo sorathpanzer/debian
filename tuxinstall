@@ -5,9 +5,20 @@ LVM_PASSWORD=""
 GIT_USERNAME=""
 GIT_EMAIL=""
 
-echo "Choose your Distro:"
-echo "[Fedora FedoraIOT Rhel Arch Void Alpine OpenSuse]"
-read OS
+RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
+
+if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
+    OS≃"$RELEASE"
+fi
+
+if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
+    OS="FedoraIOT"
+fi
+
+case $RELEASE in
+    almalinux) OS="rhel" ;;
+esac
+
 NA=" " # Not Applicable
 # DISTRO="
 # 1.Fedora/IOT
@@ -15,7 +26,8 @@ NA=" " # Not Applicable
 # 3.Arch linux
 # 4.Void Linux
 # 5.Alpine Linux
-# 6.OpenSuse Linux"
+# 6.OpenSuse Linux
+# 7.Debian"
 
 BTRFSPROGS="
 btrfs-progs:\

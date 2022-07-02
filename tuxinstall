@@ -31,7 +31,7 @@ NA=" " # Not Applicable
 
 ANDROIDTOOLS="
 android-tools:\
-$NA
+$NA:\
 android-tools:\
 android-tools:\
 android-tools:\
@@ -111,7 +111,7 @@ libXft"
 
 LIGHT="
 light:\
-$NA
+$NA:\
 light:\
 light:\
 light:\
@@ -303,8 +303,8 @@ Zathura-PDF-Poppler"
 
 case "${OS}" in
 	"")                 echo "No option was specified."; exit 1 ;;
-    Fedora|FedoraIOT)   POS="1" ;;
-    Rhel)               POS="2" ;;
+    fedora|FedoraIOT)   POS="1" ;;
+    rhel)               POS="2" ;;
     Arch)               POS="3" ;;
     Void)               POS="4" ;;
     Alpine)             POS="5" ;;

@@ -318,7 +318,7 @@ fi
 sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock light ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh android-tools
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh android-tools xclip
 
 sudo $PKGINSTALL $(SEL $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \

@@ -302,7 +302,7 @@ SEL()
   done | cut -d ':' -f $POS
 }
 
-if [ $OS = "Fedora" ] || [ $OS = "Rhel" ]; then
+if [ $OS = "fedora" ] || [ $OS = "almalinux" ]; then
     PKGINSTALL="dnf install -y"
 fi
 
@@ -314,8 +314,14 @@ if [ $OS = "Arch" ]; then
     PKGINSTALL="pacman -S"
 fi
 
-#For Silverblue/Fedora systems
+if [ $OS = "almalinux" ]; then
+    sudo dnf install epel-release
+    sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm 
+fi
+
+if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then
 sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+fi
 
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock light ncdu neovim ntfs-3g pipewire syncthing unzip \
 w3m wireguard-tools xdg-user-dirs youtube-dl zsh android-tools xclip usbutils

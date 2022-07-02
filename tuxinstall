@@ -8,7 +8,7 @@ GIT_EMAIL=""
 RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
-    OS≃"$RELEASE"
+    OS="$RELEASE"
 fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then

@@ -308,6 +308,7 @@ fi
 
 if [ $OS = "FedoraIOT" ]; then
     PKGINSTALL="rpm-ostree install --apply-live"
+    sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 fi
 
 if [ $OS = "Arch" ]; then
@@ -329,8 +330,6 @@ w3m wireguard-tools xdg-user-dirs youtube-dl zsh android-tools xclip usbutils
 sudo $PKGINSTALL $(SEL $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
-
-sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
 
 toolbox create
 toolbox run sudo dnf upgrade -y

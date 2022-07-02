@@ -127,7 +127,7 @@ lm_sensors"
 
 PANDOCPDF="
 pandoc-pdf:\
-pandoc-pdf:\
+$NA:\
 pandoc:\
 pandoc:\
 pandoc:\
@@ -255,7 +255,7 @@ xorg-server"
 
 XINIT="
 xorg-x11-xinit:\
-xorg-x11-xinitxorg-xinit:\
+xorg-x11-xinit:\
 xinit:\
 xinit:\
 xinit:\
@@ -351,7 +351,7 @@ $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET
 toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
-toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh -y
+toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf -y
 
 #sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 #sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \

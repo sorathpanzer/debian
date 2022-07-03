@@ -340,10 +340,7 @@ if [ $OS = "rhel" ]; then
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/fzf-0.26.0-1.fc34.x86_64.rpm -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/scrot-1.6-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/trash-cli-0.20.11.7-2.fc34.noarch.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/zathura-0.4.7-2.fc34.i686.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/zathura-pdf-poppler-0.3.0-3.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20160805.1-5.fc36.x86_64.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then
@@ -360,7 +357,7 @@ $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET
 toolbox create
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
-toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf -y
+toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf zathura zathura-pdf-poppler -y
 
 #sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 #sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \

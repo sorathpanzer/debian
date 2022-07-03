@@ -336,6 +336,8 @@ if [ $OS = "rhel" ]; then
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/stow-2.3.1-4.fc34.noarch.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/libexif-devel-0.6.22-4.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/giflib-devel-5.2.1-7.fc34.x86_64.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then

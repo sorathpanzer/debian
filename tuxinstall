@@ -335,13 +335,13 @@ if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/stow-2.3.1-4.fc34.noarch.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/android-tools-31.0.2-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/fzf-0.26.0-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/scrot-1.6-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/libxdo-3.20160805.1-2.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/stow-2.3.1-4.fc34.noarch.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/android-tools-31.0.2-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/fzf-0.26.0-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/scrot-1.6-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/libxdo-3.20160805.1-2.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then

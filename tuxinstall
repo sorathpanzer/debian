@@ -336,8 +336,14 @@ if [ $OS = "rhel" ]; then
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/stow-2.3.1-4.fc34.noarch.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/libexif-devel-0.6.22-4.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/giflib-devel-5.2.1-7.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/android-tools-31.0.2-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/fzf-0.26.0-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/scrot-1.6-1.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/trash-cli-0.20.11.7-2.fc34.noarch.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/zathura-0.4.7-2.fc34.i686.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/zathura-pdf-poppler-0.3.0-3.fc34.x86_64.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then

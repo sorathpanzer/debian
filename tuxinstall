@@ -335,6 +335,7 @@ if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/stow-2.3.1-7.fc36.noarch.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then

@@ -396,7 +396,7 @@ sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 #toolbox run pip install --user ueberzug
 
 
-if [ $OS = "rhel" ] || [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then
+if [ $OS != "rhel" ] || [ $OS != "fedora" ] || [ $OS != "FedoraIOT" ]; then
     sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 fi
 

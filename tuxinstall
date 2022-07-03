@@ -395,6 +395,11 @@ sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 #rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
 #toolbox run pip install --user ueberzug
 
+
+if [ $OS = "rhel" ] || [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then
+    sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+fi
+
 if [ $OS = "rhel" ]; then
     toolbox run pip install trash-cli
 fi
@@ -465,7 +470,6 @@ echo 'Section "Device"
         Option "DRI" "False"
 EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 
-sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 
 echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules

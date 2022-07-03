@@ -340,7 +340,7 @@ if [ $OS = "rhel" ]; then
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/fzf-0.26.0-1.fc34.x86_64.rpm -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/scrot-1.6-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20160805.1-5.fc36.x86_64.rpm -y
+    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/xdotool-3.20150503.1-10.el8.x86_64.rpm -y
 fi
 
 if [ $OS = "fedora" ] || [ $OS = "FedoraIOT" ]; then

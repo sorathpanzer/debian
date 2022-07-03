@@ -364,9 +364,9 @@ toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel li
 toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf zathura zathura-pdf-poppler -y
 
 if [ $OS = "rhel" ]; then
-    sed -i 's/33/36/' /etc/containers/toolbox.conf
-    sed -i '/distro/s/^## //g'
-    sed -i '/release/s/^## //g'
+    sudo sed -i 's/33/36/' /etc/containers/toolbox.conf
+    sudo sed -i '/distro/s/^## //g' /etc/containers/toolbox.conf
+    sudo sed -i '/release/s/^## //g' /etc/containers/toolbox.conf
 fi
 
 #sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

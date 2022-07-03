@@ -31,277 +31,277 @@ NA=" " # Not Applicable
 # 6.OpenSuse Linux
 # 7.Debian"
 
-ANDROIDTOOLS="
+ANDROIDTOOLS=(
 android-tools:\
 $NA:\
 android-tools:\
 android-tools:\
 android-tools:\
-android-tools"
+android-tools)
 
-BTRFSPROGS="
+BTRFSPROGS=(
 btrfs-progs:\
 $NA:\
 btrfs-progs:\
 btrfs-progs:\
 btrfs-progs:\
-btrfsprogs"
+btrfsprogs)
 
-CRONTABS="
+CRONTABS=(
 crontabs:\
 crontabs:\
 $NA:\
 $NA:\
 $NA:\
-crontabs"
+crontabs)
 
-DBUSX11="
+DBUSX11=(
 dbus-x11:\
 dbus-x11:\
 dbus:\
 dbus-x11:\
 dbus-x11:\
-dbus-x11"
+dbus-x11)
 
-DUNST="
+DUNST=(
 dunst:\
 $NA:\
 dunst:\
 dunst:\
 dunst:\
-dunst"
+dunst)
 
-FEH="
+FEH=(
 feh:\
 $NA:\
 feh:\
 feh:\
 feh:\
-feh"
+feh)
 
-FFMPEGTHUMBNAILER="
+FFMPEGTHUMBNAILER=(
 ffmpegthumbnailer:\
 $NA:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
-FFmpegThumbnailer"
+FFmpegThumbnailer)
 
-FZF="
+FZF=(
 fzf:\
 $NA:\
 fzf:\
 fzf:\
 fzf:\
-fzf"
+fzf)
 
-IMAGEMAGICK="
+IMAGEMAGICK=(
 ImageMagick:\
 ImageMagick:\
 imagemagick:\
 ImageMagick:\
 imagemagick:\
-ImageMagick"
+ImageMagick)
 
-LIBXFT="
+LIBXFT=(
 libXft:\
 libXft:\
 libxft:\
 libXft:\
 libxft:\
-libXft"
+libXft)
 
-LIGHT="
+LIGHT=(
 light:\
 $NA:\
 light:\
 light:\
 light:\
-light"
+light)
 
-LMSENSORS="
+LMSENSORS=(
 lm_sensors:\
 lm_sensors:\
 lm_sensors:\
 lm_sensors:\
 lm-sensors:\
-lm_sensors"
+lm_sensors)
 
-PANDOCPDF="
+PANDOCPDF=(
 pandoc-pdf:\
 $NA:\
 pandoc:\
 pandoc:\
 pandoc:\
-pandoc"
+pandoc)
 
-PICOM="
+PICOM=(
 picom:\
 $NA:\
 picom:\
 picom:\
 picom:\
-picom"
+picom)
 
-POPPLERUTILS="
+POPPLERUTILS=(
 poppler-utils:\
 poppler:\
 poppler-utils:\
 poppler-utils:\
 poppler-utils:\
-poppler-utils"
+poppler-utils)
 
-PULSEAUDIOUTILS="
+PULSEAUDIOUTILS=(
 pulseaudio-utils:\
 pulseaudio-utils:\
 pulseaudio:\
 pulseaudio-utils:\
 pulseaudio-utils:\
-pulseaudio-utils"
+pulseaudio-utils)
 
-PYTHON3SIX="
+PYTHON3SIX=(
 python3-six:\
 python-six:\
 python-six:\
 py3-six:\
 python3-six:\
-python3-six"
+python3-six)
 
-QEMU="
+QEMU=(
 qemu:\
 qemu-img:\
 qemu-base:\
 qemu:\
 qemu:\
-qemu"
+qemu)
 
-SCROT="
+SCROT=(
 scrot:\
 $NA:\
 scrot:\
 scrot:\
 scrot:\
-scrot"
+scrot)
 
-SOX="
+SOX=(
 sox:\
 $NA:\
 sox:\
 sox:\
 sox:\
-sox"
+sox)
 
-STOW="
+STOW=(
 stow:\
 $NA:\
 stow:\
 stow:\
 stow:\
-stow"
+stow)
 
-TIG="
+TIG=(
 tig:\
 tig:\
 tig:\
 tig:\
 tig:\
-$NA"
+$NA)
 
-TRASHCLI="
+TRASHCLI=(
 trash-cli:\
 $NA:\
 trash-cli:\
 trash-cli:\
 trash-cli:\
-trash-cli"
+trash-cli)
 
-UDISKIE="
+UDISKIE=(
 udiskie:\
 $NA:\
 udiskie:\
 udiskie:\
 udiskie:\
-udiskie"
+udiskie)
 
-XDOTOOL="
+XDOTOOL=(
 xdotool:\
 $NA:\
 xdotool:\
 xdotool:\
 xdotool:\
-xdotool"
+xdotool)
 
-XINPUT="
+XINPUT=(
 xinput:\
 xinput:\
 xorg-xinput:\
 xinput:\
 xinput:\
-xinput"
+xinput)
 
-XF86VIDEOINTEL="
+XF86VIDEOINTEL=(
 xorg-x11-drv-intel:\
 xorg-x11-drv-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
-xf86-video-intel"
+xf86-video-intel)
 
-XORGSERVER="
+XORGSERVER=(
 xorg-x11-server-Xorg:\
 xorg-x11-server-Xorg:\
 xorg-server:\
 xorg-minimal:\
 xorg-server:\
-xorg-server"
+xorg-server)
 
-XINIT="
+XINIT=(
 xorg-x11-xinit:\
 xorg-x11-xinit:\
 xinit:\
 xinit:\
 xinit:\
-xinit"
+xinit)
 
-XRANDR="
+XRANDR=(
 xrandr:\
 xrandr:\
 xorg-xrandr:\
 xrandr:\
 xrandr:\
-xrandr"
+xrandr)
 
-XRDB="
+XRDB=(
 xrdb:\
 xrdb:\
 xorg-xrdb:\
 xrdb:\
 xrdb:\
-xrdb"
+xrdb)
 
-XSET="
+XSET=(
 xset:\
 xset:\
 xorg-xset:\
 xset:\
 xset:\
-xset"
+xset)
 
-ZATHURA="
+ZATHURA=(
 zathura:\
 $NA:\
 zathura:\
 zathura:\
 zathura:\
-zathura"
+zathura)
 
-ZATHURAPDF="
+ZATHURAPDF=(
 zathura-pdf-poppler:\
 $NA:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
-Zathura-PDF-Poppler"
+Zathura-PDF-Poppler)
 
 case "${OS}" in
 	"")                 echo "No option was specified."; exit 1 ;;
@@ -354,7 +354,7 @@ fi
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
 w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils
 
-sudo $PKGINSTALL $(SEL $ANDROID-TOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
+sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 

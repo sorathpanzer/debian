@@ -241,7 +241,7 @@ xinput)
 
 XF86VIDEOINTEL=(
 xorg-x11-drv-intel:\
-xorg-x11-drv-intel:\
+$NA:\
 xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
@@ -336,7 +336,6 @@ fi
 if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
-    sudo dnf install elrepo-release -y
     sudo dnf update -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/stow-2.3.1-4.fc34.noarch.rpm -y
     sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/android-tools-31.0.2-1.fc34.x86_64.rpm -y

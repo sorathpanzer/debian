@@ -364,7 +364,7 @@ if [ $OS = "rhel" ]; then
     sudo sed -i '$d' /etc/containers/toolbox.conf
 fi
 
-toolbox create
+toolbox create -y
 toolbox run sudo dnf upgrade -y
 toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
 toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf zathura zathura-pdf-poppler -y

@@ -362,6 +362,7 @@ if [ $OS = "rhel" ]; then
     sudo sed -i 's/33/36/' /etc/containers/toolbox.conf
     sudo sed -i '/distro/s/^## //g' /etc/containers/toolbox.conf
     sudo sed -i '/release/s/^## //g' /etc/containers/toolbox.conf
+    sudo sed -i '$d' /etc/containers/toolbox.conf
 fi
 
 toolbox create

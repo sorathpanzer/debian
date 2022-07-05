@@ -23,15 +23,17 @@ esac
 
 NA=" " # Not Applicable
 # DISTRO="
-# 1.Fedora/IOT
-# 2.Rhel like systems
-# 3.Arch linux
-# 4.Void Linux
-# 5.Alpine Linux
-# 6.OpenSuse Linux
-# 7.Debian"
+# 1.Debian/Ubuntu
+# 2.Fedora/IOT
+# 3.Rhel like systems
+# 4.Arch linux
+# 5.Void Linux
+# 6.Alpine Linux
+# 7.OpenSuse Linux
+# 8.Debian"
 
 ANDROIDTOOLS=(
+android-tools-adb android-tools-fastboot:\
 android-tools:\
 $NA:\
 android-tools:\
@@ -40,6 +42,7 @@ android-tools:\
 android-tools)
 
 BTRFSPROGS=(
+btrfs-progs
 btrfs-progs:\
 $NA:\
 btrfs-progs:\
@@ -48,6 +51,7 @@ btrfs-progs:\
 btrfsprogs)
 
 CRONTABS=(
+python3-crontab
 crontabs:\
 crontabs:\
 $NA:\
@@ -58,12 +62,14 @@ crontabs)
 DBUSX11=(
 dbus-x11:\
 dbus-x11:\
+dbus-x11:\
 dbus:\
 dbus-x11:\
 dbus-x11:\
 dbus-x11)
 
 DUNST=(
+dunst:\
 dunst:\
 $NA:\
 dunst:\
@@ -73,6 +79,7 @@ dunst)
 
 FEH=(
 feh:\
+feh:\
 $NA:\
 feh:\
 feh:\
@@ -80,6 +87,7 @@ feh:\
 feh)
 
 FFMPEGTHUMBNAILER=(
+ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 $NA:\
 ffmpegthumbnailer:\
@@ -96,6 +104,7 @@ fzf:\
 fzf)
 
 IMAGEMAGICK=(
+imagemagick:\
 ImageMagick:\
 ImageMagick:\
 imagemagick:\
@@ -104,6 +113,7 @@ imagemagick:\
 ImageMagick)
 
 LIBXFT=(
+libxft2:\
 libXft:\
 libXft:\
 libxft:\
@@ -113,6 +123,7 @@ libXft)
 
 LIGHT=(
 light:\
+light:\
 $NA:\
 light:\
 light:\
@@ -120,6 +131,7 @@ light:\
 light)
 
 LMSENSORS=(
+lm-sensors:\
 lm_sensors:\
 lm_sensors:\
 lm_sensors:\
@@ -137,6 +149,7 @@ pandoc)
 
 PICOM=(
 picom:\
+picom:\
 $NA:\
 picom:\
 picom:\
@@ -144,6 +157,7 @@ picom:\
 picom)
 
 POPPLERUTILS=(
+poppler-utils:\
 poppler-utils:\
 poppler:\
 poppler-utils:\
@@ -154,12 +168,14 @@ poppler-utils)
 PULSEAUDIOUTILS=(
 pulseaudio-utils:\
 pulseaudio-utils:\
+pulseaudio-utils:\
 pulseaudio:\
 pulseaudio-utils:\
 pulseaudio-utils:\
 pulseaudio-utils)
 
 PYTHON3SIX=(
+python3-six:\
 python3-six:\
 python-six:\
 python-six:\
@@ -169,6 +185,7 @@ python3-six)
 
 QEMU=(
 qemu:\
+qemu:\
 qemu-img:\
 qemu-base:\
 qemu:\
@@ -176,6 +193,7 @@ qemu:\
 qemu)
 
 SCROT=(
+scrot:\
 scrot:\
 $NA:\
 scrot:\
@@ -185,6 +203,7 @@ scrot)
 
 SOX=(
 sox:\
+sox:\
 $NA:\
 sox:\
 sox:\
@@ -192,6 +211,7 @@ sox:\
 sox)
 
 STOW=(
+stow:\
 stow:\
 $NA:\
 stow:\
@@ -205,9 +225,11 @@ tig:\
 tig:\
 tig:\
 tig:\
+tig:\
 $NA)
 
 TRASHCLI=(
+trash-cli:\
 trash-cli:\
 $NA:\
 trash-cli:\
@@ -217,6 +239,7 @@ trash-cli)
 
 UDISKIE=(
 udiskie:\
+udiskie:\
 $NA:\
 udiskie:\
 udiskie:\
@@ -224,6 +247,7 @@ udiskie:\
 udiskie)
 
 XDOTOOL=(
+xdotool:\
 xdotool:\
 $NA:\
 xdotool:\
@@ -234,12 +258,14 @@ xdotool)
 XINPUT=(
 xinput:\
 xinput:\
+xinput:\
 xorg-xinput:\
 xinput:\
 xinput:\
 xinput)
 
 XF86VIDEOINTEL=(
+xserver-xorg-video-intel
 xorg-x11-drv-intel:\
 $NA:\
 xf86-video-intel:\
@@ -248,6 +274,7 @@ xf86-video-intel:\
 xf86-video-intel)
 
 XORGSERVER=(
+xserver-xorg
 xorg-x11-server-Xorg:\
 xorg-x11-server-Xorg:\
 xorg-server:\
@@ -256,6 +283,7 @@ xorg-server:\
 xorg-server)
 
 XINIT=(
+xinit:\
 xorg-x11-xinit:\
 xorg-x11-xinit:\
 xinit:\
@@ -264,6 +292,7 @@ xinit:\
 xinit)
 
 XRANDR=(
+x11-xserver-utils
 xrandr:\
 xrandr:\
 xorg-xrandr:\
@@ -272,6 +301,7 @@ xrandr:\
 xrandr)
 
 XRDB=(
+x11-xserver-utils
 xrdb:\
 xrdb:\
 xorg-xrdb:\
@@ -280,6 +310,7 @@ xrdb:\
 xrdb)
 
 XSET=(
+x11-xserver-utils
 xset:\
 xset:\
 xorg-xset:\
@@ -289,6 +320,7 @@ xset)
 
 ZATHURA=(
 zathura:\
+zathura:\
 $NA:\
 zathura:\
 zathura:\
@@ -296,6 +328,7 @@ zathura:\
 zathura)
 
 ZATHURAPDF=(
+zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 $NA:\
 zathura-pdf-poppler:\
@@ -305,12 +338,13 @@ Zathura-PDF-Poppler)
 
 case "${OS}" in
 	"")                 echo "No option was specified."; exit 1 ;;
-    fedora|FedoraIOT)   POS="1" ;;
-    rhel)               POS="2" ;;
-    Arch)               POS="3" ;;
-    Void)               POS="4" ;;
-    Alpine)             POS="5" ;;
-    OpenSuse)           POS="6" ;;
+    debian|ubuntu)	POS="1" ;;
+    fedora|FedoraIOT)   POS="2" ;;
+    rhel)               POS="3" ;;
+    Arch)               POS="4" ;;
+    Void)               POS="5" ;;
+    Alpine)             POS="6" ;;
+    OpenSuse)           POS="7" ;;
 esac
 
 SEL()

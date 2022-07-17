@@ -51,7 +51,7 @@ btrfs-progs:\
 btrfsprogs)
 
 CRONTABS=(
-python3-crontab
+python3-crontab:\
 crontabs:\
 crontabs:\
 $NA:\
@@ -265,7 +265,7 @@ xinput:\
 xinput)
 
 XF86VIDEOINTEL=(
-xserver-xorg-video-intel
+xserver-xorg-video-intel:\
 xorg-x11-drv-intel:\
 $NA:\
 xf86-video-intel:\
@@ -274,7 +274,7 @@ xf86-video-intel:\
 xf86-video-intel)
 
 XORGSERVER=(
-xserver-xorg
+xserver-xorg:\
 xorg-x11-server-Xorg:\
 xorg-x11-server-Xorg:\
 xorg-server:\
@@ -292,7 +292,7 @@ xinit:\
 xinit)
 
 XRANDR=(
-x11-xserver-utils
+x11-xserver-utils:\
 xrandr:\
 xrandr:\
 xorg-xrandr:\
@@ -301,7 +301,7 @@ xrandr:\
 xrandr)
 
 XRDB=(
-x11-xserver-utils
+x11-xserver-utils:\
 xrdb:\
 xrdb:\
 xorg-xrdb:\
@@ -310,7 +310,7 @@ xrdb:\
 xrdb)
 
 XSET=(
-x11-xserver-utils
+x11-xserver-utils:\
 xset:\
 xset:\
 xorg-xset:\

@@ -438,11 +438,11 @@ if [ $OS = "rhel" ]; then
     toolbox run pip install trash-cli
 fi
 
-sudo mkdir -p /sys/module/snd_hda_intel/parameters/
+#sudo mkdir -p /sys/module/snd_hda_intel/parameters/
 sudo mkdir -p /etc/polkit-1/rules.d/
 
 echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo 1 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+#echo 1 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
 echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
 
 echo "[udiskie]
@@ -487,7 +487,7 @@ ExecStart=/usr/bin/i3lock -c 000000
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
 
-sudo systemctl enable --now suspend@sorath.service #firewalld
+#sudo systemctl enable --now suspend@sorath.service #firewalld
 
 echo 'Section "InputClass"
         Identifier "libinput touchpad catchall"
@@ -508,7 +508,10 @@ EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
 
-sudo usermod -a -G plugdev $USER
+if [ $OS != "FedoraIOT" ] || [ $OS != "fedora" ] || [ $OS != "rhel" ]; then
+    sudo usermod -a -G plugdev $USER
+fi
+
 sudo usermod -s /usr/bin/zsh $USER
 
 sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/

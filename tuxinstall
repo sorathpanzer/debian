@@ -33,7 +33,7 @@ NA=" " # Not Applicable
 # 8.Debian"
 
 ANDROIDTOOLS=(
-android-tools-adb android-tools-fastboot:\
+android-tools-adb:\
 android-tools:\
 $NA:\
 android-tools:\
@@ -42,7 +42,7 @@ android-tools:\
 android-tools)
 
 BTRFSPROGS=(
-btrfs-progs
+btrfs-progs:\
 btrfs-progs:\
 $NA:\
 btrfs-progs:\

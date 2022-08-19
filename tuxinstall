@@ -385,7 +385,7 @@ if [ $OS = "rhel" ]; then
 fi
 
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils pmbootstrap
 
 sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \

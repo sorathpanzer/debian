@@ -375,6 +375,7 @@ if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
+    sudo dnf install tar
     sh <(curl -L https://nixos.org/nix/install) --daemon
     nix-env -iA nixpkgs.stow
     nix-env -iA nixpkgs.android-tools
@@ -438,6 +439,7 @@ mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,n
 touch /home/$USER_NAME/.local/recently-used.xbel
 git config --global user.name "$GIT_USERNAME"
 git config --global user.email "$GIT_EMAIL"
+echo "Cloning my dotfiles..."
 git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
 git config --global credential.helper store
 mkdir -p /home/$USER_NAME/.cache/zsh

@@ -375,17 +375,34 @@ if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/stow-2.3.1-4.fc34.noarch.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/android-tools-31.0.2-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/fzf-0.26.0-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/scrot-1.6-1.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/libxdo-3.20160805.1-2.fc34.x86_64.rpm -y
-    sudo dnf install https://github.com/sorathpanzer/debian/raw/main/packages/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    nix-env -iA nixpkgs.stow
+    nix-env -iA nixpkgs.android-tools
+    nix-env -iA nixpkgs.ffmpegthumbnailer
+    nix-env -iA nixpkgs.fzf
+    nix-env -iA nixpkgs.scrot
+    nix-env -iA nixpkgs.xdotool
+    nix-env -iA nixpkgs.btrfs-progs
+    nix-env -iA nixpkgs.dunst
+    nix-env -iA nixpkgs.feh
+    nix-env -iA nixpkgs.trash-cli
+    nix-env -iA nixpkgs.zathura
+
+    nix-env -iA nixpkgs.light
+    nix-env -iA nixpkgs.picom
+    nix-env -iA nixpkgs.sox
+    nix-env -iA nixpkgs.udiskie
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/stow-2.3.1-4.fc34.noarch.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/android-tools-31.0.2-1.fc34.x86_64.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/fzf-0.26.0-1.fc34.x86_64.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/scrot-1.6-1.fc34.x86_64.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/libxdo-3.20160805.1-2.fc34.x86_64.rpm -y
+    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
 fi
 
 sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils pmbootstrap
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils
 
 sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \

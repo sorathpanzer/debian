@@ -376,7 +376,11 @@ if [ $OS = "rhel" ]; then
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
     sudo dnf install tar -y
+
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
+    . /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh
+    sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
+
     nix-env -iA nixpkgs.stow
     nix-env -iA nixpkgs.android-tools
     nix-env -iA nixpkgs.ffmpegthumbnailer

@@ -375,8 +375,8 @@ if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
     sudo dnf update -y
-    sudo dnf install tar
-    sh <(curl -L https://nixos.org/nix/install) --daemon
+    sudo dnf install tar -y
+    sh <(curl -L https://nixos.org/nix/install) --no-daemon
     nix-env -iA nixpkgs.stow
     nix-env -iA nixpkgs.android-tools
     nix-env -iA nixpkgs.ffmpegthumbnailer

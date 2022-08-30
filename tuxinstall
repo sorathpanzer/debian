@@ -426,7 +426,7 @@ mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 
-if [[ -d /media/Vault ]]
+if [[ -d /media/Vault ]]; then
     echo "Open vault password:"
     sudo mkdir /media/Vault
     echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault

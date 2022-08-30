@@ -115,8 +115,8 @@ ImageMagick)
 
 LIBXFT=(
 libxft2:\
-libXft:\
-libXft:\
+libXft-devel:\
+libXft-devel:\
 libxft:\
 libXft:\
 libxft:\
@@ -142,8 +142,8 @@ lm_sensors)
 
 PANDOCPDF=(
 pandoc-pdf:\
+pandoc-pdf:\
 $NA:\
-pandoc:\
 pandoc:\
 pandoc:\
 pandoc)
@@ -339,7 +339,7 @@ Zathura-PDF-Poppler)
 
 case "${OS}" in
 	"")                 echo "No option was specified."; exit 1 ;;
-    debian|ubuntu)	POS="1" ;;
+    debian|ubuntu)	    POS="1" ;;
     fedora|FedoraIOT)   POS="2" ;;
     rhel)               POS="3" ;;
     Arch)               POS="4" ;;
@@ -364,16 +364,14 @@ if [ $OS = "FedoraIOT" ]; then
     PKGINSTALL="rpm-ostree install"
     sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo rpm-ostree install flatpak
     sudo rpm-ostree ex apply-live --allow-replacement
-fi
-
-if [ $OS = "Arch" ]; then
-    PKGINSTALL="pacman -S"
 fi
 
 if [ $OS = "rhel" ]; then
     sudo dnf install epel-release -y
     sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+    sudo dnf config-manager --set-enabled crb
     sudo dnf update -y
     sudo dnf install tar -y
 
@@ -392,51 +390,29 @@ if [ $OS = "rhel" ]; then
     nix-env -iA nixpkgs.feh
     nix-env -iA nixpkgs.trash-cli
     nix-env -iA nixpkgs.zathura
+    nix-env -iA nixpkgs.pandoc
+    nix-env -iA nixpkgs.qutebrowser
+    nix-env -iA nixpkgs.transmission-gtk
 
     nix-env -iA nixpkgs.light
     nix-env -iA nixpkgs.picom
     nix-env -iA nixpkgs.sox
     nix-env -iA nixpkgs.udiskie
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/stow-2.3.1-4.fc34.noarch.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/android-tools-31.0.2-1.fc34.x86_64.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/ffmpegthumbnailer-2.2.2-8.fc34.x86_64.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/fzf-0.26.0-1.fc34.x86_64.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/scrot-1.6-1.fc34.x86_64.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/libxdo-3.20160805.1-2.fc34.x86_64.rpm -y
-    #sudo dnf install https://github.com/sorathpanzer/tuxinstall/raw/main/packages/xdotool-3.20160805.1-2.fc34.x86_64.rpm -y
 fi
 
-sudo $PKGINSTALL git toolbox rsync flatpak ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils
+sudo $PKGINSTALL git rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
+w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
+gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel
 
 sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 
-if [ $OS = "FedoraIOT" ]; then
-    sudo rpm-ostree ex apply-live --allow-replacement
-fi
+[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-if [ $OS = "rhel" ]; then
-    sudo sed -i 's/33/36/' /etc/containers/toolbox.conf
-    sudo sed -i '/distro/s/^## //g' /etc/containers/toolbox.conf
-    sudo sed -i '/release/s/^## //g' /etc/containers/toolbox.conf
-    sudo sed -i '$d' /etc/containers/toolbox.conf
-fi
+[ -x "$(command -v rpm-ostree)" ] && sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+[ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop
 
-#toolbox create -y
-#toolbox run sudo dnf upgrade -y
-#toolbox run sudo dnf install gcc fontconfig-devel freetype-devel libXft-devel libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel -y
-#toolbox run sudo dnf install python3-pip libXext-devel libxshmfence-devel python3-wheel python3-devel zsh pandoc-pdf -y
-
-#sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-#sudo flatpak install org.chromium.Chromium net.agalwood.Motrix org.keepassxc.KeePassXC org.libreoffice.LibreOffice org.signal.Signal org.telegram.desktop \
-#io.mpv.Mpv org.gimp.GIMP org.qutebrowser.qutebrowser org.tribler.Tribler -y
-
-#echo "Open vault password:"
-#sudo mkdir /media/Vault
-#echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
-#sudo mount /dev/mapper/Vault /media/Vault
 
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
@@ -450,19 +426,21 @@ mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 
-#rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
-#toolbox run pip install --user ueberzug
-
-
-if [ $OS != "rhel" ] || [ $OS != "fedora" ] || [ $OS != "FedoraIOT" ]; then
+if [[ -d /media/Vault ]]
+    echo "Open vault password:"
+    sudo mkdir /media/Vault
+    echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+    sudo mount /dev/mapper/Vault /media/Vault
+    rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
     sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 fi
 
-#sudo mkdir -p /sys/module/snd_hda_intel/parameters/
+pip install --user adblock
+pip install --user ueberzug
+
 sudo mkdir -p /etc/polkit-1/rules.d/
 
 echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-#echo 1 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
 echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
 
 echo '/* Allow members of the wheel group to execute any actions
@@ -501,8 +479,6 @@ ExecStartPre=/usr/bin/xset dpms force suspend
 ExecStart=/usr/bin/i3lock -c 000000
 [Install]
 WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
-
-#sudo systemctl enable --now suspend@sorath.service #firewalld
 
 echo 'Section "InputClass"
         Identifier "libinput touchpad catchall"

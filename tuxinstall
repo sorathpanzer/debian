@@ -398,6 +398,10 @@ if [ $OS = "rhel" ]; then
     nix-env -iA nixpkgs.picom
     nix-env -iA nixpkgs.sox
     nix-env -iA nixpkgs.udiskie
+
+    echo "max_parallel_downloads=10
+    deltarpm=True
+    defaultyes=True" >> | sudo tee -a /etc/dnf/dnf.conf
 fi
 
 sudo $PKGINSTALL git rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \

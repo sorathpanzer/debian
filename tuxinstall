@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Melhorar a variavel PKGINSTALL
+
 exec &> >(tee -a "install.log") 2>install.error
 
 USER_NAME=""
@@ -355,17 +357,17 @@ SEL()
   done | cut -d ':' -f $POS
 }
 
-if [ $OS = "fedora" ] || [ $OS = "rhel" ]; then
+if [ $OS = "rhel" ]; then
     PKGINSTALL="dnf install -y"
-    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
 fi
 
-if [ $OS = "FedoraIOT" ]; then
-    PKGINSTALL="rpm-ostree install"
-    sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    sudo rpm-ostree install flatpak
-    sudo rpm-ostree ex apply-live --allow-replacement
+if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
+    [ -x "$(command -v rpm-ostree)" ] && PKGINSTALL="rpm-ostree" || PKGINSTALL="dnf"
+    [ -x "$(command -v rpm-ostree)" ] && sudo $PKGINSTALL override remove zezere-ignition ignition dbus-parsec
+    sudo $PKGINSTALL install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo $PKGINSTALL install flatpak
+    [ -x "$(command -v rpm-ostree)" ] && sudo $PKGINSTALL ex apply-live --allow-replacement
 fi
 
 if [ $OS = "rhel" ]; then
@@ -415,7 +417,7 @@ $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET
 [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
 [ -x "$(command -v rpm-ostree)" ] && sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-[ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop
+[ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
 
 
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
@@ -439,8 +441,8 @@ if [[ -d /media/Vault ]]; then
     sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
 fi
 
-pip install --user adblock
-pip install --user ueberzug
+#pip install --user adblock
+#pip install --user ueberzug
 
 sudo mkdir -p /etc/polkit-1/rules.d/
 

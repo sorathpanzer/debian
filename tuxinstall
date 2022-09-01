@@ -357,11 +357,6 @@ SEL()
   done | cut -d ':' -f $POS
 }
 
-if [ $OS = "rhel" ]; then
-    PKGINSTALL="dnf install -y"
-    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
-fi
-
 if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     [ -x "$(command -v rpm-ostree)" ] && PKGINSTALL="rpm-ostree" || PKGINSTALL="dnf"
     [ -x "$(command -v rpm-ostree)" ] && sudo $PKGINSTALL override remove zezere-ignition ignition dbus-parsec

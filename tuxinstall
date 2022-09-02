@@ -11,7 +11,7 @@ RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
     OS="$RELEASE"
-    PKGINSTALL="dnf install"
+    PKGINSTALL="dnf install -y"
 fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
@@ -21,7 +21,7 @@ fi
 
 if [[ $RELEASE = almalinux ]]; then
     OS="rhel"
-    PKGINSTALL="dnf install"
+    PKGINSTALL="dnf install -y"
 fi
 
 NA=" " # Not Applicable
@@ -360,17 +360,17 @@ SEL()
 
 if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm -y
+    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     sudo $PKGINSTALL flatpak
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 fi
 
 if [ $OS = "rhel" ]; then
-    sudo $PKGINSTALL epel-release -y
-    sudo $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+    sudo $PKGINSTALL epel-release
+    sudo $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
     sudo dnf config-manager --set-enabled crb
-    sudo dnf update -y
-    sudo $PKGINSTALL tar -y
+    sudo dnf update
+    sudo $PKGINSTALL tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
@@ -403,11 +403,11 @@ fi
 
 sudo $PKGINSTALL git rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
 w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
-gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel flatpak -y
+gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel flatpak
 
 sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
-$UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF) -y
+$UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 
 [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 

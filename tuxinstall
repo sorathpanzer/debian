@@ -1,7 +1,5 @@
 #!/bin/bash
 
-### Melhorar a variavel PKGINSTALL
-
 exec &> >(tee -a "install.log") 2>install.error
 
 USER_NAME=""
@@ -432,7 +430,7 @@ sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
-if [[ $NVME = nvme0n1 ]] && [[ $SDA = sda ]]; then
+if [ -n $LVM_PASSWORD ]; then
     echo "Open vault password:"
     sudo mkdir /media/Vault
     echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault

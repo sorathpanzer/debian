@@ -376,8 +376,7 @@ if [ $OS = "rhel" ]; then
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
-    . /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh
-    echo ". /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh" >> .profile
+    . $HOME/.nix-profile/etc/profile.d/nix.sh
 
     nix-env -iA nixpkgs.stow
     nix-env -iA nixpkgs.android-tools
@@ -430,7 +429,7 @@ mkdir -p /home/$USER_NAME/.cache/zsh
 touch /home/$USER_NAME/.cache/zsh/history
 sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 
-NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}'
+NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
 if [[ $NVME = nvme0n1 ]] && [[ $SDA = sda ]]; then
@@ -525,5 +524,6 @@ echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostr
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
 
 sudo grubby --update-kernel=ALL --args=quiet
+echo ". /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh" >> .profile
 
 cat install.error | grep error

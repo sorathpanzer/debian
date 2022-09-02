@@ -376,6 +376,8 @@ if [ $OS = "rhel" ]; then
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
+    . /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh
+    echo ". /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh" >> .profile
 
     nix-env -iA nixpkgs.stow
     nix-env -iA nixpkgs.android-tools
@@ -397,11 +399,9 @@ if [ $OS = "rhel" ]; then
     nix-env -iA nixpkgs.sox
     nix-env -iA nixpkgs.udiskie
 
-    . /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh
-
     echo "max_parallel_downloads=10
-    deltarpm=True
-    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+deltarpm=True
+defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
 fi
 
 sudo $PKGINSTALL git rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \

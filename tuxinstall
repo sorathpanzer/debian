@@ -17,6 +17,7 @@ fi
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
     OS="FedoraIOT"
     PKGINSTALL="sudo rpm-ostree install"
+    echo "Defaults:$USER_NAME timestamp_timeout=30" | sudo tee /etc/sudoers.d/sorath
 fi
 
 if [[ $RELEASE = almalinux ]]; then

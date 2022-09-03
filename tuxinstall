@@ -400,19 +400,19 @@ deltarpm=True
 defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
 fi
 
-sudo $PKGINSTALL git rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
+sudo $PKGINSTALL flatpak git $(SEL $STOW)
+[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+
+sudo $PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
 w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
-gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel flatpak
+gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel
 
 sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
-$LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $STOW $TIG $TRASHCLI \
+$LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
-
-[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
-
 
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
 mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}

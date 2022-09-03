@@ -12,7 +12,7 @@ RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
     OS="$RELEASE"
-    PKGINSTALL="dnf install -y"
+    PKGINSTALL="sudo dnf install -y"
 fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
@@ -22,7 +22,7 @@ fi
 
 if [[ $RELEASE = almalinux ]]; then
     OS="rhel"
-    PKGINSTALL="dnf install -y"
+    PKGINSTALL="sudo dnf install -y"
 fi
 
 NA=" " # Not Applicable
@@ -361,16 +361,16 @@ SEL()
 
 if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 fi
 
 if [ $OS = "rhel" ]; then
-    sudo $PKGINSTALL epel-release
-    sudo $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+    $PKGINSTALL epel-release
+    $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
     sudo dnf config-manager --set-enabled crb
     sudo dnf update
-    sudo $PKGINSTALL tar
+    $PKGINSTALL tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
@@ -401,18 +401,18 @@ deltarpm=True
 defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
 fi
 
-sudo $PKGINSTALL flatpak git $(SEL $STOW)
+$PKGINSTALL flatpak git $(SEL $STOW)
 [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-echo -n "$PASSWORD" | sudo $PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
+$PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
 w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
 gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel
 
-echo -n "$PASSWORD" | sudo $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
+$PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
 $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
 $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 
-echo -n "$PASSWORD" | sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
 
 mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}

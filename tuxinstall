@@ -361,7 +361,6 @@ SEL()
 if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     sudo $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    sudo $PKGINSTALL flatpak
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 fi
 
@@ -522,6 +521,5 @@ echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostr
 echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
 
 sudo grubby --update-kernel=ALL --args=quiet
-echo ". /home/$USER_NAME/.nix-profile/etc/profile.d/nix.sh" >> .profile
 
 cat install.error | grep error

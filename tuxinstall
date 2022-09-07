@@ -2,347 +2,349 @@
 
 exec &> >(tee -a "install.log") 2>install.error
 
-USER_NAME=""
-LVM_PASSWORD=""
-GIT_USERNAME=""
-GIT_EMAIL=""
+CONFIGURE_PACKAGES()
+{
+  USER_NAME=""
+  LVM_PASSWORD=""
+  GIT_USERNAME=""
+  GIT_EMAIL=""
 
-RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
+  RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
-if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
+  if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
     OS="$RELEASE"
     PKGINSTALL="sudo dnf install -y"
-fi
+  fi
 
-if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
+  if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
     OS="FedoraIOT"
     PKGINSTALL="sudo rpm-ostree install"
     echo "Defaults:$USER_NAME timestamp_timeout=30" | sudo tee /etc/sudoers.d/sorath
-fi
+  fi
 
-if [[ $RELEASE = almalinux ]]; then
+  if [[ $RELEASE = almalinux ]]; then
     OS="rhel"
     PKGINSTALL="sudo dnf install -y"
-fi
+  fi
 
-NA=" " # Not Applicable
-# DISTRO="
-# 1.Debian/Ubuntu
-# 2.Fedora/IOT
-# 3.Rhel like systems
-# 4.Arch linux
-# 5.Void Linux
-# 6.Alpine Linux
-# 7.OpenSuse Linux
-# 8.Debian"
+  NA=" " # Not Applicable
+  # DISTRO="
+  # 1.Debian/Ubuntu
+  # 2.Fedora/IOT
+  # 3.Rhel like systems
+  # 4.Arch linux
+  # 5.Void Linux
+  # 6.Alpine Linux
+  # 7.OpenSuse Linux
+  # 8.Debian"
 
-ANDROIDTOOLS=(
-android-tools-adb:\
-android-tools:\
-$NA:\
-android-tools:\
-android-tools:\
-android-tools:\
-android-tools)
+  ANDROIDTOOLS=(
+    android-tools-adb:\
+    android-tools:\
+    $NA:\
+    android-tools:\
+    android-tools:\
+    android-tools:\
+    android-tools)
 
-BTRFSPROGS=(
-btrfs-progs:\
-btrfs-progs:\
-$NA:\
-btrfs-progs:\
-btrfs-progs:\
-btrfs-progs:\
-btrfsprogs)
+  BTRFSPROGS=(
+    btrfs-progs:\
+    btrfs-progs:\
+    $NA:\
+    btrfs-progs:\
+    btrfs-progs:\
+    btrfs-progs:\
+    btrfsprogs)
 
-CRONTABS=(
-python3-crontab:\
-crontabs:\
-crontabs:\
-$NA:\
-$NA:\
-$NA:\
-crontabs)
+  CRONTABS=(
+    python3-crontab:\
+    crontabs:\
+    crontabs:\
+    $NA:\
+    $NA:\
+    $NA:\
+    crontabs)
 
-DBUSX11=(
-dbus-x11:\
-dbus-x11:\
-dbus-x11:\
-dbus:\
-dbus-x11:\
-dbus-x11:\
-dbus-x11)
+  DBUSX11=(
+    dbus-x11:\
+    dbus-x11:\
+    dbus-x11:\
+    dbus:\
+    dbus-x11:\
+    dbus-x11:\
+    dbus-x11)
 
-DUNST=(
-dunst:\
-dunst:\
-$NA:\
-dunst:\
-dunst:\
-dunst:\
-dunst)
+  DUNST=(
+    dunst:\
+    dunst:\
+    $NA:\
+    dunst:\
+    dunst:\
+    dunst:\
+    dunst)
 
-FEH=(
-feh:\
-feh:\
-$NA:\
-feh:\
-feh:\
-feh:\
-feh)
+  FEH=(
+    feh:\
+    feh:\
+    $NA:\
+    feh:\
+    feh:\
+    feh:\
+    feh)
 
-FFMPEGTHUMBNAILER=(
-ffmpegthumbnailer:\
-ffmpegthumbnailer:\
-$NA:\
-ffmpegthumbnailer:\
-ffmpegthumbnailer:\
-ffmpegthumbnailer:\
-FFmpegThumbnailer)
+  FFMPEGTHUMBNAILER=(
+    ffmpegthumbnailer:\
+    ffmpegthumbnailer:\
+    $NA:\
+    ffmpegthumbnailer:\
+    ffmpegthumbnailer:\
+    ffmpegthumbnailer:\
+    FFmpegThumbnailer)
 
-FZF=(
-fzf:\
-fzf:\
-$NA:\
-fzf:\
-fzf:\
-fzf:\
-fzf)
+  FZF=(
+    fzf:\
+    fzf:\
+    $NA:\
+    fzf:\
+    fzf:\
+    fzf:\
+    fzf)
 
-IMAGEMAGICK=(
-imagemagick:\
-ImageMagick:\
-ImageMagick:\
-imagemagick:\
-ImageMagick:\
-imagemagick:\
-ImageMagick)
+  IMAGEMAGICK=(
+    imagemagick:\
+    ImageMagick:\
+    ImageMagick:\
+    imagemagick:\
+    ImageMagick:\
+    imagemagick:\
+    ImageMagick)
 
-LIBXFT=(
-libxft2:\
-libXft-devel:\
-libXft-devel:\
-libxft:\
-libXft:\
-libxft:\
-libXft)
+  LIBXFT=(
+    libxft2:\
+    libXft-devel:\
+    libXft-devel:\
+    libxft:\
+    libXft:\
+    libxft:\
+    libXft)
 
-LIGHT=(
-light:\
-light:\
-$NA:\
-light:\
-light:\
-light:\
-light)
+  LIGHT=(
+    light:\
+    light:\
+    $NA:\
+    light:\
+    light:\
+    light:\
+    light)
 
-LMSENSORS=(
-lm-sensors:\
-lm_sensors:\
-lm_sensors:\
-lm_sensors:\
-lm_sensors:\
-lm-sensors:\
-lm_sensors)
+  LMSENSORS=(
+    lm-sensors:\
+    lm_sensors:\
+    lm_sensors:\
+    lm_sensors:\
+    lm_sensors:\
+    lm-sensors:\
+    lm_sensors)
 
-PANDOCPDF=(
-pandoc-pdf:\
-pandoc-pdf:\
-$NA:\
-pandoc:\
-pandoc:\
-pandoc)
+  PANDOCPDF=(
+    pandoc-pdf:\
+    pandoc-pdf:\
+    $NA:\
+    pandoc:\
+    pandoc:\
+    pandoc)
 
-PICOM=(
-picom:\
-picom:\
-$NA:\
-picom:\
-picom:\
-picom:\
-picom)
+  PICOM=(
+    picom:\
+    picom:\
+    $NA:\
+    picom:\
+    picom:\
+    picom:\
+    picom)
 
-POPPLERUTILS=(
-poppler-utils:\
-poppler-utils:\
-poppler:\
-poppler-utils:\
-poppler-utils:\
-poppler-utils:\
-poppler-utils)
+  POPPLERUTILS=(
+    poppler-utils:\
+    poppler-utils:\
+    poppler:\
+    poppler-utils:\
+    poppler-utils:\
+    poppler-utils:\
+    poppler-utils)
 
-PULSEAUDIOUTILS=(
-pulseaudio-utils:\
-pulseaudio-utils:\
-pulseaudio-utils:\
-pulseaudio:\
-pulseaudio-utils:\
-pulseaudio-utils:\
-pulseaudio-utils)
+  PULSEAUDIOUTILS=(
+    pulseaudio-utils:\
+    pulseaudio-utils:\
+    pulseaudio-utils:\
+    pulseaudio:\
+    pulseaudio-utils:\
+    pulseaudio-utils:\
+    pulseaudio-utils)
 
-PYTHON3SIX=(
-python3-six:\
-python3-six:\
-python-six:\
-python-six:\
-py3-six:\
-python3-six:\
-python3-six)
+  PYTHON3SIX=(
+    python3-six:\
+    python3-six:\
+    python-six:\
+    python-six:\
+    py3-six:\
+    python3-six:\
+    python3-six)
 
-QEMU=(
-qemu:\
-qemu:\
-qemu-img:\
-qemu-base:\
-qemu:\
-qemu:\
-qemu)
+  QEMU=(
+    qemu:\
+    qemu:\
+    qemu-img:\
+    qemu-base:\
+    qemu:\
+    qemu:\
+    qemu)
 
-SCROT=(
-scrot:\
-scrot:\
-$NA:\
-scrot:\
-scrot:\
-scrot:\
-scrot)
+  SCROT=(
+    scrot:\
+    scrot:\
+    $NA:\
+    scrot:\
+    scrot:\
+    scrot:\
+    scrot)
 
-SOX=(
-sox:\
-sox:\
-$NA:\
-sox:\
-sox:\
-sox:\
-sox)
+  SOX=(
+    sox:\
+    sox:\
+    $NA:\
+    sox:\
+    sox:\
+    sox:\
+    sox)
 
-STOW=(
-stow:\
-stow:\
-$NA:\
-stow:\
-stow:\
-stow:\
-stow)
+  STOW=(
+    stow:\
+    stow:\
+    $NA:\
+    stow:\
+    stow:\
+    stow:\
+    stow)
 
-TIG=(
-tig:\
-tig:\
-tig:\
-tig:\
-tig:\
-tig:\
-$NA)
+  TIG=(
+    tig:\
+    tig:\
+    tig:\
+    tig:\
+    tig:\
+    tig:\
+    $NA)
 
-TRASHCLI=(
-trash-cli:\
-trash-cli:\
-$NA:\
-trash-cli:\
-trash-cli:\
-trash-cli:\
-trash-cli)
+  TRASHCLI=(
+    trash-cli:\
+    trash-cli:\
+    $NA:\
+    trash-cli:\
+    trash-cli:\
+    trash-cli:\
+    trash-cli)
 
-UDISKIE=(
-udiskie:\
-udiskie:\
-$NA:\
-udiskie:\
-udiskie:\
-udiskie:\
-udiskie)
+  UDISKIE=(
+    udiskie:\
+    udiskie:\
+    $NA:\
+    udiskie:\
+    udiskie:\
+    udiskie:\
+    udiskie)
 
-XDOTOOL=(
-xdotool:\
-xdotool:\
-$NA:\
-xdotool:\
-xdotool:\
-xdotool:\
-xdotool)
+  XDOTOOL=(
+    xdotool:\
+    xdotool:\
+    $NA:\
+    xdotool:\
+    xdotool:\
+    xdotool:\
+    xdotool)
 
-XINPUT=(
-xinput:\
-xinput:\
-xinput:\
-xorg-xinput:\
-xinput:\
-xinput:\
-xinput)
+  XINPUT=(
+    xinput:\
+    xinput:\
+    xinput:\
+    xorg-xinput:\
+    xinput:\
+    xinput:\
+    xinput)
 
-XF86VIDEOINTEL=(
-xserver-xorg-video-intel:\
-xorg-x11-drv-intel:\
-$NA:\
-xf86-video-intel:\
-xf86-video-intel:\
-xf86-video-intel:\
-xf86-video-intel)
+  XF86VIDEOINTEL=(
+    xserver-xorg-video-intel:\
+    xorg-x11-drv-intel:\
+    $NA:\
+    xf86-video-intel:\
+    xf86-video-intel:\
+    xf86-video-intel:\
+    xf86-video-intel)
 
-XORGSERVER=(
-xserver-xorg:\
-xorg-x11-server-Xorg:\
-xorg-x11-server-Xorg:\
-xorg-server:\
-xorg-minimal:\
-xorg-server:\
-xorg-server)
+  XORGSERVER=(
+    xserver-xorg:\
+    xorg-x11-server-Xorg:\
+    xorg-x11-server-Xorg:\
+    xorg-server:\
+    xorg-minimal:\
+    xorg-server:\
+    xorg-server)
 
-XINIT=(
-xinit:\
-xorg-x11-xinit:\
-xorg-x11-xinit:\
-xinit:\
-xinit:\
-xinit:\
-xinit)
+  XINIT=(
+    xinit:\
+    xorg-x11-xinit:\
+    xorg-x11-xinit:\
+    xinit:\
+    xinit:\
+    xinit:\
+    xinit)
 
-XRANDR=(
-x11-xserver-utils:\
-xrandr:\
-xrandr:\
-xorg-xrandr:\
-xrandr:\
-xrandr:\
-xrandr)
+  XRANDR=(
+    x11-xserver-utils:\
+    xrandr:\
+    xrandr:\
+    xorg-xrandr:\
+    xrandr:\
+    xrandr:\
+    xrandr)
 
-XRDB=(
-x11-xserver-utils:\
-xrdb:\
-xrdb:\
-xorg-xrdb:\
-xrdb:\
-xrdb:\
-xrdb)
+  XRDB=(
+    x11-xserver-utils:\
+    xrdb:\
+    xrdb:\
+    xorg-xrdb:\
+    xrdb:\
+    xrdb:\
+    xrdb)
 
-XSET=(
-x11-xserver-utils:\
-xset:\
-xset:\
-xorg-xset:\
-xset:\
-xset:\
-xset)
+  XSET=(
+    x11-xserver-utils:\
+    xset:\
+    xset:\
+    xorg-xset:\
+    xset:\
+    xset:\
+    xset)
 
-ZATHURA=(
-zathura:\
-zathura:\
-$NA:\
-zathura:\
-zathura:\
-zathura:\
-zathura)
+  ZATHURA=(
+    zathura:\
+    zathura:\
+    $NA:\
+    zathura:\
+    zathura:\
+    zathura:\
+    zathura)
 
-ZATHURAPDF=(
-zathura-pdf-poppler:\
-zathura-pdf-poppler:\
-$NA:\
-zathura-pdf-poppler:\
-zathura-pdf-poppler:\
-zathura-pdf-poppler:\
-Zathura-PDF-Poppler)
+  ZATHURAPDF=(
+    zathura-pdf-poppler:\
+    zathura-pdf-poppler:\
+    $NA:\
+    zathura-pdf-poppler:\
+    zathura-pdf-poppler:\
+    zathura-pdf-poppler:\
+    Zathura-PDF-Poppler)
 
-case "${OS}" in
-	"")                 echo "No option was specified."; exit 1 ;;
+  case "${OS}" in
+    "")                 echo "No option was specified."; exit 1 ;;
     debian|ubuntu)	    POS="1" ;;
     fedora|FedoraIOT)   POS="2" ;;
     rhel)               POS="3" ;;
@@ -350,22 +352,22 @@ case "${OS}" in
     Void)               POS="5" ;;
     Alpine)             POS="6" ;;
     OpenSuse)           POS="7" ;;
-esac
+  esac
 
-SEL()
-{
-  for element in "$@"; do
-    echo "$element"
-  done | cut -d ':' -f $POS
-}
+  SEL()
+  {
+    for element in "$@"; do
+      echo "$element"
+    done | cut -d ':' -f $POS
+  }
 
-if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
+  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
-fi
+  fi
 
-if [ $OS = "rhel" ]; then
+  if [ $OS = "rhel" ]; then
     $PKGINSTALL epel-release
     $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
     sudo dnf config-manager --set-enabled crb
@@ -397,130 +399,155 @@ if [ $OS = "rhel" ]; then
     nix-env -iA nixpkgs.udiskie
 
     echo "max_parallel_downloads=10
-deltarpm=True
-defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
-fi
+    deltarpm=True
+    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+  fi
 
-$PKGINSTALL flatpak git $(SEL $STOW)
-[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+  $PKGINSTALL flatpak git $(SEL $STOW)
+  [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-$PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
-gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel
+  $PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
+    w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
+    gcc libX11-devel libXinerama-devel libexif-devel imlib2-devel giflib-devel python3-pip python3-devel
 
-$PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
-$LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
-$UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
+  $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
+    $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
+    $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
 
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-[ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  }
 
-mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
-mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-touch /home/$USER_NAME/.local/recently-used.xbel
-git config --global user.name "$GIT_USERNAME"
-git config --global user.email "$GIT_EMAIL"
-echo "Cloning my dotfiles..."
-git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
-git config --global credential.helper store
-mkdir -p /home/$USER_NAME/.cache/zsh
-touch /home/$USER_NAME/.cache/zsh/history
-sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
+  CONFIGURE_HOME()
+  {
+  mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
+  mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  touch /home/$USER_NAME/.local/recently-used.xbel
+  git config --global user.name "$GIT_USERNAME"
+  git config --global user.email "$GIT_EMAIL"
+  echo "Cloning my dotfiles..."
+  git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+  git config --global credential.helper store
+  mkdir -p /home/$USER_NAME/.cache/zsh
+  touch /home/$USER_NAME/.cache/zsh/history
+  sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
 
-NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
-SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
-if [ ! -z $LVM_PASSWORD ]; then
+  NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
+  SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
+
+  if [ ! -z $LVM_PASSWORD ]; then
     echo "Open vault password:"
     sudo mkdir /media/Vault
     echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
     sudo mount /dev/mapper/Vault /media/Vault
     rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
     sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
-fi
-
-#pip install --user adblock
-#pip install --user ueberzug
-
-sudo mkdir -p /etc/polkit-1/rules.d/
-
-echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
-
-echo '/* Allow members of the wheel group to execute any actions
-  * without password authentication, similar to "sudo NOPASSWD:"
-  */
-  polkit.addRule(function(action, subject) {
-  if (subject.isInGroup("wheel")) {
-    return polkit.Result.YES;
+  fi
   }
-});' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-echo 'polkit.addRule(function(action, subject) {
-if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
-  action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
-  subject.local && subject.active && subject.isInGroup("wheel"))
+  CONFIGURE_SYSTEM()
   {
-    return polkit.Result.YES;
-  }
-});' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+    pip install --user adblock
+    pip install --user ueberzug
 
-sudo mkdir -p /media
-echo '# UDISKS_FILESYSTEM_SHARED
-# ==1: mount filesystem to a shared directory (/media/VolumeName)
-# ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
-# See udisks(8)
-ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+    sudo mkdir -p /etc/polkit-1/rules.d/
 
-echo "[Unit]
-Description=Lock X session using slock for user %i
-Before=sleep.target
-[Service]
-User=%i
-Type=forking
-Environment=DISPLAY=:0
-ExecStartPre=/usr/bin/xset dpms force suspend
-ExecStart=/usr/bin/i3lock -c 000000
-[Install]
-WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+    echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+    echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
 
-echo 'Section "InputClass"
-        Identifier "libinput touchpad catchall"
-        MatchIsTouchpad "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-        Option "NaturalScrolling" "true"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+    echo '/* Allow members of the wheel group to execute any actions
+    * without password authentication, similar to "sudo NOPASSWD:"
+    */
+    polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("wheel")) {
+      return polkit.Result.YES;
+    }
+  });' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-echo 'Section "Device"
-        Identifier "Intel Graphics"
-        Driver "intel"
-        Option "TearFree" "true"
-        Option "DRI" "False"
-EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+  echo 'polkit.addRule(function(action, subject) {
+  if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+    action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
+    subject.local && subject.active && subject.isInGroup("wheel"))
+    {
+      return polkit.Result.YES;
+    }
+  });' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+
+  sudo mkdir -p /media
+  echo '# UDISKS_FILESYSTEM_SHARED
+  # ==1: mount filesystem to a shared directory (/media/VolumeName)
+  # ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
+  # See udisks(8)
+  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+
+  echo "[Unit]
+  Description=Lock X session using slock for user %i
+  Before=sleep.target
+  [Service]
+  User=%i
+  Type=forking
+  Environment=DISPLAY=:0
+  ExecStartPre=/usr/bin/xset dpms force suspend
+  ExecStart=/usr/bin/i3lock -c 000000
+  [Install]
+  WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+
+  echo 'Section "InputClass"
+  Identifier "libinput touchpad catchall"
+  MatchIsTouchpad "on"
+  MatchDevicePath "/dev/input/event*"
+  Driver "libinput"
+  Option "NaturalScrolling" "true"
+  EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+
+  echo 'Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+  Option "TearFree" "true"
+  Option "DRI" "False"
+  EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 
 
-echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
+  echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
 
-if [ $OS != "FedoraIOT" ] || [ $OS != "fedora" ] || [ $OS != "rhel" ]; then
+  if [ $OS != "FedoraIOT" ] || [ $OS != "fedora" ] || [ $OS != "rhel" ]; then
     sudo usermod -a -G plugdev $USER
-fi
+  fi
 
-sudo usermod -s /usr/bin/zsh $USER
+  sudo usermod -s /usr/bin/zsh $USER
 
-sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+  sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
 
-sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
-echo '[Service]
-ExecStart=
-ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+  sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+  echo '[Service]
+  ExecStart=
+  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-sudo touch /etc/sudoers.d/$USER_NAME
-echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
+  sudo touch /etc/sudoers.d/$USER_NAME
+  echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
 
-echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+  echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
 
-sudo grubby --update-kernel=ALL --args=quiet
+  sudo grubby --update-kernel=ALL --args=quiet
+  }
 
-cat install.error | grep error
+
+  if [[ $RELEASE != nixos ]]; then
+    CONFIGURE_PACKAGES
+  fi
+
+  if [[ $RELEASE = nixos ]]; then
+    curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix
+    # LUKS
+    sudo nixos-rebuild switch
+    mkdir .config
+  fi
+
+  CONFIGURE_HOME
+  if [[ $RELEASE != nixos ]]; then
+    CONFIGURE_SYSTEM
+  fi
+
+  cat install.error | grep error

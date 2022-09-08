@@ -421,7 +421,7 @@ CONFIGURE_PACKAGES()
 
   CONFIGURE_HOME()
   {
-  mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.cache/{lf,transmission}}
+  mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
   mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
   touch /home/$USER_NAME/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
@@ -539,6 +539,8 @@ CONFIGURE_PACKAGES()
     CONFIGURE_PACKAGES
   fi
 
+  CONFIGURE_HOME
+
   if [ $RELEASE = nixos ]; then
     #nix-shell -p git stow
     mkdir .config
@@ -551,8 +553,6 @@ CONFIGURE_PACKAGES()
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' /.config/suckless/dwm-6.3/config.mk
     #sudo nixos-rebuild switch
   fi
-
-  CONFIGURE_HOME
 
   if [ $RELEASE != nixos ]; then
     CONFIGURE_SYSTEM

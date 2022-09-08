@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 exec &> >(tee -a "install.log") 2>install.error
 

@@ -2,30 +2,31 @@
 
 exec &> >(tee -a "install.log") 2>install.error
 
+USER_NAME=""
+LVM_PASSWORD=""
+GIT_USERNAME=""
+GIT_EMAIL=""
+
+RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
+
+if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
+  OS="$RELEASE"
+  PKGINSTALL="sudo dnf install -y"
+fi
+
+if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
+  OS="FedoraIOT"
+  PKGINSTALL="sudo rpm-ostree install"
+  echo "Defaults:$USER_NAME timestamp_timeout=30" | sudo tee /etc/sudoers.d/sorath
+fi
+
+if [[ $RELEASE = almalinux ]]; then
+  OS="rhel"
+  PKGINSTALL="sudo dnf install -y"
+fi
+
 CONFIGURE_PACKAGES()
 {
-  USER_NAME=""
-  LVM_PASSWORD=""
-  GIT_USERNAME=""
-  GIT_EMAIL=""
-
-  RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
-
-  if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
-    OS="$RELEASE"
-    PKGINSTALL="sudo dnf install -y"
-  fi
-
-  if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
-    OS="FedoraIOT"
-    PKGINSTALL="sudo rpm-ostree install"
-    echo "Defaults:$USER_NAME timestamp_timeout=30" | sudo tee /etc/sudoers.d/sorath
-  fi
-
-  if [[ $RELEASE = almalinux ]]; then
-    OS="rhel"
-    PKGINSTALL="sudo dnf install -y"
-  fi
 
   NA=" " # Not Applicable
   # DISTRO="
@@ -534,11 +535,11 @@ CONFIGURE_PACKAGES()
   }
 
 
-  if [[ $RELEASE != nixos ]]; then
+  if [ $RELEASE != nixos ]; then
     CONFIGURE_PACKAGES
   fi
 
-  if [[ $RELEASE = nixos ]]; then
+  if [ $RELEASE = nixos ]; then
     #nix-shell -p git stow
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
@@ -553,7 +554,7 @@ CONFIGURE_PACKAGES()
 
   CONFIGURE_HOME
 
-  if [[ $RELEASE != nixos ]]; then
+  if [ $RELEASE != nixos ]; then
     CONFIGURE_SYSTEM
   fi
 

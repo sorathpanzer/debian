@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#imlib2-devel libXft-devel telegram-desktop conflict with zlib versions in FedoraIOT
+
 exec &> >(tee -a "install.log") 2>install.error
 
 USER_NAME=""
@@ -227,6 +229,15 @@ CONFIGURE_PACKAGES()
     stow:\
     stow)
 
+  TELEGRAM=(
+    telegram-desktop:\
+    $NA:\
+    $NA:\
+    telegram-desktop:\
+    telegram-desktop:\
+    telegram-desktop:\
+    telegram-desktop)
+
   TIG=(
     tig:\
     tig:\
@@ -413,10 +424,10 @@ CONFIGURE_PACKAGES()
 
   $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $LIGHT \
     $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
-    $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF)
+    $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF $TELEGRAM)
 
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
   }
 
   CONFIGURE_HOME()

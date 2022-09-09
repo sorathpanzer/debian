@@ -31,338 +31,338 @@ CONFIGURE_PACKAGES()
 {
 
   NA=" " # Not Applicable
-    # DISTRO="
-    # 1.Debian/Ubuntu
-    # 2.Fedora/IOT
-    # 3.Rhel like systems
-    # 4.Arch linux
-    # 5.Void Linux
-    # 6.Alpine Linux
-    # 7.OpenSuse Linux
-    # 8.Debian"
+# DISTRO="
+# 1.Debian/Ubuntu
+# 2.Fedora/IOT
+# 3.Rhel like systems
+# 4.Arch linux
+# 5.Void Linux
+# 6.Alpine Linux
+# 7.OpenSuse Linux
+# 8.Debian"
 
   ANDROIDTOOLS=(
-    android-tools-adb:\
-    android-tools:\
-    $NA:\
-    android-tools:\
-    android-tools:\
-    android-tools:\
-    android-tools)
+android-tools-adb:\
+android-tools:\
+$NA:\
+android-tools:\
+android-tools:\
+android-tools:\
+android-tools)
 
   BTRFSPROGS=(
-    btrfs-progs:\
-    btrfs-progs:\
-    $NA:\
-    btrfs-progs:\
-    btrfs-progs:\
-    btrfs-progs:\
-    btrfsprogs)
+btrfs-progs:\
+btrfs-progs:\
+$NA:\
+btrfs-progs:\
+btrfs-progs:\
+btrfs-progs:\
+btrfsprogs)
 
   CRONTABS=(
-    python3-crontab:\
-    crontabs:\
-    crontabs:\
-    $NA:\
-    $NA:\
-    $NA:\
-    crontabs)
+python3-crontab:\
+crontabs:\
+crontabs:\
+$NA:\
+$NA:\
+$NA:\
+crontabs)
 
   DBUSX11=(
-    dbus-x11:\
-    dbus-x11:\
-    dbus-x11:\
-    dbus:\
-    dbus-x11:\
-    dbus-x11:\
-    dbus-x11)
+dbus-x11:\
+dbus-x11:\
+dbus-x11:\
+dbus:\
+dbus-x11:\
+dbus-x11:\
+dbus-x11)
 
   DUNST=(
-    dunst:\
-    dunst:\
-    $NA:\
-    dunst:\
-    dunst:\
-    dunst:\
-    dunst)
+dunst:\
+dunst:\
+$NA:\
+dunst:\
+dunst:\
+dunst:\
+dunst)
 
   FEH=(
-    feh:\
-    feh:\
-    $NA:\
-    feh:\
-    feh:\
-    feh:\
-    feh)
+feh:\
+feh:\
+$NA:\
+feh:\
+feh:\
+feh:\
+feh)
 
   FFMPEGTHUMBNAILER=(
-    ffmpegthumbnailer:\
-    ffmpegthumbnailer:\
-    $NA:\
-    ffmpegthumbnailer:\
-    ffmpegthumbnailer:\
-    ffmpegthumbnailer:\
-    FFmpegThumbnailer)
+ffmpegthumbnailer:\
+ffmpegthumbnailer:\
+$NA:\
+ffmpegthumbnailer:\
+ffmpegthumbnailer:\
+ffmpegthumbnailer:\
+FFmpegThumbnailer)
 
   FZF=(
-    fzf:\
-    fzf:\
-    $NA:\
-    fzf:\
-    fzf:\
-    fzf:\
-    fzf)
+fzf:\
+fzf:\
+$NA:\
+fzf:\
+fzf:\
+fzf:\
+fzf)
 
   IMLIB2=(
-    imlib2-devel:\
-    $NA:\
-    $NA:\
-    imlib2-devel:\
-    tig:\
-    tig:\
-    $NA)
+imlib2-devel:\
+$NA:\
+$NA:\
+imlib2-devel:\
+tig:\
+tig:\
+$NA)
 
   IMAGEMAGICK=(
-    imagemagick:\
-    ImageMagick:\
-    ImageMagick:\
-    imagemagick:\
-    ImageMagick:\
-    imagemagick:\
-    ImageMagick)
+imagemagick:\
+ImageMagick:\
+ImageMagick:\
+imagemagick:\
+ImageMagick:\
+imagemagick:\
+ImageMagick)
 
   LIBXFT=(
-    libxft2:\
-    $NA:\
-    $NA:\
-    libxft:\
-    libXft:\
-    libxft:\
-    libXft)
+libxft2:\
+$NA:\
+$NA:\
+libxft:\
+libXft:\
+libxft:\
+libXft)
 
   LIGHT=(
-    light:\
-    light:\
-    $NA:\
-    light:\
-    light:\
-    light:\
-    light)
+light:\
+light:\
+$NA:\
+light:\
+light:\
+light:\
+light)
 
   LMSENSORS=(
-    lm-sensors:\
-    lm_sensors:\
-    lm_sensors:\
-    lm_sensors:\
-    lm_sensors:\
-    lm-sensors:\
-    lm_sensors)
+lm-sensors:\
+lm_sensors:\
+lm_sensors:\
+lm_sensors:\
+lm_sensors:\
+lm-sensors:\
+lm_sensors)
 
   PANDOCPDF=(
-    pandoc-pdf:\
-    pandoc-pdf:\
-    $NA:\
-    pandoc:\
-    pandoc:\
-    pandoc)
+pandoc-pdf:\
+pandoc-pdf:\
+$NA:\
+pandoc:\
+pandoc:\
+pandoc)
 
   PICOM=(
-    picom:\
-    picom:\
-    $NA:\
-    picom:\
-    picom:\
-    picom:\
-    picom)
+picom:\
+picom:\
+$NA:\
+picom:\
+picom:\
+picom:\
+picom)
 
   POPPLERUTILS=(
-    poppler-utils:\
-    poppler-utils:\
-    poppler:\
-    poppler-utils:\
-    poppler-utils:\
-    poppler-utils:\
-    poppler-utils)
+poppler-utils:\
+poppler-utils:\
+poppler:\
+poppler-utils:\
+poppler-utils:\
+poppler-utils:\
+poppler-utils)
 
   PULSEAUDIOUTILS=(
-    pulseaudio-utils:\
-    pulseaudio-utils:\
-    pulseaudio-utils:\
-    pulseaudio:\
-    pulseaudio-utils:\
-    pulseaudio-utils:\
-    pulseaudio-utils)
+pulseaudio-utils:\
+pulseaudio-utils:\
+pulseaudio-utils:\
+pulseaudio:\
+pulseaudio-utils:\
+pulseaudio-utils:\
+pulseaudio-utils)
 
   PYTHON3SIX=(
-    python3-six:\
-    python3-six:\
-    python-six:\
-    python-six:\
-    py3-six:\
-    python3-six:\
-    python3-six)
+python3-six:\
+python3-six:\
+python-six:\
+python-six:\
+py3-six:\
+python3-six:\
+python3-six)
 
   QEMU=(
-    qemu:\
-    qemu:\
-    qemu-img:\
-    qemu-base:\
-    qemu:\
-    qemu:\
-    qemu)
+qemu:\
+qemu:\
+qemu-img:\
+qemu-base:\
+qemu:\
+qemu:\
+qemu)
 
   SCROT=(
-    scrot:\
-    scrot:\
-    $NA:\
-    scrot:\
-    scrot:\
-    scrot:\
-    scrot)
+scrot:\
+scrot:\
+$NA:\
+scrot:\
+scrot:\
+scrot:\
+scrot)
 
   SOX=(
-    sox:\
-    sox:\
-    $NA:\
-    sox:\
-    sox:\
-    sox:\
-    sox)
+sox:\
+sox:\
+$NA:\
+sox:\
+sox:\
+sox:\
+sox)
 
   STOW=(
-    stow:\
-    stow:\
-    $NA:\
-    stow:\
-    stow:\
-    stow:\
-    stow)
+stow:\
+stow:\
+$NA:\
+stow:\
+stow:\
+stow:\
+stow)
 
   TELEGRAM=(
-    telegram-desktop:\
-    $NA:\
-    $NA:\
-    telegram-desktop:\
-    telegram-desktop:\
-    telegram-desktop:\
-    telegram-desktop)
+telegram-desktop:\
+$NA:\
+$NA:\
+telegram-desktop:\
+telegram-desktop:\
+telegram-desktop:\
+telegram-desktop)
 
   TIG=(
-    tig:\
-    tig:\
-    tig:\
-    tig:\
-    tig:\
-    tig:\
-    $NA)
+tig:\
+tig:\
+tig:\
+tig:\
+tig:\
+tig:\
+$NA)
 
   TRASHCLI=(
-    trash-cli:\
-    trash-cli:\
-    $NA:\
-    trash-cli:\
-    trash-cli:\
-    trash-cli:\
-    trash-cli)
+trash-cli:\
+trash-cli:\
+$NA:\
+trash-cli:\
+trash-cli:\
+trash-cli:\
+trash-cli)
 
   UDISKIE=(
-    udiskie:\
-    udiskie:\
-    $NA:\
-    udiskie:\
-    udiskie:\
-    udiskie:\
-    udiskie)
+udiskie:\
+udiskie:\
+$NA:\
+udiskie:\
+udiskie:\
+udiskie:\
+udiskie)
 
   XDOTOOL=(
-    xdotool:\
-    xdotool:\
-    $NA:\
-    xdotool:\
-    xdotool:\
-    xdotool:\
-    xdotool)
+xdotool:\
+xdotool:\
+$NA:\
+xdotool:\
+xdotool:\
+xdotool:\
+xdotool)
 
   XINPUT=(
-    xinput:\
-    xinput:\
-    xinput:\
-    xorg-xinput:\
-    xinput:\
-    xinput:\
-    xinput)
+xinput:\
+xinput:\
+xinput:\
+xorg-xinput:\
+xinput:\
+xinput:\
+xinput)
 
   XF86VIDEOINTEL=(
-    xserver-xorg-video-intel:\
-    xorg-x11-drv-intel:\
-    $NA:\
-    xf86-video-intel:\
-    xf86-video-intel:\
-    xf86-video-intel:\
-    xf86-video-intel)
+xserver-xorg-video-intel:\
+xorg-x11-drv-intel:\
+$NA:\
+xf86-video-intel:\
+xf86-video-intel:\
+xf86-video-intel:\
+xf86-video-intel)
 
   XORGSERVER=(
-    xserver-xorg:\
-    xorg-x11-server-Xorg:\
-    xorg-x11-server-Xorg:\
-    xorg-server:\
-    xorg-minimal:\
-    xorg-server:\
-    xorg-server)
+xserver-xorg:\
+xorg-x11-server-Xorg:\
+xorg-x11-server-Xorg:\
+xorg-server:\
+xorg-minimal:\
+xorg-server:\
+xorg-server)
 
   XINIT=(
-    xinit:\
-    xorg-x11-xinit:\
-    xorg-x11-xinit:\
-    xinit:\
-    xinit:\
-    xinit:\
-    xinit)
+xinit:\
+xorg-x11-xinit:\
+xorg-x11-xinit:\
+xinit:\
+xinit:\
+xinit:\
+xinit)
 
   XRANDR=(
-    x11-xserver-utils:\
-    xrandr:\
-    xrandr:\
-    xorg-xrandr:\
-    xrandr:\
-    xrandr:\
-    xrandr)
+x11-xserver-utils:\
+xrandr:\
+xrandr:\
+xorg-xrandr:\
+xrandr:\
+xrandr:\
+xrandr)
 
   XRDB=(
-    x11-xserver-utils:\
-    xrdb:\
-    xrdb:\
-    xorg-xrdb:\
-    xrdb:\
-    xrdb:\
-    xrdb)
+x11-xserver-utils:\
+xrdb:\
+xrdb:\
+xorg-xrdb:\
+xrdb:\
+xrdb:\
+xrdb)
 
   XSET=(
-    x11-xserver-utils:\
-    xset:\
-    xset:\
-    xorg-xset:\
-    xset:\
-    xset:\
-    xset)
+x11-xserver-utils:\
+xset:\
+xset:\
+xorg-xset:\
+xset:\
+xset:\
+xset)
 
   ZATHURA=(
-    zathura:\
-    zathura:\
-    $NA:\
-    zathura:\
-    zathura:\
-    zathura:\
-    zathura)
+zathura:\
+zathura:\
+$NA:\
+zathura:\
+zathura:\
+zathura:\
+zathura)
 
   ZATHURAPDF=(
-    zathura-pdf-poppler:\
-    zathura-pdf-poppler:\
-    $NA:\
-    zathura-pdf-poppler:\
-    zathura-pdf-poppler:\
-    zathura-pdf-poppler:\
-    Zathura-PDF-Poppler)
+zathura-pdf-poppler:\
+zathura-pdf-poppler:\
+$NA:\
+zathura-pdf-poppler:\
+zathura-pdf-poppler:\
+zathura-pdf-poppler:\
+Zathura-PDF-Poppler)
 
   case "${OS}" in
     "")                 echo "No option was specified."; exit 1 ;;

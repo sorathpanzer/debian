@@ -113,7 +113,7 @@ CONFIGURE_PACKAGES()
     fzf:\
     fzf)
 
-  TIG=(
+  IMLIB2=(
     imlib2-devel:\
     $NA:\
     $NA:\

@@ -113,6 +113,15 @@ CONFIGURE_PACKAGES()
     fzf:\
     fzf)
 
+  TIG=(
+    imlib2-devel:\
+    $NA:\
+    $NA:\
+    imlib2-devel:\
+    tig:\
+    tig:\
+    $NA)
+
   IMAGEMAGICK=(
     imagemagick:\
     ImageMagick:\

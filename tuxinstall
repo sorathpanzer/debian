@@ -424,12 +424,12 @@ Zathura-PDF-Poppler)
     defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
   fi
 
-  $PKGINSTALL flatpak git $(SEL $STOW)
+  $PKGINSTALL flatpak git python3-pip grubby $(SEL $STOW)
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
   $PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
     w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
-    gcc libX11-devel libXinerama-devel libexif-devel giflib-devel python3-pip python3-devel
+    gcc libX11-devel libXinerama-devel libexif-devel giflib-devel python3-devel
 
   $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $IMLIB2 $LIGHT \
     $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \

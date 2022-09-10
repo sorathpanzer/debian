@@ -30,6 +30,11 @@ if [[ $RELEASE = almalinux ]]; then
   PKGINSTALL="sudo dnf install -y"
 fi
 
+if [[ $RELEASE = freebsd ]]; then
+  OS="freebsd"
+  PKGINSTALL="sudo pkg install -y"
+fi
+
 CONFIGURE_PACKAGES()
 {
 
@@ -42,12 +47,13 @@ CONFIGURE_PACKAGES()
 # 5.Void Linux
 # 6.Alpine Linux
 # 7.OpenSuse Linux
-# 8.Debian"
+# 8.FreeBSD"
 
   ANDROIDTOOLS=(
 android-tools-adb:\
 android-tools:\
 $NA:\
+android-tools:\
 android-tools:\
 android-tools:\
 android-tools:\
@@ -60,7 +66,8 @@ $NA:\
 btrfs-progs:\
 btrfs-progs:\
 btrfs-progs:\
-btrfsprogs)
+btrfsprogs:\
+$NA)
 
   CRONTABS=(
 python3-crontab:\
@@ -69,7 +76,8 @@ crontabs:\
 $NA:\
 $NA:\
 $NA:\
-crontabs)
+crontabs:\
+py39-python-crontab)
 
   DBUSX11=(
 dbus-x11:\
@@ -78,12 +86,14 @@ dbus-x11:\
 dbus:\
 dbus-x11:\
 dbus-x11:\
-dbus-x11)
+dbus-x11:\
+dbus)
 
   DUNST=(
 dunst:\
 dunst:\
 $NA:\
+dunst:\
 dunst:\
 dunst:\
 dunst:\
@@ -96,6 +106,7 @@ $NA:\
 feh:\
 feh:\
 feh:\
+feh:\
 feh)
 
   FFMPEGTHUMBNAILER=(
@@ -105,7 +116,8 @@ $NA:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
-FFmpegThumbnailer)
+FFmpegThumbnailer:\
+ffmpegthumbnailer)
 
   FZF=(
 fzf:\
@@ -114,16 +126,18 @@ $NA:\
 fzf:\
 fzf:\
 fzf:\
+fzf:\
 fzf)
 
-  IMLIB2=(
-imlib2-devel:\
-$NA:\
-$NA:\
-imlib2-devel:\
-tig:\
-tig:\
-$NA)
+  GIFLIB=(
+giflib-devel:\
+giflib-devel:\
+giflib-devel:\
+giflib-devel:\
+giflib-devel:\
+giflib-devel:\
+giflib-devel:\
+giflib)
 
   IMAGEMAGICK=(
 imagemagick:\
@@ -132,7 +146,58 @@ ImageMagick:\
 imagemagick:\
 ImageMagick:\
 imagemagick:\
-ImageMagick)
+ImageMagick:\
+ImageMagick7-nox11)
+
+  IMLIB2=(
+imlib2-devel:\
+$NA:\
+$NA:\
+imlib2-devel:\
+imlib2-devel:\
+imlib2-devel:\
+$NA:\
+imlib2)
+
+  LIBEXIF=(
+libexif-devel:\
+libexif-devel:\
+libexif-devel:\
+libexif-devel:\
+libexif-devel:\
+libexif-devel:\
+libexif-devel:\
+libexif)
+
+  LIBREOFFICE=(
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice-calc:\
+libreoffice)
+
+  LIBREOFFICEPT=(
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+libreoffice-langpack-pt-PT:\
+pt-libreoffice)
+
+  LIBX11=(
+libX11-devel:\
+libX11-devel:\
+libX11-devel:\
+libX11-devel:\
+libX11-devel:\
+libX11-devel:\
+libX11-devel:\
+libX11)
 
   LIBXFT=(
 libxft2:\
@@ -141,7 +206,18 @@ $NA:\
 libxft:\
 libXft:\
 libxft:\
+libXft:\
 libXft)
+
+  LIBXINERAMA=
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama-devel:\
+libXinerama)
 
   LIGHT=(
 light:\
@@ -150,7 +226,8 @@ $NA:\
 light:\
 light:\
 light:\
-light)
+light:\
+$NA)
 
   LMSENSORS=(
 lm-sensors:\
@@ -159,7 +236,18 @@ lm_sensors:\
 lm_sensors:\
 lm_sensors:\
 lm-sensors:\
-lm_sensors)
+lm_sensors:\
+$NA)
+
+  NTFS3G=(
+ntfs-3g:\
+ntfs-3g:\
+ntfs-3g:\
+ntfs-3g:\
+ntfs-3g:\
+ntfs-3g:\
+ntfs-3g:\
+fusefs-ntfs)
 
   PANDOCPDF=(
 pandoc-pdf:\
@@ -167,12 +255,15 @@ pandoc-pdf:\
 $NA:\
 pandoc:\
 pandoc:\
-pandoc)
+pandoc:\
+pandoc:\
+$NA)
 
   PICOM=(
 picom:\
 picom:\
 $NA:\
+picom:\
 picom:\
 picom:\
 picom:\
@@ -185,6 +276,7 @@ poppler:\
 poppler-utils:\
 poppler-utils:\
 poppler-utils:\
+poppler-utils:\
 poppler-utils)
 
   PULSEAUDIOUTILS=(
@@ -194,7 +286,18 @@ pulseaudio-utils:\
 pulseaudio:\
 pulseaudio-utils:\
 pulseaudio-utils:\
-pulseaudio-utils)
+pulseaudio-utils:\
+linux-c7-pulseaudio-utils)
+
+  PYTHON=(
+python3:\
+python3:\
+python3:\
+python3:\
+python3:\
+python3:\
+python3:\
+python311)
 
   PYTHON3SIX=(
 python3-six:\
@@ -203,7 +306,8 @@ python-six:\
 python-six:\
 py3-six:\
 python3-six:\
-python3-six)
+python3-six:\
+py39-six)
 
   QEMU=(
 qemu:\
@@ -212,12 +316,14 @@ qemu-img:\
 qemu-base:\
 qemu:\
 qemu:\
+qemu:\
 qemu)
 
   SCROT=(
 scrot:\
 scrot:\
 $NA:\
+scrot:\
 scrot:\
 scrot:\
 scrot:\
@@ -230,12 +336,14 @@ $NA:\
 sox:\
 sox:\
 sox:\
+sox:\
 sox)
 
   STOW=(
 stow:\
 stow:\
 $NA:\
+stow:\
 stow:\
 stow:\
 stow:\
@@ -248,6 +356,7 @@ $NA:\
 telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
+telegram-desktop:\
 telegram-desktop)
 
   TIG=(
@@ -257,7 +366,8 @@ tig:\
 tig:\
 tig:\
 tig:\
-$NA)
+$NA:\
+tig)
 
   TRASHCLI=(
 trash-cli:\
@@ -266,7 +376,8 @@ $NA:\
 trash-cli:\
 trash-cli:\
 trash-cli:\
-trash-cli)
+trash-cli:\
+$NA)
 
   UDISKIE=(
 udiskie:\
@@ -276,6 +387,7 @@ udiskie:\
 udiskie:\
 udiskie:\
 udiskie)
+$NA)
 
   XDOTOOL=(
 xdotool:\
@@ -284,16 +396,8 @@ $NA:\
 xdotool:\
 xdotool:\
 xdotool:\
+xdotool:\
 xdotool)
-
-  XINPUT=(
-xinput:\
-xinput:\
-xinput:\
-xorg-xinput:\
-xinput:\
-xinput:\
-xinput)
 
   XF86VIDEOINTEL=(
 xserver-xorg-video-intel:\
@@ -302,16 +406,8 @@ $NA:\
 xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
+xf86-video-intel:\
 xf86-video-intel)
-
-  XORGSERVER=(
-xserver-xorg:\
-xorg-x11-server-Xorg:\
-xorg-x11-server-Xorg:\
-xorg-server:\
-xorg-minimal:\
-xorg-server:\
-xorg-server)
 
   XINIT=(
 xinit:\
@@ -320,13 +416,35 @@ xorg-x11-xinit:\
 xinit:\
 xinit:\
 xinit:\
+xinit:\
 xinit)
+
+  XINPUT=(
+xinput:\
+xinput:\
+xinput:\
+xorg-xinput:\
+xinput:\
+xinput:\
+xinput:\
+xinput)
+
+  XORGSERVER=(
+xserver-xorg:\
+xorg-x11-server-Xorg:\
+xorg-x11-server-Xorg:\
+xorg-server:\
+xorg-minimal:\
+xorg-server:\
+xorg-server:\
+xorg-server)
 
   XRANDR=(
 x11-xserver-utils:\
 xrandr:\
 xrandr:\
 xorg-xrandr:\
+xrandr:\
 xrandr:\
 xrandr:\
 xrandr)
@@ -338,6 +456,7 @@ xrdb:\
 xorg-xrdb:\
 xrdb:\
 xrdb:\
+xrdb:\
 xrdb)
 
   XSET=(
@@ -347,12 +466,24 @@ xset:\
 xorg-xset:\
 xset:\
 xset:\
+xset:\
 xset)
+
+  YOUTUBEDL=(
+youtube-dl:\
+youtube-dl:\
+youtube-dl:\
+youtube-dl:\
+youtube-dl:\
+youtube-dl:\
+youtube-dl:\
+youtube_dl)
 
   ZATHURA=(
 zathura:\
 zathura:\
 $NA:\
+zathura:\
 zathura:\
 zathura:\
 zathura:\
@@ -365,7 +496,8 @@ $NA:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
-Zathura-PDF-Poppler)
+Zathura-PDF-Poppler:\
+zathura-pdf-poppler)
 
   case "${OS}" in
     "")                 echo "No option was specified."; exit 1 ;;
@@ -376,6 +508,7 @@ Zathura-PDF-Poppler)
     Void)               POS="5" ;;
     Alpine)             POS="6" ;;
     OpenSuse)           POS="7" ;;
+    freebsd)            POS="8" ;;
   esac
 
   SEL()
@@ -430,16 +563,18 @@ Zathura-PDF-Poppler)
   $PKGINSTALL flatpak git python3-pip grubby $(SEL $STOW)
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-  $PKGINSTALL rsync ffmpeg groff i3lock ncdu neovim ntfs-3g pipewire syncthing unzip \
-    w3m wireguard-tools xdg-user-dirs youtube-dl zsh xclip usbutils firefox libreoffice-calc libreoffice-langpack-pt-PT keepassxc mpv \
-    gcc libX11-devel libXinerama-devel libexif-devel giflib-devel python3-devel
+  $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \
+    rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
-  $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $IMAGEMAGICK $LIBXFT $IMLIB2 $LIGHT \
-    $LMSENSORS $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS $PYTHON3SIX $QEMU  $SCROT $SOX $TIG $TRASHCLI \
-    $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR $XRDB $XSET $ZATHURA $ZATHURAPDF $TELEGRAM)
+  $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
+    $LIBREOFFICE $LIBREOFFICEPT $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
+    $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
+    $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
-  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  if [ $RELEASE != freebsd ]; then
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  fi
   }
 
   CONFIGURE_HOME()
@@ -576,7 +711,7 @@ Zathura-PDF-Poppler)
     sudo nixos-rebuild switch
   fi
 
-  if [ $RELEASE != nixos ]; then
+  if [ $RELEASE != nixos ] ||  [ $RELEASE != freebsd ]; then
     CONFIGURE_SYSTEM
   fi
 

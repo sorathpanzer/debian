@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Fedora - Install audit
+# NIXOS - Install git and stow
+
 #imlib2-devel libXft-devel telegram-desktop conflict with zlib versions in FedoraIOT
 
 exec &> >(tee -a "install.log") 2>install.error
@@ -562,7 +565,6 @@ Zathura-PDF-Poppler)
   CONFIGURE_HOME
 
   if [ $RELEASE = nixos ]; then
-    nix-shell -p git stow
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix

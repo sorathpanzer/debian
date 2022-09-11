@@ -156,8 +156,8 @@ ImageMagick7-nox11)
 
   IMLIB2=(
 imlib2-devel:\
-$NA:\
-$NA:\
+imlib2-devel:\
+imlib2-devel:\
 imlib2-devel:\
 imlib2-devel:\
 imlib2-devel:\
@@ -206,8 +206,8 @@ libX11)
 
   LIBXFT=(
 libxft2:\
-$NA:\
-$NA:\
+libXft-devel:\
+libXft-devel:\
 libxft:\
 libXft:\
 libxft:\
@@ -356,8 +356,8 @@ stow)
 
   TELEGRAM=(
 telegram-desktop:\
-$NA:\
-$NA:\
+telegram-desktop:\
+telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
@@ -578,7 +578,7 @@ zathura-pdf-poppler)
 
   if [ $RELEASE != freebsd ]; then
     $SUDO flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
+    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
   fi
   }
 

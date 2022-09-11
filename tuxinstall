@@ -214,7 +214,7 @@ libxft:\
 libXft:\
 libXft)
 
-  LIBXINERAMA=
+LIBXINERAMA=(
 libXinerama-devel:\
 libXinerama-devel:\
 libXinerama-devel:\
@@ -295,13 +295,13 @@ pulseaudio-utils:\
 linux-c7-pulseaudio-utils)
 
   PYTHON=(
-python3:\
-python3:\
-python3:\
-python3:\
-python3:\
-python3:\
-python3:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
 python311)
 
   PYTHON3SIX=(
@@ -391,7 +391,7 @@ $NA:\
 udiskie:\
 udiskie:\
 udiskie:\
-udiskie)
+udiskie:\
 $NA)
 
   XDOTOOL=(

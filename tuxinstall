@@ -4,7 +4,8 @@
 
 # Fedora - Install audit
 # NIXOS - Install git and stow
-# FreeBSD - Install doas, curl and bash
+# FreeBSD - Install doas, curl and bash >>>>>>>> permit nopass keepenv
+# $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
 exec &> >(tee -a "install.log") 2>install.error
 
@@ -603,7 +604,7 @@ zathura-pdf-poppler)
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
   $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
-    $LIBREOFFICE $LIBREOFFICEPT $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
+    $LIBREOFFICE $LIBREOFFICEPT $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS \
     $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
@@ -628,6 +629,7 @@ zathura-pdf-poppler)
   sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
 
 
+if [ $RELEASE != freebsd ]; then
   NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
   SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
@@ -639,6 +641,7 @@ zathura-pdf-poppler)
     rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USERNAME
     $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
   fi
+fi
   }
 
   CONFIGURE_SYSTEM()
@@ -738,6 +741,7 @@ zathura-pdf-poppler)
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
+    echo "kern.evdev.rcpt_mask=3" | sudo tee -a /etc/sysctl.conf
   fi
 
   if [ $RELEASE = nixos ]; then

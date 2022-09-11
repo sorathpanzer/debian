@@ -3,14 +3,12 @@
 # Fedora - Install audit
 # NIXOS - Install git and stow
 
-#imlib2-devel libXft-devel telegram-desktop conflict with zlib versions in FedoraIOT
-
 exec &> >(tee -a "install.log") 2>install.error
 
-USER_NAME=""
+USERNAME=""
 LVM_PASSWORD=""
-GIT_USERNAME=""
-GIT_EMAIL=""
+GIT_USERNAME="${USERNAME}panzer"
+GIT_EMAIL="$GIT_USERNAME"
 
 RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
@@ -24,7 +22,7 @@ if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
   OS="FedoraIOT"
   SUDO="sudo"
   PKGINSTALL="$SUDO rpm-ostree install"
-  echo "Defaults:$USER_NAME timestamp_timeout=30" | $SUDO tee /etc/sudoers.d/sorath
+  echo "Defaults:$USERNAME timestamp_timeout=30" | $SUDO tee /etc/sudoers.d/sorath
 fi
 
 if [[ $RELEASE = almalinux ]]; then
@@ -584,17 +582,17 @@ zathura-pdf-poppler)
 
   CONFIGURE_HOME()
   {
-  mkdir -p /home/$USER_NAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
-  mkdir -p /home/$USER_NAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-  touch /home/$USER_NAME/.local/recently-used.xbel
+  mkdir -p /home/$USERNAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
+  mkdir -p /home/$USERNAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  touch /home/$USERNAME/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
   echo "Cloning my dotfiles..."
-  git clone https://github.com/sorathpanzer/dotgit.git /home/$USER_NAME/.config/dotgit
+  git clone https://github.com/sorathpanzer/dotgit.git /home/$USERNAME/.config/dotgit
   git config --global credential.helper store
-  mkdir -p /home/$USER_NAME/.cache/zsh
-  touch /home/$USER_NAME/.cache/zsh/history
-  sh -c "cd /home/$USER_NAME/.config/dotgit; stow -vt ~ dotfiles"
+  mkdir -p /home/$USERNAME/.cache/zsh
+  touch /home/$USERNAME/.cache/zsh/history
+  sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
 
 
   NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
@@ -605,7 +603,7 @@ zathura-pdf-poppler)
     $SUDO mkdir /media/Vault
     echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
     $SUDO mount /dev/mapper/Vault /media/Vault
-    rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
+    rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USERNAME
     $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
   fi
   }
@@ -672,7 +670,6 @@ zathura-pdf-poppler)
   Option "DRI" "False"
   EndSection' | $SUDO tee /etc/X11/xorg.conf.d/20-intel.conf
 
-
   echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
   SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDO tee /etc/udev/rules.d/50-android.rules
 
@@ -689,10 +686,10 @@ zathura-pdf-poppler)
   ExecStart=
   ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDO tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-  $SUDO touch /etc/sudoers.d/$USER_NAME
-  echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDO tee /etc/sudoers.d/sorath
+  $SUDO touch /etc/sudoers.d/$USERNAME
+  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDO tee /etc/sudoers.d/sorath
 
-  echo "$USER_NAME" | $SUDO tee -a /etc/shutdown.allow
+  echo "$USERNAME" | $SUDO tee -a /etc/shutdown.allow
 
   $SUDO grubby --update-kernel=ALL --args=quiet
   }

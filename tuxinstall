@@ -4,6 +4,7 @@
 
 # Fedora - Install audit
 # NIXOS - Install git and stow
+# FreeBSD - Install doas, curl and bash
 
 exec &> >(tee -a "install.log") 2>install.error
 
@@ -324,6 +325,16 @@ $NA:\
 $NA:\
 python311)
 
+  PYTHON3PIP=(
+python3-pip:\
+python3-pip:\
+python-pip:\
+python-pip:\
+py3-pip:\
+python3-pip:\
+python3-pip:\
+py39-pip)
+
   PYTHON3SIX=(
 python3-six:\
 python3-six:\
@@ -585,7 +596,7 @@ zathura-pdf-poppler)
     defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
   fi
 
-  $PKGINSTALL git python3-pip $(SEL $STOW $FLATPAK $GRUBBY)
+  $PKGINSTALL git $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
   $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \

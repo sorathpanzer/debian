@@ -124,6 +124,16 @@ ffmpegthumbnailer:\
 FFmpegThumbnailer:\
 ffmpegthumbnailer)
 
+  FLATPAK=(
+$NA:\
+flatpak:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
+$NA:\
+$NA)
+
   FZF=(
 fzf:\
 fzf:\
@@ -143,6 +153,16 @@ giflib-devel:\
 giflib-devel:\
 giflib-devel:\
 giflib)
+
+  GRUBBY=(
+grubby:\
+grubby:\
+grubby:\
+grubby:\
+grubby:\
+grubby:\
+grubby:\
+$NA)
 
   IMAGEMAGICK=(
 imagemagick:\
@@ -565,7 +585,7 @@ zathura-pdf-poppler)
     defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
   fi
 
-  $PKGINSTALL flatpak git python3-pip grubby $(SEL $STOW)
+  $PKGINSTALL git python3-pip $(SEL $STOW $FLATPAK $GRUBBY)
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
   $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \
@@ -702,6 +722,12 @@ zathura-pdf-poppler)
   fi
 
   CONFIGURE_HOME
+
+  if [ $RELEASE = freebsd ]; then
+    doas sysrc dbus_enable=YES
+    doas sysrc openntpd_enable=YES
+    doas sysrc hald_enable=YES
+  fi
 
   if [ $RELEASE = nixos ]; then
     mkdir .config

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Version= 0.2.63
+
 # Fedora - Install audit
 # NIXOS - Install git and stow
 

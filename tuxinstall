@@ -45,8 +45,7 @@ fi
 CONFIGURE_PACKAGES()
 {
 
-  NA=" " # Not Applicable
-# DISTRO="
+#   DISTRO="
 # 1.Debian/Ubuntu
 # 2.Fedora/IOT
 # 3.Rhel like systems
@@ -59,7 +58,7 @@ CONFIGURE_PACKAGES()
   ANDROIDTOOLS=(
 android-tools-adb:\
 android-tools:\
-$NA:\
+:\
 android-tools:\
 android-tools:\
 android-tools:\
@@ -69,20 +68,20 @@ android-tools)
   BTRFSPROGS=(
 btrfs-progs:\
 btrfs-progs:\
-$NA:\
+:\
 btrfs-progs:\
 btrfs-progs:\
 btrfs-progs:\
 btrfsprogs:\
-$NA)
+)
 
   CRONTABS=(
 python3-crontab:\
 crontabs:\
 crontabs:\
-$NA:\
-$NA:\
-$NA:\
+:\
+:\
+:\
 crontabs:\
 py39-python-crontab)
 
@@ -99,7 +98,7 @@ dbus)
   DUNST=(
 dunst:\
 dunst:\
-$NA:\
+:\
 dunst:\
 dunst:\
 dunst:\
@@ -109,7 +108,7 @@ dunst)
   FEH=(
 feh:\
 feh:\
-$NA:\
+:\
 feh:\
 feh:\
 feh:\
@@ -119,7 +118,7 @@ feh)
   FFMPEGTHUMBNAILER=(
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
-$NA:\
+:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
@@ -127,19 +126,19 @@ FFmpegThumbnailer:\
 ffmpegthumbnailer)
 
   FLATPAK=(
-$NA:\
+:\
 flatpak:\
-$NA:\
-$NA:\
-$NA:\
-$NA:\
-$NA:\
-$NA)
+:\
+:\
+:\
+:\
+:\
+)
 
   FZF=(
 fzf:\
 fzf:\
-$NA:\
+:\
 fzf:\
 fzf:\
 fzf:\
@@ -164,7 +163,7 @@ grubby:\
 grubby:\
 grubby:\
 grubby:\
-$NA)
+)
 
   IMAGEMAGICK=(
 imagemagick:\
@@ -183,7 +182,7 @@ imlib2-devel:\
 imlib2-devel:\
 imlib2-devel:\
 imlib2-devel:\
-$NA:\
+:\
 imlib2)
 
   LIBEXIF=(
@@ -236,7 +235,7 @@ libxft:\
 libXft:\
 libXft)
 
-LIBXINERAMA=(
+  LIBXINERAMA=(
 libXinerama-devel:\
 libXinerama-devel:\
 libXinerama-devel:\
@@ -249,12 +248,12 @@ libXinerama)
   LIGHT=(
 light:\
 light:\
-$NA:\
+:\
 light:\
 light:\
 light:\
 light:\
-$NA)
+)
 
   LMSENSORS=(
 lm-sensors:\
@@ -264,7 +263,7 @@ lm_sensors:\
 lm_sensors:\
 lm-sensors:\
 lm_sensors:\
-$NA)
+)
 
   NTFS3G=(
 ntfs-3g:\
@@ -279,17 +278,17 @@ fusefs-ntfs)
   PANDOCPDF=(
 pandoc-pdf:\
 pandoc-pdf:\
-$NA:\
+:\
 pandoc:\
 pandoc:\
 pandoc:\
 pandoc:\
-$NA)
+)
 
   PICOM=(
 picom:\
 picom:\
-$NA:\
+:\
 picom:\
 picom:\
 picom:\
@@ -314,16 +313,16 @@ pulseaudio:\
 pulseaudio-utils:\
 pulseaudio-utils:\
 pulseaudio-utils:\
-$NA)
+)
 
   PYTHON=(
-$NA:\
+:\
 python3-devel:\
 python3-devel:\
-$NA:\
-$NA:\
-$NA:\
-$NA:\
+:\
+:\
+:\
+:\
 python311)
 
   PYTHON3PIP=(
@@ -359,7 +358,7 @@ qemu)
   SCROT=(
 scrot:\
 scrot:\
-$NA:\
+:\
 scrot:\
 scrot:\
 scrot:\
@@ -369,7 +368,7 @@ scrot)
   SOX=(
 sox:\
 sox:\
-$NA:\
+:\
 sox:\
 sox:\
 sox:\
@@ -379,7 +378,7 @@ sox)
   STOW=(
 stow:\
 stow:\
-$NA:\
+:\
 stow:\
 stow:\
 stow:\
@@ -389,7 +388,7 @@ stow)
   TELEGRAM=(
 telegram-desktop:\
 telegram-desktop:\
-$NA:\
+:\
 telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
@@ -403,33 +402,33 @@ tig:\
 tig:\
 tig:\
 tig:\
-$NA:\
+:\
 tig)
 
   TRASHCLI=(
 trash-cli:\
 trash-cli:\
-$NA:\
+:\
 trash-cli:\
 trash-cli:\
 trash-cli:\
 trash-cli:\
-$NA)
+)
 
   UDISKIE=(
 udiskie:\
 udiskie:\
-$NA:\
+:\
 udiskie:\
 udiskie:\
 udiskie:\
 udiskie:\
-$NA)
+)
 
   XDOTOOL=(
 xdotool:\
 xdotool:\
-$NA:\
+:\
 xdotool:\
 xdotool:\
 xdotool:\
@@ -439,7 +438,7 @@ xdotool)
   XF86VIDEOINTEL=(
 xserver-xorg-video-intel:\
 xorg-x11-drv-intel:\
-$NA:\
+:\
 xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
@@ -519,7 +518,7 @@ youtube_dl)
   ZATHURA=(
 zathura:\
 zathura:\
-$NA:\
+:\
 zathura:\
 zathura:\
 zathura:\
@@ -529,7 +528,7 @@ zathura)
   ZATHURAPDF=(
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
-$NA:\
+:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
@@ -741,7 +740,7 @@ fi
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
-    echo "kern.evdev.rcpt_mask=3" | sudo tee -a /etc/sysctl.conf
+    echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
   fi
 
   if [ $RELEASE = nixos ]; then

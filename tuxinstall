@@ -37,6 +37,7 @@ if [[ $RELEASE = freebsd ]]; then
   OS="freebsd"
   SUDO="doas"
   PKGINSTALL="$SUDO pkg install -y"
+  $SUDO pkg install curl
 fi
 
 CONFIGURE_PACKAGES()

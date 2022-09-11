@@ -16,23 +16,27 @@ RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
   OS="$RELEASE"
-  PKGINSTALL="sudo dnf install -y"
+  SUDO="sudo"
+  PKGINSTALL="$SUDO dnf install -y"
 fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
   OS="FedoraIOT"
-  PKGINSTALL="sudo rpm-ostree install"
-  echo "Defaults:$USER_NAME timestamp_timeout=30" | sudo tee /etc/sudoers.d/sorath
+  SUDO="sudo"
+  PKGINSTALL="$SUDO rpm-ostree install"
+  echo "Defaults:$USER_NAME timestamp_timeout=30" | $SUDO tee /etc/sudoers.d/sorath
 fi
 
 if [[ $RELEASE = almalinux ]]; then
   OS="rhel"
-  PKGINSTALL="sudo dnf install -y"
+  SUDO="sudo"
+  PKGINSTALL="$SUDO dnf install -y"
 fi
 
 if [[ $RELEASE = freebsd ]]; then
   OS="freebsd"
-  PKGINSTALL="sudo pkg install -y"
+  SUDO="doas"
+  PKGINSTALL="$SUDO pkg install -y"
 fi
 
 CONFIGURE_PACKAGES()
@@ -519,16 +523,16 @@ zathura-pdf-poppler)
   }
 
   if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
-    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+    [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
   fi
 
   if [ $OS = "rhel" ]; then
     $PKGINSTALL epel-release
     $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
-    sudo dnf config-manager --set-enabled crb
-    sudo dnf update
+    $SUDO dnf config-manager --set-enabled crb
+    $SUDO dnf update
     $PKGINSTALL tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
@@ -557,11 +561,11 @@ zathura-pdf-poppler)
 
     echo "max_parallel_downloads=10
     deltarpm=True
-    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+    defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
   fi
 
   $PKGINSTALL flatpak git python3-pip grubby $(SEL $STOW)
-  [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
   $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
@@ -572,8 +576,8 @@ zathura-pdf-poppler)
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
   if [ $RELEASE != freebsd ]; then
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    [ -x "$(command -v rpm-ostree)" ] && sudo flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
+    $SUDO flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal org.telegram.desktop -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
   fi
   }
 
@@ -597,11 +601,11 @@ zathura-pdf-poppler)
 
   if [ ! -z $LVM_PASSWORD ]; then
     echo "Open vault password:"
-    sudo mkdir /media/Vault
-    echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
-    sudo mount /dev/mapper/Vault /media/Vault
+    $SUDO mkdir /media/Vault
+    echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
+    $SUDO mount /dev/mapper/Vault /media/Vault
     rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USER_NAME
-    sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+    $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
   fi
   }
 
@@ -610,19 +614,19 @@ zathura-pdf-poppler)
     pip install --user adblock
     pip install --user ueberzug
 
-    sudo mkdir -p /etc/polkit-1/rules.d/
+    $SUDO mkdir -p /etc/polkit-1/rules.d/
 
-    echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-    echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
+    echo "vm.swappiness=10" | $SUDO tee -a /etc/sysctl.d/99-sysctl.conf
+    echo "blacklist ideapad_laptop" | $SUDO tee /etc/modprobe.d/blacklist.conf
 
     echo '/* Allow members of the wheel group to execute any actions
-    * without password authentication, similar to "sudo NOPASSWD:"
+    * without password authentication, similar to "$SUDO NOPASSWD:"
     */
     polkit.addRule(function(action, subject) {
     if (subject.isInGroup("wheel")) {
       return polkit.Result.YES;
     }
-  });' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+  });' | $SUDO tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
   echo 'polkit.addRule(function(action, subject) {
   if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
@@ -631,14 +635,14 @@ zathura-pdf-poppler)
     {
       return polkit.Result.YES;
     }
-  });' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+  });' | $SUDO tee /etc/polkit-1/rules.d/allow-mount-internal.rules
 
-  sudo mkdir -p /media
+  $SUDO mkdir -p /media
   echo '# UDISKS_FILESYSTEM_SHARED
   # ==1: mount filesystem to a shared directory (/media/VolumeName)
   # ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
   # See udisks(8)
-  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | $SUDO tee /etc/udev/rules.d/99-udisks2.rules
 
   echo "[Unit]
   Description=Lock X session using slock for user %i
@@ -650,7 +654,7 @@ zathura-pdf-poppler)
   ExecStartPre=/usr/bin/xset dpms force suspend
   ExecStart=/usr/bin/i3lock -c 000000
   [Install]
-  WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+  WantedBy=sleep.target" | $SUDO tee /etc/systemd/system/suspend@.service
 
   echo 'Section "InputClass"
   Identifier "libinput touchpad catchall"
@@ -658,38 +662,38 @@ zathura-pdf-poppler)
   MatchDevicePath "/dev/input/event*"
   Driver "libinput"
   Option "NaturalScrolling" "true"
-  EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
+  EndSection' | $SUDO tee /etc/X11/xorg.conf.d/40-libinput.conf
 
   echo 'Section "Device"
   Identifier "Intel Graphics"
   Driver "intel"
   Option "TearFree" "true"
   Option "DRI" "False"
-  EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
+  EndSection' | $SUDO tee /etc/X11/xorg.conf.d/20-intel.conf
 
 
   echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
+  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDO tee /etc/udev/rules.d/50-android.rules
 
   if [ $OS != "FedoraIOT" ] || [ $OS != "fedora" ] || [ $OS != "rhel" ]; then
-    sudo usermod -a -G plugdev $USER
+    $SUDO usermod -a -G plugdev $USER
   fi
 
-  sudo usermod -s /usr/bin/zsh $USER
+  $SUDO usermod -s /usr/bin/zsh $USER
 
-  sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+  $SUDO mkdir -p /etc/systemd/system/getty@tty1.service.d/
 
-  sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+  $SUDO touch /etc/systemd/system/getty@tty1.service.d/override.conf
   echo '[Service]
   ExecStart=
-  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDO tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-  sudo touch /etc/sudoers.d/$USER_NAME
-  echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
+  $SUDO touch /etc/sudoers.d/$USER_NAME
+  echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDO tee /etc/sudoers.d/sorath
 
-  echo "$USER_NAME" | sudo tee -a /etc/shutdown.allow
+  echo "$USER_NAME" | $SUDO tee -a /etc/shutdown.allow
 
-  sudo grubby --update-kernel=ALL --args=quiet
+  $SUDO grubby --update-kernel=ALL --args=quiet
   }
 
 
@@ -703,12 +707,12 @@ zathura-pdf-poppler)
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-    sudo mv configuration.nix /etc/nixos
+    $SUDO mv configuration.nix /etc/nixos
     sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dmenu-5.1/config.mk
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dmenu-5.1/config.mk
     sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dwm-6.3/config.mk
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dwm-6.3/config.mk
-    sudo nixos-rebuild switch
+    $SUDO nixos-rebuild switch
   fi
 
   if [ $RELEASE != nixos ] ||  [ $RELEASE != freebsd ]; then

@@ -710,7 +710,7 @@ zathura-pdf-poppler)
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dmenu-5.1/config.mk
     sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dwm-6.3/config.mk
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dwm-6.3/config.mk
-    sudo nixos-rebuild switch
+    sudo nixos-rebuild boot
   fi
 
   if [ $RELEASE != nixos ] &&  [ $RELEASE != freebsd ]; then

@@ -705,15 +705,15 @@ zathura-pdf-poppler)
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-    $SUDO mv configuration.nix /etc/nixos
+    sudo mv configuration.nix /etc/nixos
     sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dmenu-5.1/config.mk
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dmenu-5.1/config.mk
     sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dwm-6.3/config.mk
     sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dwm-6.3/config.mk
-    $SUDO nixos-rebuild switch
+    sudo nixos-rebuild switch
   fi
 
-  if [ $RELEASE != nixos ] ||  [ $RELEASE != freebsd ]; then
+  if [ $RELEASE != nixos ] &&  [ $RELEASE != freebsd ]; then
     CONFIGURE_SYSTEM
   fi
 

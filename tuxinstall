@@ -294,8 +294,8 @@ linux-c7-pulseaudio-utils)
 
   PYTHON=(
 $NA:\
-$NA:\
-$NA:\
+python-devel:\
+python-devel:\
 $NA:\
 $NA:\
 $NA:\

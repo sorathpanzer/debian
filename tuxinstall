@@ -294,8 +294,8 @@ linux-c7-pulseaudio-utils)
 
   PYTHON=(
 $NA:\
-python-devel:\
-python-devel:\
+python3-devel:\
+python3-devel:\
 $NA:\
 $NA:\
 $NA:\
@@ -531,7 +531,7 @@ zathura-pdf-poppler)
     $PKGINSTALL epel-release
     $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
     $SUDO dnf config-manager --set-enabled crb
-    $SUDO dnf update
+    $SUDO dnf update -y
     $PKGINSTALL tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
@@ -673,7 +673,7 @@ zathura-pdf-poppler)
   echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
   SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDO tee /etc/udev/rules.d/50-android.rules
 
-  if [ $OS != "FedoraIOT" ] || [ $OS != "fedora" ] || [ $OS != "rhel" ]; then
+  if [ $OS != "FedoraIOT" ] && [ $OS != "fedora" ] && [ $OS != "rhel" ]; then
     $SUDO usermod -a -G plugdev $USER
   fi
 

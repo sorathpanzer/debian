@@ -615,6 +615,7 @@ zathura-pdf-poppler)
 
   CONFIGURE_HOME()
   {
+  [ -e .profile ] && rm .profile
   mkdir -p /home/$USERNAME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
   mkdir -p /home/$USERNAME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
   touch /home/$USERNAME/.local/recently-used.xbel

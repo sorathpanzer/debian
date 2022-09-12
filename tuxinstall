@@ -185,6 +185,16 @@ imlib2-devel:\
 :\
 imlib2)
 
+  LF=(
+lf:\
+:\
+:\
+lf:\
+lf:\
+lf:\
+lf:\
+lf)
+
   LIBEXIF=(
 libexif-devel:\
 libexif-devel:\
@@ -473,7 +483,7 @@ xorg-server:\
 xorg-minimal:\
 xorg-server:\
 xorg-server:\
-xorg-server)
+xorg-minimal)
 
   XRANDR=(
 x11-xserver-utils:\
@@ -603,7 +613,7 @@ zathura-pdf-poppler)
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
   $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
-    $LIBREOFFICE $LIBREOFFICEPT $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
+    $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
     $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
@@ -738,10 +748,22 @@ fi
   CONFIGURE_HOME
 
   if [ $RELEASE = freebsd ]; then
+    doas pkg install ncurses dsbmd fusefs-lkl
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
+    doas sysrc moused_enable=YES
+    #doas sysrc linux_enable=YES
     echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
+    grep -q config.bsd .config/suckless/dwm-6.3/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.bsd .config/suckless/st-0.8.5/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/st-0.8.5/Makefile
+    cd $HOME/.config/suckless/dwm-6.3; doas make clean install
+    cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
+    cd $HOME/.config/suckless/st-0.8.5; doas make clean install
+    cd $HOME/.config/suckless/dwmblocks; doas make clean install
+    cd $HOME/.config/suckless/sxiv; doas make clean install
+    cd $HOME
   fi
 
   if [ $RELEASE = nixos ]; then
@@ -749,10 +771,8 @@ fi
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
     sudo mv configuration.nix /etc/nixos
-    sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dmenu-5.1/config.mk
-    sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dmenu-5.1/config.mk
-    sed -i 's/^PREFIX /#PREFIX/' .config/suckless/dwm-6.3/config.mk
-    sed -i '0,/#PREFIX/! s/#PREFIX/PREFIX/' .config/suckless/dwm-6.3/config.mk
+    grep -q config.nixos .config/suckless/dwm-6.3/Makefile || sed -i 's/config.mk/config.nixos/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.mk/config.nixos/g' .config/suckless/dmenu-5.1/Makefile
     sudo nixos-rebuild boot
   fi
 

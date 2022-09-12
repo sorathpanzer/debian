@@ -681,9 +681,12 @@ fi
     pip install --user ueberzug
   fi
 
-    grep -q config.mk .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.mk .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.mk .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/st-0.8.5/Makefile
+    grep -q config.bsd .config/suckless/dwm-6.3/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.bsd .config/suckless/st-0.8.5/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/st-0.8.5/Makefile
+    grep -q config.nixos .config/suckless/dwm-6.3/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.nixos .config/suckless/st-0.8.5/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/st-0.8.5/Makefile
 
     $SUDO mkdir -p /etc/polkit-1/rules.d/
 
@@ -774,16 +777,19 @@ fi
   CONFIGURE_HOME
 
   if [ $RELEASE = freebsd ]; then
-    doas pkg install ncurses dsbmd fusefs-lkl
+    doas pkg install -y ncurses dsbmd fusefs-lkl
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
     doas sysrc moused_enable=YES
     #doas sysrc linux_enable=YES
     echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
-    grep -q config.bsd .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.bsd .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/st-0.8.5/Makefile
+    grep -q config.mk .config/suckless/dwm-6.3/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/dwm-6.3/Makefile
+    grep -q config.mk .config/suckless/dmenu-5.1/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/dmenu-5.1/Makefile
+    grep -q config.mk .config/suckless/st-0.8.5/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/st-0.8.5/Makefile
+    grep -q config.nixos .config/suckless/dwm-6.3/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/dwm-6.3/Makefile
+    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/dmenu-5.1/Makefile
+    grep -q config.nixos .config/suckless/st-0.8.5/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/st-0.8.5/Makefile
     cd $HOME/.config/suckless/dwm-6.3; doas make clean install
     cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
     cd $HOME/.config/suckless/st-0.8.5; doas make clean install

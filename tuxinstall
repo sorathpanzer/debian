@@ -55,6 +55,16 @@ CONFIGURE_PACKAGES()
 # 7.OpenSuse Linux
 # 8.FreeBSD"
 
+  ADBLOCK=(
+:\
+:\
+:\
+:\
+:\
+:\
+:\
+py39-adblock)
+
   ANDROIDTOOLS=(
 android-tools-adb:\
 android-tools:\
@@ -425,6 +435,16 @@ trash-cli:\
 trash-cli:\
 )
 
+  UEBERZUG=(
+:\
+:\
+:\
+:\
+:\
+:\
+:\
+py39-ueberzug)
+
   UDISKIE=(
 udiskie:\
 udiskie:\
@@ -612,9 +632,9 @@ zathura-pdf-poppler)
   $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
-  $PKGINSTALL $(SEL $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
+  $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
     $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
-    $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
+    $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $UEBERZUG $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
   if [ $RELEASE != freebsd ]; then
@@ -656,8 +676,14 @@ fi
 
   CONFIGURE_SYSTEM()
   {
+  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ] || [ $OS = "rhel" ]; then
     pip install --user adblock
     pip install --user ueberzug
+  fi
+
+    grep -q config.mk .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.mk .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.mk .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.mk/g' .config/suckless/st-0.8.5/Makefile
 
     $SUDO mkdir -p /etc/polkit-1/rules.d/
 
@@ -755,9 +781,9 @@ fi
     doas sysrc moused_enable=YES
     #doas sysrc linux_enable=YES
     echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
-    grep -q config.bsd .config/suckless/dwm-6.3/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.bsd .config/suckless/st-0.8.5/Makefile || sed -i 's/config.mk/config.bsd/g' .config/suckless/st-0.8.5/Makefile
+    grep -q config.bsd .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.bsd .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.bsd/g' .config/suckless/st-0.8.5/Makefile
     cd $HOME/.config/suckless/dwm-6.3; doas make clean install
     cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
     cd $HOME/.config/suckless/st-0.8.5; doas make clean install
@@ -771,8 +797,9 @@ fi
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
     sudo mv configuration.nix /etc/nixos
-    grep -q config.nixos .config/suckless/dwm-6.3/Makefile || sed -i 's/config.mk/config.nixos/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.mk/config.nixos/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.nixos .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/dwm-6.3/Makefile
+    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/dmenu-5.1/Makefile
+    grep -q config.nixos .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/st-0.8.5/Makefile
     sudo nixos-rebuild boot
   fi
 

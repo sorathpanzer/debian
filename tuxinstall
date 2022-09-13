@@ -777,7 +777,7 @@ fi
   CONFIGURE_HOME
 
   if [ $RELEASE = freebsd ]; then
-    doas pkg install -y ncurses dsbmd fusefs-lkl
+    doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
@@ -794,7 +794,7 @@ fi
     cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
     cd $HOME/.config/suckless/st-0.8.5; doas make clean install
     cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
-    cd $HOME/.config/suckless/sxiv; doas make clean install
+    #cd $HOME/.config/suckless/sxiv; doas make clean install
     cd $HOME
   fi
 

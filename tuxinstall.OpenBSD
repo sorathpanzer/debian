@@ -15,6 +15,7 @@ GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 
 RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
+OPENBSD=$(uname)
 
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
   OS="$RELEASE"
@@ -39,7 +40,12 @@ if [[ $RELEASE = freebsd ]]; then
   OS="freebsd"
   SUDO="doas"
   PKGINSTALL="$SUDO pkg install -y"
-  $SUDO pkg install curl
+fi
+
+if [[ $OPENBSD = OpenBSD ]]; then
+  OS="OpenBSD"
+  SUDO="doas"
+  PKGINSTALL="doas pkg_add"
 fi
 
 CONFIGURE_PACKAGES()
@@ -54,6 +60,7 @@ CONFIGURE_PACKAGES()
 # 6.Alpine Linux
 # 7.OpenSuse Linux
 # 8.FreeBSD"
+# 9.OpenBSD
 
   ADBLOCK=(
 :\
@@ -63,7 +70,8 @@ CONFIGURE_PACKAGES()
 :\
 :\
 :\
-py39-adblock)
+py39-adblock:\
+py3-adblock)
 
   ANDROIDTOOLS=(
 android-tools-adb:\
@@ -73,7 +81,8 @@ android-tools:\
 android-tools:\
 android-tools:\
 android-tools:\
-android-tools)
+android-tools:\
+)
 
   BTRFSPROGS=(
 btrfs-progs:\
@@ -83,6 +92,7 @@ btrfs-progs:\
 btrfs-progs:\
 btrfs-progs:\
 btrfsprogs:\
+:\
 )
 
   CRONTABS=(
@@ -93,7 +103,8 @@ crontabs:\
 :\
 :\
 crontabs:\
-py39-python-crontab)
+py39-python-crontab:\
+)
 
   DBUSX11=(
 dbus-x11:\
@@ -103,12 +114,14 @@ dbus:\
 dbus-x11:\
 dbus-x11:\
 dbus-x11:\
+dbus:\
 dbus)
 
   DUNST=(
 dunst:\
 dunst:\
 :\
+dunst:\
 dunst:\
 dunst:\
 dunst:\
@@ -123,6 +136,7 @@ feh:\
 feh:\
 feh:\
 feh:\
+feh:\
 feh)
 
   FFMPEGTHUMBNAILER=(
@@ -133,11 +147,13 @@ ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 FFmpegThumbnailer:\
+ffmpegthumbnailer:\
 ffmpegthumbnailer)
 
   FLATPAK=(
 :\
 flatpak:\
+:\
 :\
 :\
 :\
@@ -153,7 +169,8 @@ fzf:\
 fzf:\
 fzf:\
 fzf:\
-fzf)
+fzf:\
+)
 
   GIFLIB=(
 giflib-devel:\
@@ -163,6 +180,7 @@ giflib-devel:\
 giflib-devel:\
 giflib-devel:\
 giflib-devel:\
+giflib:\
 giflib)
 
   GRUBBY=(
@@ -173,6 +191,7 @@ grubby:\
 grubby:\
 grubby:\
 grubby:\
+:\
 )
 
   IMAGEMAGICK=(
@@ -183,7 +202,8 @@ imagemagick:\
 ImageMagick:\
 imagemagick:\
 ImageMagick:\
-ImageMagick7-nox11)
+ImageMagick7-nox11:\
+ImageMagick)
 
   IMLIB2=(
 imlib2-devel:\
@@ -193,12 +213,14 @@ imlib2-devel:\
 imlib2-devel:\
 imlib2-devel:\
 :\
+imlib2:\
 imlib2)
 
   LF=(
 lf:\
 :\
 :\
+lf:\
 lf:\
 lf:\
 lf:\
@@ -213,6 +235,7 @@ libexif-devel:\
 libexif-devel:\
 libexif-devel:\
 libexif-devel:\
+libexif:\
 libexif)
 
   LIBREOFFICE=(
@@ -223,6 +246,7 @@ libreoffice-calc:\
 libreoffice-calc:\
 libreoffice-calc:\
 libreoffice-calc:\
+libreoffice:\
 libreoffice)
 
   LIBREOFFICEPT=(
@@ -233,7 +257,8 @@ libreoffice-langpack-pt-PT:\
 libreoffice-langpack-pt-PT:\
 libreoffice-langpack-pt-PT:\
 libreoffice-langpack-pt-PT:\
-pt-libreoffice)
+pt-libreoffice:\
+libreoffice-i18n-pt-br)
 
   LIBX11=(
 libX11-devel:\
@@ -243,7 +268,8 @@ libX11-devel:\
 libX11-devel:\
 libX11-devel:\
 libX11-devel:\
-libX11)
+libX11:\
+)
 
   LIBXFT=(
 libxft2:\
@@ -253,7 +279,8 @@ libxft:\
 libXft:\
 libxft:\
 libXft:\
-libXft)
+libXft:\
+)
 
   LIBXINERAMA=(
 libXinerama-devel:\
@@ -263,7 +290,8 @@ libXinerama-devel:\
 libXinerama-devel:\
 libXinerama-devel:\
 libXinerama-devel:\
-libXinerama)
+libXinerama:\
+)
 
   LIGHT=(
 light:\
@@ -273,6 +301,7 @@ light:\
 light:\
 light:\
 light:\
+:\
 )
 
   LMSENSORS=(
@@ -283,6 +312,7 @@ lm_sensors:\
 lm_sensors:\
 lm-sensors:\
 lm_sensors:\
+:\
 )
 
   NTFS3G=(
@@ -293,7 +323,8 @@ ntfs-3g:\
 ntfs-3g:\
 ntfs-3g:\
 ntfs-3g:\
-fusefs-ntfs)
+fusefs-ntfs:\
+ntfs_3g)
 
   PANDOCPDF=(
 pandoc-pdf:\
@@ -303,7 +334,8 @@ pandoc:\
 pandoc:\
 pandoc:\
 pandoc:\
-)
+:\
+pandoc)
 
   PICOM=(
 picom:\
@@ -313,12 +345,25 @@ picom:\
 picom:\
 picom:\
 picom:\
+picom:\
 picom)
+
+  PIPEWIRE=(
+pipewire:\
+pipewire:\
+pipewire:\
+pipewire:\
+pipewire:\
+pipewire:\
+pipewire:\
+pipewire:\
+)
 
   POPPLERUTILS=(
 poppler-utils:\
 poppler-utils:\
 poppler:\
+poppler-utils:\
 poppler-utils:\
 poppler-utils:\
 poppler-utils:\
@@ -333,6 +378,7 @@ pulseaudio:\
 pulseaudio-utils:\
 pulseaudio-utils:\
 pulseaudio-utils:\
+:\
 )
 
   PYTHON=(
@@ -343,7 +389,8 @@ python3-devel:\
 :\
 :\
 :\
-python311)
+python311:\
+python3)
 
   PYTHON3PIP=(
 python3-pip:\
@@ -353,7 +400,8 @@ python-pip:\
 py3-pip:\
 python3-pip:\
 python3-pip:\
-py39-pip)
+py39-pip:\
+py3-pip)
 
   PYTHON3SIX=(
 python3-six:\
@@ -363,7 +411,8 @@ python-six:\
 py3-six:\
 python3-six:\
 python3-six:\
-py39-six)
+py39-six:\
+py3-six)
 
   QEMU=(
 qemu:\
@@ -373,12 +422,14 @@ qemu-base:\
 qemu:\
 qemu:\
 qemu:\
+qemu:\
 qemu)
 
   SCROT=(
 scrot:\
 scrot:\
 :\
+scrot:\
 scrot:\
 scrot:\
 scrot:\
@@ -393,12 +444,14 @@ sox:\
 sox:\
 sox:\
 sox:\
+sox:\
 sox)
 
   STOW=(
 stow:\
 stow:\
 :\
+stow:\
 stow:\
 stow:\
 stow:\
@@ -413,7 +466,8 @@ telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
 telegram-desktop:\
-telegram-desktop)
+telegram-desktop:\
+)
 
   TIG=(
 tig:\
@@ -423,6 +477,7 @@ tig:\
 tig:\
 tig:\
 :\
+tig:\
 tig)
 
   TRASHCLI=(
@@ -433,6 +488,7 @@ trash-cli:\
 trash-cli:\
 trash-cli:\
 trash-cli:\
+:\
 )
 
   UEBERZUG=(
@@ -443,7 +499,8 @@ trash-cli:\
 :\
 :\
 :\
-py39-ueberzug)
+py39-ueberzug:\
+)
 
   UDISKIE=(
 udiskie:\
@@ -453,12 +510,14 @@ udiskie:\
 udiskie:\
 udiskie:\
 udiskie:\
+:\
 )
 
   XDOTOOL=(
 xdotool:\
 xdotool:\
 :\
+xdotool:\
 xdotool:\
 xdotool:\
 xdotool:\
@@ -473,7 +532,8 @@ xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
 xf86-video-intel:\
-xf86-video-intel)
+xf86-video-intel:\
+)
 
   XINIT=(
 xinit:\
@@ -483,7 +543,8 @@ xinit:\
 xinit:\
 xinit:\
 xinit:\
-xinit)
+xinit:\
+)
 
   XINPUT=(
 xinput:\
@@ -493,7 +554,8 @@ xorg-xinput:\
 xinput:\
 xinput:\
 xinput:\
-xinput)
+xinput:\
+)
 
   XORGSERVER=(
 xserver-xorg:\
@@ -503,7 +565,8 @@ xorg-server:\
 xorg-minimal:\
 xorg-server:\
 xorg-server:\
-xorg-minimal)
+xorg-minimal:\
+)
 
   XRANDR=(
 x11-xserver-utils:\
@@ -513,7 +576,8 @@ xorg-xrandr:\
 xrandr:\
 xrandr:\
 xrandr:\
-xrandr)
+xrandr:\
+)
 
   XRDB=(
 x11-xserver-utils:\
@@ -523,7 +587,8 @@ xorg-xrdb:\
 xrdb:\
 xrdb:\
 xrdb:\
-xrdb)
+xrdb:\
+)
 
   XSET=(
 x11-xserver-utils:\
@@ -533,7 +598,8 @@ xorg-xset:\
 xset:\
 xset:\
 xset:\
-xset)
+xset:\
+)
 
   YOUTUBEDL=(
 youtube-dl:\
@@ -543,12 +609,14 @@ youtube-dl:\
 youtube-dl:\
 youtube-dl:\
 youtube-dl:\
-youtube_dl)
+youtube_dl:\
+youtube-dl)
 
   ZATHURA=(
 zathura:\
 zathura:\
 :\
+zathura:\
 zathura:\
 zathura:\
 zathura:\
@@ -563,6 +631,7 @@ zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 zathura-pdf-poppler:\
 Zathura-PDF-Poppler:\
+zathura-pdf-poppler:\
 zathura-pdf-poppler)
 
   case "${OS}" in
@@ -575,6 +644,7 @@ zathura-pdf-poppler)
     Alpine)             POS="6" ;;
     OpenSuse)           POS="7" ;;
     freebsd)            POS="8" ;;
+    OpenBSD)            POS="9" ;;
   esac
 
   SEL()
@@ -629,11 +699,11 @@ zathura-pdf-poppler)
   $PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
-  $PKGINSTALL ffmpeg firefox groff i3lock keepassxc ncdu neovim mpv pipewire \
+  $PKGINSTALL ffmpeg firefox groff i3lock keepassxc ncdu neovim mpv \
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
   $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
-    $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
+    $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $PIPEWIRE $POPPLERUTILS $PULSEAUDIOUTILS \
     $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $UEBERZUG $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
@@ -798,6 +868,9 @@ fi
     cd $HOME
   fi
 
+  #if [ $OPENBSD = OpenBSD ]; then
+  #fi
+
   if [ $RELEASE = nixos ]; then
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
@@ -814,4 +887,3 @@ fi
   fi
 
   cat install.error | grep error
-

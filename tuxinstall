@@ -626,10 +626,10 @@ zathura-pdf-poppler)
     defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
   fi
 
-  $PKGINSTALL git $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
+  $PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
-  $PKGINSTALL ffmpeg firefox gcc groff i3lock keepassxc ncdu neovim mpv pipewire \
+  $PKGINSTALL ffmpeg firefox groff i3lock keepassxc ncdu neovim mpv pipewire \
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
   $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \

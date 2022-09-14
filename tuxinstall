@@ -620,6 +620,8 @@ zathura-pdf-poppler)
     nix-env -iA nixpkgs.picom
     nix-env -iA nixpkgs.sox
     nix-env -iA nixpkgs.udiskie
+    nix-env -iA python310Packages.adblock
+    nix-env -iA ueberzug
 
     echo "max_parallel_downloads=10
     deltarpm=True
@@ -676,17 +678,14 @@ fi
 
   CONFIGURE_SYSTEM()
   {
-  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ] || [ $OS = "rhel" ]; then
+  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
     pip install --user adblock
     pip install --user ueberzug
   fi
 
-    grep -q config.bsd .config/suckless/dwm-6.3/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.bsd .config/suckless/dmenu-5.1/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.bsd .config/suckless/st-0.8.5/Makefile && sed -i 's/config.bsd/config.mk/g' .config/suckless/st-0.8.5/Makefile
-    grep -q config.nixos .config/suckless/dwm-6.3/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.nixos .config/suckless/st-0.8.5/Makefile && sed -i 's/config.nixos/config.mk/g' .config/suckless/st-0.8.5/Makefile
+    cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
+    cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
+    cp .config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
 
     $SUDO mkdir -p /etc/polkit-1/rules.d/
 
@@ -784,12 +783,9 @@ fi
     doas sysrc moused_enable=YES
     #doas sysrc linux_enable=YES
     echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
-    grep -q config.mk .config/suckless/dwm-6.3/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/dwm-6.3/Makefile
-    grep -q config.mk .config/suckless/dmenu-5.1/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/dmenu-5.1/Makefile
-    grep -q config.mk .config/suckless/st-0.8.5/Makefile && sed -i '' s/config.mk/config.bsd/g .config/suckless/st-0.8.5/Makefile
-    grep -q config.nixos .config/suckless/dwm-6.3/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/dwm-6.3/Makefile
-    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/dmenu-5.1/Makefile
-    grep -q config.nixos .config/suckless/st-0.8.5/Makefile && sed -i '' s/config.nixos/config.bsd/g .config/suckless/st-0.8.5/Makefile
+    cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
+    cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
+    cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
     cd $HOME/.config/suckless/dwm-6.3; doas make clean install
     cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
     cd $HOME/.config/suckless/st-0.8.5; doas make clean install
@@ -801,11 +797,11 @@ fi
   if [ $RELEASE = nixos ]; then
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
-    sed -i s/luks-/$(lsblk -l | grep luks | head -n 1 | awk '{print $1}')/g configuration.nix
+    sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
+    cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
+    cp .config/suckless/dmenu-5.1/config.nixos .config/suckless/dmenu-5.1/config.mk
+    cp .config/suckless/st-0.8.5/config.nixos .config/suckless/st-0.8.5/config.mk
     sudo mv configuration.nix /etc/nixos
-    grep -q config.nixos .config/suckless/dwm-6.3/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/dwm-6.3/Makefile
-    grep -q config.nixos .config/suckless/dmenu-5.1/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/dmenu-5.1/Makefile
-    grep -q config.nixos .config/suckless/st-0.8.5/Makefile || sed -i 's/config.*/config.nixos/g' .config/suckless/st-0.8.5/Makefile
     sudo nixos-rebuild boot
   fi
 

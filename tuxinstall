@@ -667,10 +667,10 @@ if [ $RELEASE != freebsd ]; then
 
   if [ ! -z $LVM_PASSWORD ]; then
     echo "Open vault password:"
-    $SUDO mkdir /media/Vault
+    mkdir Vault
     echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
-    $SUDO mount /dev/mapper/Vault /media/Vault
-    rsync -avrop /media/Vault/Documentos/BackHome/ /home/$USERNAME
+    $SUDO mount /dev/mapper/Vault Vault
+    rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
     $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
   fi
 fi

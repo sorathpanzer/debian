@@ -29,6 +29,7 @@ if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
   echo "Defaults:$USERNAME timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/sorath
   sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
   sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+  sudo systemctl enable rpm-ostreed-automatic.timer
 fi
 
 if [[ $RELEASE = almalinux ]]; then

@@ -26,7 +26,9 @@ if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
   OS="FedoraIOT"
   SUDO="sudo"
   PKGINSTALL="$SUDO rpm-ostree install"
-  echo "Defaults:$USERNAME timestamp_timeout=30" | $SUDO tee /etc/sudoers.d/sorath
+  echo "Defaults:$USERNAME timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/sorath
+  sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+  sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
 fi
 
 if [[ $RELEASE = almalinux ]]; then
@@ -134,6 +136,16 @@ ffmpegthumbnailer:\
 ffmpegthumbnailer:\
 FFmpegThumbnailer:\
 ffmpegthumbnailer)
+
+  FIREFOX=(
+firefox:\
+firefox:\
+firefox:\
+firefox:\
+firefox:\
+firefox:\
+firefox:\
+firefox-esr)
 
   FLATPAK=(
 :\
@@ -631,10 +643,10 @@ zathura-pdf-poppler)
   $PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
 
-  $PKGINSTALL ffmpeg firefox groff i3lock keepassxc ncdu neovim mpv pipewire \
+  $PKGINSTALL ffmpeg groff i3lock keepassxc ncdu neovim mpv pipewire \
     rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
-  $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
+  $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FIREFOX $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
     $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
     $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $UEBERZUG $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
@@ -660,20 +672,23 @@ zathura-pdf-poppler)
   touch /home/$USERNAME/.cache/zsh/history
   sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
 
+  cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
+  cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
+  cp .config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
 
-if [ $RELEASE != freebsd ]; then
-  NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
-  SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
+  if [ $RELEASE != freebsd ]; then
+    NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
+    SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
-  if [ ! -z $LVM_PASSWORD ]; then
-    echo "Open vault password:"
-    mkdir Vault
-    echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
-    $SUDO mount /dev/mapper/Vault Vault
-    rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
-    $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
+    if [ ! -z $LVM_PASSWORD ]; then
+      echo "Open vault password:"
+      mkdir Vault
+      echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
+      $SUDO mount /dev/mapper/Vault Vault
+      rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
+      $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
+    fi
   fi
-fi
   }
 
   CONFIGURE_SYSTEM()

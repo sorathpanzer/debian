@@ -699,10 +699,6 @@ zathura-pdf-poppler)
     pip install --user ueberzug
   fi
 
-    cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
-    cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
-    cp .config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
-
     $SUDO mkdir -p /etc/polkit-1/rules.d/
 
     echo "vm.swappiness=10" | $SUDO tee -a /etc/sysctl.d/99-sysctl.conf

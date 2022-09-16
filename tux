@@ -19,7 +19,7 @@ RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
   OS="$RELEASE"
   SUDO="sudo"
-  PKGINSTALL="$SUDO dnf install -y"
+  PKGINSTALL="sudo dnf install -y"
 fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
@@ -29,13 +29,13 @@ fi
 if [[ $RELEASE = almalinux ]]; then
   OS="rhel"
   SUDO="sudo"
-  PKGINSTALL="$SUDO dnf install -y"
+  PKGINSTALL="sudo dnf install -y"
 fi
 
 if [[ $RELEASE = freebsd ]]; then
   OS="freebsd"
   SUDO="doas"
-  PKGINSTALL="$SUDO pkg install -y"
+  PKGINSTALL="doas pkg install -y"
   $SUDO pkg install curl
 fi
 
@@ -607,55 +607,41 @@ zathura-pdf-poppler)
   if [ $OS = "rhel" ]; then
     $PKGINSTALL epel-release
     $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
-    $SUDO dnf config-manager --set-enabled crb
-    $SUDO dnf update -y
+    sudo dnf config-manager --set-enabled crb
+    sudo dnf update -y
     $PKGINSTALL tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
     . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-    nix-env -iA nixpkgs.stow
-    nix-env -iA nixpkgs.android-tools
-    nix-env -iA nixpkgs.ffmpegthumbnailer
-    nix-env -iA nixpkgs.fzf
-    nix-env -iA nixpkgs.scrot
-    nix-env -iA nixpkgs.xdotool
-    nix-env -iA nixpkgs.btrfs-progs
-    nix-env -iA nixpkgs.dunst
-    nix-env -iA nixpkgs.feh
-    nix-env -iA nixpkgs.trash-cli
-    nix-env -iA nixpkgs.zathura
-    nix-env -iA nixpkgs.pandoc
-    nix-env -iA nixpkgs.qutebrowser
-    nix-env -iA nixpkgs.transmission-gtk
-
-    nix-env -iA nixpkgs.light
-    nix-env -iA nixpkgs.picom
-    nix-env -iA nixpkgs.sox
-    nix-env -iA nixpkgs.udiskie
-    nix-env -iA python310Packages.adblock
-    nix-env -iA ueberzug
+    nix-env -iA nixpkgs.stow nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.xdotool nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
+      nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.telegram-desktop nixpkgs.light \
+      nixpkgs.picom nixpkgs.sox nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
 
     echo "max_parallel_downloads=10
     deltarpm=True
-    defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
+    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
   fi
 
-  $PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
-  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+  #$PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
 
-  $PKGINSTALL ffmpeg groff i3lock keepassxc ncdu neovim mpv pipewire \
-    rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
+  #$PKGINSTALL ffmpeg groff i3lock keepassxc ncdu neovim mpv pipewire \
+  #  rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
 
-  $PKGINSTALL $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FIREFOX $FZF $GIFLIB $IMAGEMAGICK $LIBXFT $IMLIB2 \
+  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc ncdu neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
+    $(SEL $ADBLOCK $ANDROIDTOOLS $BTRFSPROGS $CRONTABS $DBUSX11 $DUNST $FEH $FFMPEGTHUMBNAILER $FIREFOX $FLATPAK $FZF $GIFLIB $GRUBBY $IMAGEMAGICK $LIBXFT $IMLIB2 \
     $LIBREOFFICE $LIBREOFFICEPT $LF $LIGHT $LIBEXIF $LIBX11 $LIBXINERAMA $LMSENSORS $NTFS3G $PANDOCPDF $PICOM $POPPLERUTILS $PULSEAUDIOUTILS \
-    $PYTHON $PYTHON3SIX $QEMU $SCROT $SOX $TIG $TRASHCLI $TELEGRAM $UDISKIE $UEBERZUG $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
+    $PYTHON $PYTHON3PIP $PYTHON3SIX $QEMU $SCROT $SOX $STOW $TIG $TRASHCLI $TELEGRAM $UDISKIE $UEBERZUG $XDOTOOL $XINPUT $XF86VIDEOINTEL $XORGSERVER $XINIT $XRANDR \
     $XRDB $XSET $YOUTUBEDL $ZATHURA $ZATHURAPDF)
 
-  if [ $RELEASE != freebsd ]; then
-    $SUDO flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || nix-env -iA nixpkgs.signal-desktop nixpkgs.telegram-desktop; flatpak install org.qutebrowser.qutebrowser -y
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+
+  if [ $RELEASE = FedoraIOT ] || [ $RELEASE = fedora ] || [ $OS = "rhel" ]; then
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || flatpak install org.qutebrowser.qutebrowser -y
+    pip install --user adblock
+    pip install --user ueberzug
   fi
   }
 
@@ -685,25 +671,16 @@ zathura-pdf-poppler)
     if [ ! -z $LVM_PASSWORD ]; then
       echo "Open vault password:"
       mkdir Vault
-      echo -n "$LVM_PASSWORD" | $SUDO cryptsetup open --type luks /dev/sda1 Vault
-      $SUDO mount /dev/mapper/Vault Vault
+      echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
+      sudo mount /dev/mapper/Vault Vault
       rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
-      $SUDO cp $HOME/Documentos/wg0.conf /etc/wireguard
+      sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
   fi
   }
 
   CONFIGURE_SYSTEM()
   {
-  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
-    pip install --user adblock
-    pip install --user ueberzug
-  fi
-
-    cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
-    cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
-    cp .config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
-
     $SUDO mkdir -p /etc/polkit-1/rules.d/
 
     echo "vm.swappiness=10" | $SUDO tee -a /etc/sysctl.d/99-sysctl.conf
@@ -799,7 +776,7 @@ zathura-pdf-poppler)
     doas sysrc openntpd_enable=YES
     doas sysrc hald_enable=YES
     doas sysrc moused_enable=YES
-    #doas sysrc linux_enable=YES
+    doas sysrc linux_enable=YES
     echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
     cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
     cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk

@@ -24,12 +24,6 @@ fi
 
 if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
   OS="FedoraIOT"
-  SUDO="sudo"
-  PKGINSTALL="$SUDO rpm-ostree install"
-  echo "Defaults:$USERNAME timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/sorath
-  sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-  sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-  sudo systemctl enable rpm-ostreed-automatic.timer
 fi
 
 if [[ $RELEASE = almalinux ]]; then
@@ -597,10 +591,17 @@ zathura-pdf-poppler)
     done | cut -d ':' -f $POS
   }
 
-  if [ $OS = "FedoraIOT" ] || [ $OS = "fedora" ]; then
-    [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+  if [ $OS = "FedoraIOT" ]; then
+    SUDO="sudo"
+    PKGINSTALL="$SUDO rpm-ostree install"
+
+    echo "Defaults:$USERNAME timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/sorath
+    sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo rpm-ostree ex apply-live --allow-replacement
+    sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+    sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+    sudo systemctl enable rpm-ostreed-automatic.timer
   fi
 
   if [ $OS = "rhel" ]; then

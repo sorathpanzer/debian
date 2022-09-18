@@ -13,6 +13,7 @@ USERNAME=""
 LVM_PASSWORD=""
 GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
+DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
 
@@ -180,7 +181,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
   echo "Cloning my dotfiles..."
-  git clone https://github.com/sorathpanzer/dotgit.git /home/$USERNAME/.config/dotgit
+  git clone $DOTFILES /home/$USERNAME/.config/dotgit
   git config --global credential.helper store
   mkdir -p /home/$USERNAME/.cache/zsh
   touch /home/$USERNAME/.cache/zsh/history

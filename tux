@@ -136,11 +136,11 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   fi
 
   if [ $OS = "rhel" ]; then
-    $PKGINSTALL epel-release
-    $PKGINSTALL --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
-    sudo dnf config-manager --set-enabled crb
     sudo dnf update -y
-    $PKGINSTALL tar
+    sudo dnf install -y epel-release
+    sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+    sudo dnf config-manager --set-enabled crb
+    sudo dnf install -y tar
 
     sh <(curl -L https://nixos.org/nix/install) --no-daemon
     sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
@@ -168,8 +168,6 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   if [ $RELEASE = FedoraIOT ] || [ $RELEASE = fedora ] || [ $OS = "rhel" ]; then
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || flatpak install org.qutebrowser.qutebrowser -y
-    #pip install --user adblock
-    #pip install --user ueberzug
   fi
   }
 
@@ -187,6 +185,9 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   mkdir -p /home/$USERNAME/.cache/zsh
   touch /home/$USERNAME/.cache/zsh/history
   sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
+
+  pip install --user adblock
+  pip install --user ueberzug
 
   cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
   cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk

@@ -100,14 +100,14 @@ CONFIGURE_PACKAGES()
 
   case "${OS}" in
     "")                 echo "No option was specified."; exit 1 ;;
-    debian|ubuntu)	    POS="1" ;;
-    fedora|FedoraIOT)   POS="2" ;;
-    rhel)               POS="3" ;;
-    Arch)               POS="4" ;;
-    Void)               POS="5" ;;
-    Alpine)             POS="6" ;;
-    OpenSuse)           POS="7" ;;
-    freebsd)            POS="8" ;;
+    debian|ubuntu)	    POS="0" ;;
+    fedora|FedoraIOT)   POS="1" ;;
+    rhel)               POS="2" ;;
+    Arch)               POS="3" ;;
+    Void)               POS="4" ;;
+    Alpine)             POS="5" ;;
+    OpenSuse)           POS="6" ;;
+    freebsd)            POS="7" ;;
   esac
 
   if [ $OS = "FedoraIOT" ]; then

@@ -155,11 +155,6 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
   fi
 
-  #$PKGINSTALL git gcc $(SEL $STOW $FLATPAK $GRUBBY $PYTHON3PIP)
-
-  #$PKGINSTALL ffmpeg groff i3lock keepassxc ncdu neovim mpv pipewire \
-  #  rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh
-
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc ncdu neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LIBREOFFPT[$POS]} ${LF[$POS]} \
@@ -173,8 +168,8 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   if [ $RELEASE = FedoraIOT ] || [ $RELEASE = fedora ] || [ $OS = "rhel" ]; then
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || flatpak install org.qutebrowser.qutebrowser -y
-    pip install --user adblock
-    pip install --user ueberzug
+    #pip install --user adblock
+    #pip install --user ueberzug
   fi
   }
 

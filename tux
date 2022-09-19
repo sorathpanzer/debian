@@ -148,7 +148,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     . $HOME/.nix-profile/etc/profile.d/nix.sh
 
     nix-env -iA nixpkgs.stow nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.xdotool nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-      nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.telegram-desktop nixpkgs.light \
+      nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
       nixpkgs.picom nixpkgs.sox nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
 
     echo "max_parallel_downloads=10

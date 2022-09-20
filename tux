@@ -15,36 +15,25 @@ GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
-RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d '=' -f2 | tr -d '"')
+RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
 
-if [[ $RELEASE = fedora && -f /usr/bin/dnf ]]; then
-  OS="$RELEASE"
-  SUDO="sudo"
-  PKGINSTALL="sudo dnf install -y"
-fi
-
-if [[ $RELEASE = fedora && -f /usr/bin/ostree ]]; then
-  OS="FedoraIOT"
-fi
-
-if [[ $RELEASE = almalinux ]]; then
-  OS="rhel"
-  SUDO="sudo"
-  PKGINSTALL="sudo dnf install -y"
-fi
-
-if [[ $RELEASE = freebsd ]]; then
-  OS="freebsd"
-  SUDO="doas"
-  PKGINSTALL="doas pkg install -y"
-  $SUDO pkg install curl
-fi
+case "${RELEASE}" in
+  "")                 echo "No option was specified."; exit 1 ;;
+  debian|ubuntu)	    PKGINSTALL="sudo apt install" ;;
+  Fedora)             PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
+  AlmaLinux)          PKGINSTALL="sudo dnf install -y" ;;
+  Arch)               PKGINSTALL="sudo pacman -Syu" ;;
+  Void)               PKGINSTALL="sudo xbps-install" ;;
+  Alpine)             PKGINSTALL="sudo apk install" ;;
+  OpenSuse)           PKGINSTALL="sudo zypper install" ;;
+  FreeBSD)            PKGINSTALL="doas pkg install -y" ;;
+esac
 
 CONFIGURE_PACKAGES()
 {
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu               Fedora/IOT                  Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
@@ -99,29 +88,26 @@ CONFIGURE_PACKAGES()
   ZATHURA=(       zathura                     zathura                     "$NA"                       zathura                     zathura                     zathura                     zathura                     zathura             )
   ZATHURAPDF=(    zathura-pdf-poppler         zathura-pdf-poppler         "$NA"                       zathura-pdf-poppler         zathura-pdf-poppler         zathura-pdf-poppler         Zathura-PDF-Poppler         zathura-pdf-poppler )
 
-  case "${OS}" in
+  case "${RELEASE}" in
     "")                 echo "No option was specified."; exit 1 ;;
     debian|ubuntu)	    POS="0" ;;
-    fedora|FedoraIOT)   POS="1" ;;
-    rhel)               POS="2" ;;
+    Fedora)             POS="1" ;;
+    AlmaLinux)          POS="2" ;;
     Arch)               POS="3" ;;
     Void)               POS="4" ;;
     Alpine)             POS="5" ;;
     OpenSuse)           POS="6" ;;
-    freebsd)            POS="7" ;;
+    FreeBSD)            POS="7" ;;
   esac
 
-  if [ $OS = "FedoraIOT" ]; then
-    SUDO="sudo"
-    PKGINSTALL="$SUDO rpm-ostree install"
-
-    echo "Defaults:$USERNAME timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/sorath
-    sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    sudo rpm-ostree ex apply-live --allow-replacement
-    sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+  if [ $RELEASE = "Fedora" ]; then
+    echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
+    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    $PKGINSTALL install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+    [ -x "$(command -v rpm-ostree)" ] && sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
     sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-    sudo systemctl enable rpm-ostreed-automatic.timer
+    [ -x "$(command -v rpm-ostree)" ] && sudo systemctl enable rpm-ostreed-automatic.timer
 
     echo '[updates-archive]
 name=Fedora $releasever - $basearch - Updates Archive
@@ -136,7 +122,7 @@ skip_if_unavailable=True
 cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive.repo
   fi
 
-  if [ $OS = "rhel" ]; then
+  if [ $RELEASE = "AlmaLinux" ]; then
     sudo dnf update -y
     sudo dnf install -y epel-release
     sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
@@ -164,11 +150,12 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
     ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]}
 
-  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+  [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-  if [ $RELEASE = FedoraIOT ] || [ $RELEASE = fedora ] || [ $OS = "rhel" ]; then
+  if [ $RELEASE = Fedora ] || [ $OS = "AlmaLinux" ]; then
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    [ -x "$(command -v rpm-ostree)" ] && $SUDO flatpak install org.signal.Signal -y || flatpak install org.qutebrowser.qutebrowser -y
+    sudo flatpak install org.signal.Signal -y
+    [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
   fi
   }
 
@@ -194,7 +181,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
   cp .config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
 
-  if [ $RELEASE != freebsd ]; then
+  if [ $RELEASE != FreeBSD ]; then
     NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
     SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
@@ -211,19 +198,19 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
 
   CONFIGURE_SYSTEM()
   {
-    $SUDO mkdir -p /etc/polkit-1/rules.d/
+    sudo mkdir -p /etc/polkit-1/rules.d/
 
-    echo "vm.swappiness=10" | $SUDO tee -a /etc/sysctl.d/99-sysctl.conf
-    echo "blacklist ideapad_laptop" | $SUDO tee /etc/modprobe.d/blacklist.conf
+    echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+    echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
 
     echo '/* Allow members of the wheel group to execute any actions
-    * without password authentication, similar to "$SUDO NOPASSWD:"
+    * without password authentication, similar to "sudo NOPASSWD:"
     */
     polkit.addRule(function(action, subject) {
     if (subject.isInGroup("wheel")) {
       return polkit.Result.YES;
     }
-  });' | $SUDO tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+  });' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
   echo 'polkit.addRule(function(action, subject) {
   if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
@@ -232,14 +219,14 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     {
       return polkit.Result.YES;
     }
-  });' | $SUDO tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+  });' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
 
-  $SUDO mkdir -p /media
+  sudo mkdir -p /media
   echo '# UDISKS_FILESYSTEM_SHARED
   # ==1: mount filesystem to a shared directory (/media/VolumeName)
   # ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
   # See udisks(8)
-  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | $SUDO tee /etc/udev/rules.d/99-udisks2.rules
+  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
 
   echo "[Unit]
   Description=Lock X session using slock for user %i
@@ -251,7 +238,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   ExecStartPre=/usr/bin/xset dpms force suspend
   ExecStart=/usr/bin/i3lock -c 000000
   [Install]
-  WantedBy=sleep.target" | $SUDO tee /etc/systemd/system/suspend@.service
+  WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
 
   echo 'Section "InputClass"
   Identifier "libinput touchpad catchall"
@@ -259,48 +246,48 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   MatchDevicePath "/dev/input/event*"
   Driver "libinput"
   Option "NaturalScrolling" "true"
-  EndSection' | $SUDO tee /etc/X11/xorg.conf.d/40-libinput.conf
+  EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
 
-  echo 'Section "Device"
-  Identifier "Intel Graphics"
-  Driver "intel"
-  Option "TearFree" "true"
-  Option "DRI" "False"
-  EndSection' | $SUDO tee /etc/X11/xorg.conf.d/20-intel.conf
+  #echo 'Section "Device"
+  #Identifier "Intel Graphics"
+  #Driver "intel"
+  #Option "TearFree" "true"
+  #Option "DRI" "False"
+  #EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
 
   echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDO tee /etc/udev/rules.d/50-android.rules
+  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
 
-  if [ $OS != "FedoraIOT" ] && [ $OS != "fedora" ] && [ $OS != "rhel" ]; then
-    $SUDO usermod -a -G plugdev $USER
+  if [ $OS != "Fedora" ] && [ $OS != "AlmaLinux" ]; then
+    sudo usermod -a -G plugdev $USER
   fi
 
-  $SUDO usermod -s /usr/bin/zsh $USER
+  sudo usermod -s /usr/bin/zsh $USER
 
-  $SUDO mkdir -p /etc/systemd/system/getty@tty1.service.d/
+  sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
 
-  $SUDO touch /etc/systemd/system/getty@tty1.service.d/override.conf
+  sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
   echo '[Service]
   ExecStart=
-  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDO tee /etc/systemd/system/getty@tty1.service.d/override.conf
+  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-  $SUDO touch /etc/sudoers.d/$USERNAME
-  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDO tee /etc/sudoers.d/sorath
+  sudo touch /etc/sudoers.d/$USERNAME
+  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
 
-  echo "$USERNAME" | $SUDO tee -a /etc/shutdown.allow
+  echo "$USERNAME" | sudo tee -a /etc/shutdown.allow
 
-  $SUDO systemctl enable suspend@$USERNAME.service
-  $SUDO grubby --update-kernel=ALL --args=quiet
+  sudo systemctl enable suspend@$USERNAME.service
+  sudo grubby --update-kernel=ALL --args=quiet
   }
 
 
-  if [ $RELEASE != nixos ]; then
+  if [ $RELEASE != NixOS ]; then
     CONFIGURE_PACKAGES
   fi
 
   CONFIGURE_HOME
 
-  if [ $RELEASE = freebsd ]; then
+  if [ $RELEASE = FreeBSD ]; then
     doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
     doas sysrc dbus_enable=YES
     doas sysrc openntpd_enable=YES
@@ -319,7 +306,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     cd $HOME
   fi
 
-  if [ $RELEASE = nixos ]; then
+  if [ $RELEASE = NixOS ]; then
     mkdir .config
     curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
     sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
@@ -330,7 +317,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     sudo nixos-rebuild boot
   fi
 
-  if [ $RELEASE != nixos ] &&  [ $RELEASE != freebsd ]; then
+  if [ $RELEASE != NixOS ] &&  [ $RELEASE != FreeBSD ]; then
     CONFIGURE_SYSTEM
   fi
 

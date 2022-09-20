@@ -16,10 +16,10 @@ GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
-RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
-
 CONFIGURE_PACKAGES()
 {
+RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
 # DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
@@ -78,15 +78,23 @@ CONFIGURE_PACKAGES()
   ZATHURAPDF=(    zathura-pdf-poppler         zathura-pdf-poppler         "$NA"                       zathura-pdf-poppler         zathura-pdf-poppler         zathura-pdf-poppler         Zathura-PDF-Poppler         zathura-pdf-poppler )
 
   case "${RELEASE}" in
-    "")                 echo "No option was specified."; exit 1 ;;
-    debian|ubuntu)	    POS="0" ;;
-    Fedora)             POS="1" ;;
-    AlmaLinux)          POS="2" ;;
-    Arch)               POS="3" ;;
-    Void)               POS="4" ;;
-    Alpine)             POS="5" ;;
-    OpenSuse)           POS="6" ;;
-    FreeBSD)            POS="7" ;;
+    "")                  echo "$RELEASE is not supported!"; exit 1 ;;
+    debian|ubuntu)	    POS="0"
+      PKGINSTALL="sudo apt install" ;;
+    Fedora)             POS="1"
+      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
+    AlmaLinux)          POS="2"
+      PKGINSTALL="sudo dnf install -y" ;;
+    Arch)               POS="3"
+      PKGINSTALL="sudo pacman -Syu" ;;
+    Void)               POS="4"
+      PKGINSTALL="sudo xbps-install -y" ;;
+    Alpine)             POS="5"
+      PKGINSTALL="sudo apk install -y" ;;
+    OpenSuse)           POS="6"
+      PKGINSTALL="sudo zypper install -y" ;;
+    FreeBSD)            POS="7"
+      PKGINSTALL="doas pkg install -y" ;;
   esac
 }
 
@@ -113,7 +121,7 @@ skip_if_unavailable=True
 cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive.repo
 }
 
-RHEL_SETUP()
+ALMALINUX_SETUP()
 {
     sudo dnf update -y
     sudo dnf install -y epel-release
@@ -309,44 +317,18 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  "")                 echo "No option was specified."; exit 1 ;;
-  debian|ubuntu)
-    PKGINSTALL="sudo apt install"
-    APT_SETUP ;;
-  Fedora)
-    PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y"
-    FEDORA_SETUP ;;
-  AlmaLinux)
-    PKGINSTALL="sudo dnf install -y"
-    RHEL_SETUP ;;
-  Arch)
-    PKGINSTALL="sudo pacman -Syu"
-    ARCH_SETUP ;;
-  Void)
-    PKGINSTALL="sudo xbps-install"
-    VOID_SETUP ;;
-  Alpine)
-    PKGINSTALL="sudo apk install -y"
-    ALPINE_SETUP ;;
-  OpenSuse)
-    PKGINSTALL="sudo zypper install -y"
-    SUSE_SETUP ;;
-  FreeBSD)
-    PKGINSTALL="doas pkg install -y"
+  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+    ${UPPERCASE}_SETUP
+    INSTALL_PACKAGES
     CONFIGURE_HOME
-    FREEBSD_SETUP ;;
+    CONFIGURE_SYSTEM ;;
+  FreeBSD)
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    $UPPERCASE_SETUP ;;
   NixOS)
     CONFIGURE_HOME
-    NIXOS_SETUP ;;
+    $UPPERCASE_SETUP ;;
 esac
 
-case "${RELEASE}" in
-  "")                 echo "No option was specified."; exit 1 ;;
-  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse) CONFIGURE_HOME ;;
-esac
-
-  if [ $RELEASE != NixOS ] &&  [ $RELEASE != FreeBSD ]; then
-    CONFIGURE_SYSTEM
-  fi
-
-  cat install.error | grep error
+cat install.error | grep error

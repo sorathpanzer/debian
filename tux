@@ -16,8 +16,11 @@ GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
+RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+
 CONFIGURE_PACKAGES()
 {
+
   NA=" "
 # DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -307,14 +310,29 @@ CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
   "")                 echo "No option was specified."; exit 1 ;;
-  debian|ubuntu)	    APT_SETUP ;;
-  Fedora)             FEDORA_SETUP ;;
-  AlmaLinux)          RHEL_SETUP ;;
-  Arch)               ARCH_SETUP ;;
-  Void)               VOID_SETUP ;;
-  Alpine)             ALPINE_SETUP ;;
-  OpenSuse)           SUSE_SETUP ;;
+  debian|ubuntu)
+    PKGINSTALL="sudo apt install"
+    APT_SETUP ;;
+  Fedora)
+    PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y"
+    FEDORA_SETUP ;;
+  AlmaLinux)
+    PKGINSTALL="sudo dnf install -y"
+    RHEL_SETUP ;;
+  Arch)
+    PKGINSTALL="sudo pacman -Syu"
+    ARCH_SETUP ;;
+  Void)
+    PKGINSTALL="sudo xbps-install"
+    VOID_SETUP ;;
+  Alpine)
+    PKGINSTALL="sudo apk install -y"
+    ALPINE_SETUP ;;
+  OpenSuse)
+    PKGINSTALL="sudo zypper install -y"
+    SUSE_SETUP ;;
   FreeBSD)
+    PKGINSTALL="doas pkg install -y"
     CONFIGURE_HOME
     FREEBSD_SETUP ;;
   NixOS)

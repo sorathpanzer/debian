@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.2.63
+# Version= 0.3
 
 # TODO: Before running this script you must install:
 # Fedora -> audit
@@ -270,8 +270,8 @@ INSTALL_PACKAGES()
   User=%i
   Type=forking
   Environment=DISPLAY=:0
-  ExecStartPre=/usr/bin/xset dpms force suspend
-  ExecStart=/usr/bin/i3lock -c 000000
+  ExecStart=/usr/bin/xset dpms force suspend
+  ExecStartPre=/usr/bin/i3lock -c 000000
   [Install]
   WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
 

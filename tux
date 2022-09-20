@@ -2,9 +2,10 @@
 
 # Version= 0.2.63
 
-# Fedora - Install audit
-# NIXOS - Install git and stow
-# FreeBSD - Install doas, curl and bash >>>>>>>> permit nopass keepenv
+# TODO: Before running this script you must install:
+# Fedora -> audit
+# NIXOS -> git, stow
+# FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
 exec &> >(tee -a "install.log") 2>install.error
@@ -15,23 +16,8 @@ GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
-RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
-
-case "${RELEASE}" in
-  "")                 echo "No option was specified."; exit 1 ;;
-  debian|ubuntu)	    PKGINSTALL="sudo apt install" ;;
-  Fedora)             PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
-  AlmaLinux)          PKGINSTALL="sudo dnf install -y" ;;
-  Arch)               PKGINSTALL="sudo pacman -Syu" ;;
-  Void)               PKGINSTALL="sudo xbps-install" ;;
-  Alpine)             PKGINSTALL="sudo apk install" ;;
-  OpenSuse)           PKGINSTALL="sudo zypper install" ;;
-  FreeBSD)            PKGINSTALL="doas pkg install -y" ;;
-esac
-
 CONFIGURE_PACKAGES()
 {
-
   NA=" "
 # DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -99,9 +85,11 @@ CONFIGURE_PACKAGES()
     OpenSuse)           POS="6" ;;
     FreeBSD)            POS="7" ;;
   esac
+}
 
-  if [ $RELEASE = "Fedora" ]; then
-    echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
+FEDORA_SETUP()
+{
+      echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
@@ -120,9 +108,10 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=True
 cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive.repo
-  fi
+}
 
-  if [ $RELEASE = "AlmaLinux" ]; then
+RHEL_SETUP()
+{
     sudo dnf update -y
     sudo dnf install -y epel-release
     sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
@@ -140,8 +129,42 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     echo "max_parallel_downloads=10
     deltarpm=True
     defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
-  fi
+}
 
+FREEBSD_SETUP()
+{
+      doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
+  doas sysrc dbus_enable=YES
+  doas sysrc openntpd_enable=YES
+  doas sysrc hald_enable=YES
+  doas sysrc moused_enable=YES
+  doas sysrc linux_enable=YES
+  echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
+  cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
+  cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
+  cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
+  cd $HOME/.config/suckless/dwm-6.3; doas make clean install
+  cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
+  cd $HOME/.config/suckless/st-0.8.5; doas make clean install
+  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
+  #cd $HOME/.config/suckless/sxiv; doas make clean install
+  cd $HOME
+}
+
+NIXOS_SETUP()
+{
+      mkdir .config
+  curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
+  sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
+  cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
+  cp .config/suckless/dmenu-5.1/config.nixos .config/suckless/dmenu-5.1/config.mk
+  cp .config/suckless/st-0.8.5/config.nixos .config/suckless/st-0.8.5/config.mk
+  sudo mv configuration.nix /etc/nixos
+  sudo nixos-rebuild boot
+}
+
+INSTALL_PACKAGES()
+{
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc ncdu neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LIBREOFFPT[$POS]} ${LF[$POS]} \
@@ -157,7 +180,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
     sudo flatpak install org.signal.Signal -y
     [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
   fi
-  }
+}
 
   CONFIGURE_HOME()
   {
@@ -280,42 +303,29 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   sudo grubby --update-kernel=ALL --args=quiet
   }
 
+CONFIGURE_PACKAGES
 
-  if [ $RELEASE != NixOS ]; then
-    CONFIGURE_PACKAGES
-  fi
+case "${RELEASE}" in
+  "")                 echo "No option was specified."; exit 1 ;;
+  debian|ubuntu)	    APT_SETUP ;;
+  Fedora)             FEDORA_SETUP ;;
+  AlmaLinux)          RHEL_SETUP ;;
+  Arch)               ARCH_SETUP ;;
+  Void)               VOID_SETUP ;;
+  Alpine)             ALPINE_SETUP ;;
+  OpenSuse)           SUSE_SETUP ;;
+  FreeBSD)
+    CONFIGURE_HOME
+    FREEBSD_SETUP ;;
+  NixOS)
+    CONFIGURE_HOME
+    NIXOS_SETUP ;;
+esac
 
-  CONFIGURE_HOME
-
-  if [ $RELEASE = FreeBSD ]; then
-    doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
-    doas sysrc dbus_enable=YES
-    doas sysrc openntpd_enable=YES
-    doas sysrc hald_enable=YES
-    doas sysrc moused_enable=YES
-    doas sysrc linux_enable=YES
-    echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
-    cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
-    cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
-    cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
-    cd $HOME/.config/suckless/dwm-6.3; doas make clean install
-    cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
-    cd $HOME/.config/suckless/st-0.8.5; doas make clean install
-    cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
-    #cd $HOME/.config/suckless/sxiv; doas make clean install
-    cd $HOME
-  fi
-
-  if [ $RELEASE = NixOS ]; then
-    mkdir .config
-    curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
-    sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-    cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
-    cp .config/suckless/dmenu-5.1/config.nixos .config/suckless/dmenu-5.1/config.mk
-    cp .config/suckless/st-0.8.5/config.nixos .config/suckless/st-0.8.5/config.mk
-    sudo mv configuration.nix /etc/nixos
-    sudo nixos-rebuild boot
-  fi
+case "${RELEASE}" in
+  "")                 echo "No option was specified."; exit 1 ;;
+  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse) CONFIGURE_HOME ;;
+esac
 
   if [ $RELEASE != NixOS ] &&  [ $RELEASE != FreeBSD ]; then
     CONFIGURE_SYSTEM

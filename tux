@@ -152,7 +152,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
 
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-  if [ $RELEASE = Fedora ] || [ $OS = "AlmaLinux" ]; then
+  if [ $RELEASE = Fedora ] || [ $RELEASE = "AlmaLinux" ]; then
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     sudo flatpak install org.signal.Signal -y
     [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
@@ -258,7 +258,7 @@ cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive
   echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
   SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
 
-  if [ $OS != "Fedora" ] && [ $OS != "AlmaLinux" ]; then
+  if [ $RELEASE != "Fedora" ] && [ $RELEASE != "AlmaLinux" ]; then
     sudo usermod -a -G plugdev $USER
   fi
 

@@ -88,7 +88,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman -Syu" ;;
-    void)               POS="4"
+    Void)               POS="4"
       PKGINSTALL="doas xbps-install -y" ;;
     Alpine)             POS="5"
       PKGINSTALL="sudo apk install -y" ;;
@@ -210,7 +210,7 @@ INSTALL_PACKAGES()
   touch /home/$USERNAME/.cache/zsh/history
   sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
 
-  if [ $RELEASE != void ]; then
+  if [ $RELEASE != Void ]; then
     pip install --user adblock
     pip install --user ueberzug
   fi
@@ -320,7 +320,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  debian|ubuntu|Fedora|AlmaLinux|Arch|void|Alpine|OpenSuse)
+  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

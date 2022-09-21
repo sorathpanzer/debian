@@ -24,7 +24,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   NA=" "
 # DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-  ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       py39-adblock        )
+  ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
   BTRFSPROGS=(    btrfs-progs                 btrfs-progs                 "$NA"                       btrfs-progs                 btrfs-progs                 btrfs-progs                 btrfsprogs                  "$NA"               )
   CRONTABS=(      python3-crontab             crontabs                    crontabs                    "$NA"                       "$NA"                       "$NA"                       crontabs                    py39-python-crontab )
@@ -36,13 +36,13 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
-  GRUBBY=(        grubby                      grubby                      grubby                      grubby                      grubby                      grubby                      grubby                      "$NA"               )
+  GRUBBY=(        grubby                      grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
   IMAGEMAGICK=(   imagemagick                 ImageMagick                 ImageMagick                 imagemagick                 ImageMagick                 imagemagick                 ImageMagick                 ImageMagick7-nox11  )
   IMLIB2=(        imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
   LF=(            lf                          "$NA"                       "$NA"                       lf                          lf                          lf                          lf                          lf                  )
   LIBEXIF=(       libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif             )
   LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice         )
-  LIBREOFFPT=(    libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
+  LIBREOFFPT=(    libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
   LIBX11=(        libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11              )
   LIBXFT=(        libxft2                     libXft-devel                libXft-devel                libxft                      libXft                      libxft                      libXft                      libXft              )
   LIBXINERAMA=(   libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
@@ -53,9 +53,9 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   PICOM=(         picom                       picom                       "$NA"                       picom                       picom                       picom                       picom                       picom               )
   POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler-utils               poppler-utils               poppler-utils               poppler-utils               poppler-utils       )
   PAUTILS=(       pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            pulseaudio                  pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            "$NA"               )
-  PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       "$NA"                       "$NA"                       "$NA"                       python311           )
-  PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  py3-pip                     python3-pip                 python3-pip                 py39-pip            )
-  PYTHON3SIX=(    python3-six                 python3-six                 python-six                  python-six                  py3-six                     python3-six                 python3-six                 py39-six            )
+  PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       python3-devel               "$NA"                       "$NA"                       python311           )
+  PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  python3-pip                 python3-pip                 python3-pip                 py39-pip            )
+  PYTHON3SIX=(    python3-six                 python3-six                 python-six                  python-six                  python3-six                 python3-six                 python3-six                 py39-six            )
   QEMU=(          qemu                        qemu                        qemu-img                    qemu-base                   qemu                        qemu                        qemu                        qemu                )
   SCROT=(         scrot                       scrot                       "$NA"                       scrot                       scrot                       scrot                       scrot                       scrot               )
   SOX=(           sox                         sox                         "$NA"                       sox                         sox                         sox                         sox                         sox                 )
@@ -63,7 +63,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   TELEGRAM=(      telegram-desktop            telegram-desktop            "$NA"                       telegram-desktop            telegram-desktop            telegram-desktop            telegram-desktop            telegram-desktop    )
   TIG=(           tig                         tig                         tig                         tig                         tig                         tig                         "$NA"                       tig                 )
   TRASHCLI=(      trash-cli                   trash-cli                   "$NA"                       trash-cli                   trash-cli                   trash-cli                   trash-cli                   "$NA"               )
-  UEBERZUG=(      "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       py39-ueberzug       )
+  UEBERZUG=(      "$NA"                       "$NA"                       "$NA"                       "$NA"                       ueberzug                    "$NA"                       "$NA"                       py39-ueberzug       )
   UDISKIE=(       udiskie                     udiskie                     "$NA"                       udiskie                     udiskie                     udiskie                     udiskie                     "$NA"               )
   XDOTOOL=(       xdotool                     xdotool                     "$NA"                       xdotool                     xdotool                     xdotool                     xdotool                     xdotool             )
   XF86INTEL=(     xserver-xorg-video-intel    xorg-x11-drv-intel          "$NA"                       xf86-video-intel            xf86-video-intel            xf86-video-intel            xf86-video-intel            xf86-video-intel    )
@@ -87,7 +87,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman -Syu" ;;
-    Void)               POS="4"
+    void)               POS="4"
       PKGINSTALL="sudo xbps-install -y" ;;
     Alpine)             POS="5"
       PKGINSTALL="sudo apk install -y" ;;
@@ -100,7 +100,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
 FEDORA_SETUP()
 {
-      echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
+    echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
@@ -145,7 +145,7 @@ ALMALINUX_SETUP()
 
 FREEBSD_SETUP()
 {
-      doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
+  doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
   doas sysrc dbus_enable=YES
   doas sysrc openntpd_enable=YES
   doas sysrc hald_enable=YES
@@ -165,7 +165,7 @@ FREEBSD_SETUP()
 
 NIXOS_SETUP()
 {
-      mkdir .config
+  mkdir .config
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
   sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
   cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
@@ -177,7 +177,7 @@ NIXOS_SETUP()
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc ncdu neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
+  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LIBREOFFPT[$POS]} ${LF[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
@@ -209,8 +209,10 @@ INSTALL_PACKAGES()
   touch /home/$USERNAME/.cache/zsh/history
   sh -c "cd /home/$USERNAME/.config/dotgit; stow -vt ~ dotfiles"
 
-  pip install --user adblock
-  pip install --user ueberzug
+  if [ $RELEASE != void ]; then
+    pip install --user adblock
+    pip install --user ueberzug
+  fi
 
   cp .config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
   cp .config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
@@ -300,7 +302,6 @@ INSTALL_PACKAGES()
   sudo usermod -s /usr/bin/zsh $USER
 
   sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
-
   sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
   echo '[Service]
   ExecStart=
@@ -318,7 +319,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+  debian|ubuntu|Fedora|AlmaLinux|Arch|void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

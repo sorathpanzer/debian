@@ -5,6 +5,7 @@
 # TODO: Before running this script you must install:
 # Fedora -> audit
 # NIXOS -> git, stow
+# VOID -> opendoas (remove sudo)
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
@@ -88,7 +89,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Arch)               POS="3"
       PKGINSTALL="sudo pacman -Syu" ;;
     void)               POS="4"
-      PKGINSTALL="sudo xbps-install -y" ;;
+      PKGINSTALL="doas xbps-install -y" ;;
     Alpine)             POS="5"
       PKGINSTALL="sudo apk install -y" ;;
     OpenSuse)           POS="6"

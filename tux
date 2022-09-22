@@ -191,7 +191,7 @@ permit nopass sorath cmd wg
 permit nopass sorath cmd ostree
 permit nopass sorath cmd reboot
 permit nopass sorath cmd poweroff
-permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
+permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 }
 
 INSTALL_PACKAGES()

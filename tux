@@ -267,9 +267,6 @@ INSTALL_PACKAGES()
   #Option "DRI" "False"
   #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
-  #echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-  #SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDOAS tee /etc/udev/rules.d/50-android.rules
-
   if [ $RELEASE = Void ]; then
     echo "[Unit]
   Description=Lock X session using slock for user %i

@@ -183,6 +183,17 @@ NIXOS_SETUP()
   sudo nixos-rebuild boot
 }
 
+VOID_SETUP()
+{
+  echo "permit persist $USERNAME as root
+permit nopass sorath as root cmd wg-quick
+permit nopass sorath cmd wg
+permit nopass sorath cmd ostree
+permit nopass sorath cmd reboot
+permit nopass sorath cmd poweroff
+permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
+}
+
 INSTALL_PACKAGES()
 {
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
@@ -246,8 +257,6 @@ INSTALL_PACKAGES()
   $SUDOAS usermod -s $(echo which zsh) $USER
   echo "$USERNAME" | $SUDOAS tee -a /etc/shutdown.allow
   $SUDOAS grubby --update-kernel=ALL --args=quiet
-  $SUDOAS touch /etc/sudoers.d/$USERNAME
-  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/sorath
   #echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
@@ -267,7 +276,7 @@ INSTALL_PACKAGES()
   #Option "DRI" "False"
   #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
-  if [ $RELEASE = Void ]; then
+  if [ $RELEASE != Void ]; then
     echo "[Unit]
   Description=Lock X session using slock for user %i
   Before=sleep.target
@@ -287,6 +296,8 @@ INSTALL_PACKAGES()
   ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
     $SUDOAS systemctl enable suspend@$USERNAME.service
+    $SUDOAS touch /etc/sudoers.d/$USERNAME
+    echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/sorath
   fi
   }
 

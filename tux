@@ -11,7 +11,7 @@
 
 exec &> >(tee -a "install.log") 2>install.error
 
-USERNAME=""
+USERNAME="$USER"
 LVM_PASSWORD=""
 GIT_USERNAME="${USERNAME}panzer"
 GIT_EMAIL="$GIT_USERNAME"
@@ -30,6 +30,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   BTRFSPROGS=(    btrfs-progs                 btrfs-progs                 "$NA"                       btrfs-progs                 btrfs-progs                 btrfs-progs                 btrfsprogs                  "$NA"               )
   CRONTABS=(      python3-crontab             crontabs                    crontabs                    "$NA"                       "$NA"                       "$NA"                       crontabs                    py39-python-crontab )
   DBUSX11=(       dbus-x11                    dbus-x11                    dbus-x11                    dbus                        dbus-x11                    dbus-x11                    dbus-x11                    dbus                )
+  DOAS=(          doas                        opendoas                    "$NA"                       opendoas                    opendoas                    doas                        opendoas                    doas                )
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
@@ -97,6 +98,12 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     FreeBSD)            POS="7"
       PKGINSTALL="doas pkg install -y" ;;
   esac
+
+  if [ $RELEASE = Void ]; then
+    SUDOAS="doas"
+  else
+    SUDOAS="sudo"
+  fi
 }
 
 FEDORA_SETUP()
@@ -226,47 +233,45 @@ INSTALL_PACKAGES()
     if [ ! -z $LVM_PASSWORD ]; then
       echo "Open vault password:"
       mkdir Vault
-      echo -n "$LVM_PASSWORD" | sudo cryptsetup open --type luks /dev/sda1 Vault
-      sudo mount /dev/mapper/Vault Vault
+      echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
+      $SUDOAS mount /dev/mapper/Vault Vault
       rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
-      sudo cp $HOME/Documentos/wg0.conf /etc/wireguard
+      $SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
   fi
   }
 
   CONFIGURE_SYSTEM()
   {
-    sudo mkdir -p /etc/polkit-1/rules.d/
+  $SUDOAS usermod -s $(echo which zsh) $USER
+  echo "$USERNAME" | $SUDOAS tee -a /etc/shutdown.allow
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
+  $SUDOAS touch /etc/sudoers.d/$USERNAME
+  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/sorath
+  #echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-    echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-    echo "blacklist ideapad_laptop" | sudo tee /etc/modprobe.d/blacklist.conf
-
-    echo '/* Allow members of the wheel group to execute any actions
-    * without password authentication, similar to "sudo NOPASSWD:"
-    */
-    polkit.addRule(function(action, subject) {
+  $SUDOAS mkdir -p /etc/polkit-1/rules.d/
+  echo '/* Allow members of the wheel group to execute any actions
+  * without password authentication, similar to "sudo NOPASSWD:"
+  */
+  polkit.addRule(function(action, subject) {
     if (subject.isInGroup("wheel")) {
       return polkit.Result.YES;
     }
-  });' | sudo tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+  });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-  echo 'polkit.addRule(function(action, subject) {
-  if ((action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
-    action.id == "org.freedesktop.udisks.filesystem-mount-system-internal") &&
-    subject.local && subject.active && subject.isInGroup("wheel"))
-    {
-      return polkit.Result.YES;
-    }
-  });' | sudo tee /etc/polkit-1/rules.d/allow-mount-internal.rules
+  #echo 'Section "Device"
+  #Identifier "Intel Graphics"
+  #Driver "intel"
+  #Option "TearFree" "true"
+  #Option "DRI" "False"
+  #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
-  sudo mkdir -p /media
-  echo '# UDISKS_FILESYSTEM_SHARED
-  # ==1: mount filesystem to a shared directory (/media/VolumeName)
-  # ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
-  # See udisks(8)
-  ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' | sudo tee /etc/udev/rules.d/99-udisks2.rules
+  #echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+  #SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | $SUDOAS tee /etc/udev/rules.d/50-android.rules
 
-  echo "[Unit]
+  if [ $RELEASE = Void ]; then
+    echo "[Unit]
   Description=Lock X session using slock for user %i
   Before=sleep.target
   [Service]
@@ -276,45 +281,16 @@ INSTALL_PACKAGES()
   ExecStart=/usr/bin/xset dpms force suspend
   ExecStartPre=/usr/bin/i3lock -c 000000
   [Install]
-  WantedBy=sleep.target" | sudo tee /etc/systemd/system/suspend@.service
+  WantedBy=sleep.target" | $SUDOAS tee /etc/systemd/system/suspend@.service
 
-  echo 'Section "InputClass"
-  Identifier "libinput touchpad catchall"
-  MatchIsTouchpad "on"
-  MatchDevicePath "/dev/input/event*"
-  Driver "libinput"
-  Option "NaturalScrolling" "true"
-  EndSection' | sudo tee /etc/X11/xorg.conf.d/40-libinput.conf
-
-  #echo 'Section "Device"
-  #Identifier "Intel Graphics"
-  #Driver "intel"
-  #Option "TearFree" "true"
-  #Option "DRI" "False"
-  #EndSection' | sudo tee /etc/X11/xorg.conf.d/20-intel.conf
-
-  echo 'ATTR{idVendor}=="2717", ATTR{idProduct}=="4ee7", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-  SUBSYSTEMS=="usb", ATTRS{idVendor}=="2717", MODE="0640", OWNER="sorath"' | sudo tee /etc/udev/rules.d/50-android.rules
-
-  if [ $RELEASE != "Fedora" ] && [ $RELEASE != "AlmaLinux" ]; then
-    sudo usermod -a -G plugdev $USER
-  fi
-
-  sudo usermod -s /usr/bin/zsh $USER
-
-  sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
-  sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
-  echo '[Service]
+    $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
+    $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
+    echo '[Service]
   ExecStart=
-  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf
+  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
-  sudo touch /etc/sudoers.d/$USERNAME
-  echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | sudo tee /etc/sudoers.d/sorath
-
-  echo "$USERNAME" | sudo tee -a /etc/shutdown.allow
-
-  sudo systemctl enable suspend@$USERNAME.service
-  sudo grubby --update-kernel=ALL --args=quiet
+    $SUDOAS systemctl enable suspend@$USERNAME.service
+  fi
   }
 
 CONFIGURE_PACKAGES

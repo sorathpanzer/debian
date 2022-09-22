@@ -33,7 +33,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DOAS=(          doas                        opendoas                    "$NA"                       opendoas                    opendoas                    doas                        opendoas                    doas                )
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
-  FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
+  FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
   FIREFOX=(       firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
@@ -196,7 +196,8 @@ permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
+  #remove temporarily ffmpeg for Void linux testing
+  $PKGINSTALL gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LIBREOFFPT[$POS]} ${LF[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \

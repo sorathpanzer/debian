@@ -5,7 +5,7 @@
 # TODO: Before running this script you must install:
 # Fedora -> audit
 # NIXOS -> git, stow
-# VOID -> opendoas (remove sudo)
+# VOID -> opendoas, curl (remove sudo)
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
@@ -194,7 +194,7 @@ permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 
 doas xbps-install -Syu
-doas xbps-install -Sy make
+doas xbps-install -Sy make pkg-config
 }
 
 INSTALL_PACKAGES()

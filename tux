@@ -90,7 +90,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Arch)               POS="3"
       PKGINSTALL="sudo pacman -Syu" ;;
     Void)               POS="4"
-      PKGINSTALL="doas xbps-install -y" ;;
+      PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="5"
       PKGINSTALL="sudo apk install -y" ;;
     OpenSuse)           POS="6"
@@ -193,8 +193,8 @@ permit nopass sorath cmd reboot
 permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 
-doas xbps-install -Su -y
-doas xbps-install -S -y make
+doas xbps-install -Syu
+doas xbps-install -Sy make
 }
 
 INSTALL_PACKAGES()

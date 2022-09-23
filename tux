@@ -193,7 +193,7 @@ permit nopass sorath cmd reboot
 permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 
-doas xbps-install make
+doas xbps-install -y make
 }
 
 INSTALL_PACKAGES()

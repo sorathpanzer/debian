@@ -46,7 +46,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice         )
   LIBREOFFPT=(    libreoffice-l10n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
   LIBX11=(        libx11-dev                  libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11              )
-  LIBXFT=(        libxft2                     libXft-devel                libXft-devel                libxft                      libXft-devel                libxft                      libXft                      libXft              )
+  LIBXFT=(        libxft-dev                  libXft-devel                libXft-devel                libxft                      libXft-devel                libxft                      libXft                      libXft              )
   LIBXINERAMA=(   libxinerama-dev             libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
   LIGHT=(         light                       light                       "$NA"                       light                       light                       light                       light                       "$NA"               )
   LMSENSORS=(     lm-sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm-sensors                  lm_sensors                  "$NA"               )
@@ -197,7 +197,10 @@ doas xbps-install -Syu
 doas xbps-install -Sy make pkg-config
 }
 
-DEBIAN_SETUP() { echo "Installing Packages..." }
+DEBIAN_SETUP()
+{
+  echo "Installing Packages..."
+}
 
 INSTALL_PACKAGES()
 {

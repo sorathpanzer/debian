@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.3.17
+# Version= 0.3.23
 
 # TODO: Before running this script you must install:
 # Fedora -> audit
@@ -34,24 +34,24 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
-  FIREFOX=(       firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
+  FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
-  GIFLIB=(        giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
-  GRUBBY=(        grubby                      grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
+  GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
+  GRUBBY=(        "$NA"                       grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
   IMAGEMAGICK=(   imagemagick                 ImageMagick                 ImageMagick                 imagemagick                 ImageMagick                 imagemagick                 ImageMagick                 ImageMagick7-nox11  )
-  IMLIB2=(        imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
-  LF=(            lf                          "$NA"                       "$NA"                       lf                          lf                          lf                          lf                          lf                  )
-  LIBEXIF=(       libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif             )
+  IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
+  LF=(            "$NA"                       "$NA"                       "$NA"                       lf                          lf                          lf                          lf                          lf                  )
+  LIBEXIF=(       libexif-dev                 libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif             )
   LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice         )
-  LIBREOFFPT=(    libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
-  LIBX11=(        libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11              )
-  LIBXFT=(        libxft2                     libXft-devel                libXft-devel                libxft                      libXft-devel                libxft                      libXft                      libXft              )
-  LIBXINERAMA=(   libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
+  LIBREOFFPT=(    libreoffice-l10n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
+  LIBX11=(        libx11-dev                  libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11              )
+  LIBXFT=(        libxft-dev                  libXft-devel                libXft-devel                libxft                      libXft-devel                libxft                      libXft                      libXft              )
+  LIBXINERAMA=(   libxinerama-dev             libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
   LIGHT=(         light                       light                       "$NA"                       light                       light                       light                       light                       "$NA"               )
   LMSENSORS=(     lm-sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm-sensors                  lm_sensors                  "$NA"               )
   NTFS3G=(        ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     fusefs-ntfs         )
-  PANDOCPDF=(     pandoc-pdf                  pandoc-pdf                  "$NA"                       pandoc                      pandoc                      pandoc                      pandoc                      "$NA"               )
+  PANDOCPDF=(     pandoc                      pandoc-pdf                  "$NA"                       pandoc                      pandoc                      pandoc                      pandoc                      "$NA"               )
   PICOM=(         picom                       picom                       "$NA"                       picom                       picom                       picom                       picom                       picom               )
   POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler-utils               poppler-utils               poppler-utils               poppler-utils               poppler-utils       )
   PAUTILS=(       pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            pulseaudio                  pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            "$NA"               )
@@ -81,8 +81,8 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    debian|ubuntu)	    POS="0"
-      PKGINSTALL="sudo apt install" ;;
+    Debian|Ubuntu)	    POS="0"
+      PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
     AlmaLinux)          POS="2"
@@ -197,6 +197,11 @@ doas xbps-install -Syu
 doas xbps-install -Sy make pkg-config
 }
 
+DEBIAN_SETUP()
+{
+  echo "Installing Packages..."
+}
+
 INSTALL_PACKAGES()
 {
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
@@ -236,11 +241,11 @@ INSTALL_PACKAGES()
     pip install --user ueberzug
   fi
 
-  cp $HOME/.config/suckless/dwm-6.3/config.tux .config/suckless/dwm-6.3/config.mk
+  cp $HOME/.config/suckless/dwm-6.3/config.tux $HOME/.config/suckless/dwm-6.3/config.mk
   cd $HOME/.config/suckless/dwm-6.3; make clean install
-  cp $HOME/.config/suckless/dmenu-5.1/config.tux .config/suckless/dmenu-5.1/config.mk
+  cp $HOME/.config/suckless/dmenu-5.1/config.tux $HOME/.config/suckless/dmenu-5.1/config.mk
   cd $HOME/.config/suckless/dmenu-5.1; make clean install
-  cp $HOME/.config/suckless/st-0.8.5/config.tux .config/suckless/st-0.8.5/config.mk
+  cp $HOME/.config/suckless/st-0.8.5/config.tux $HOME/.config/suckless/st-0.8.5/config.mk
   cd $HOME/.config/suckless/st-0.8.5; make clean install
   cd $HOME/.config/suckless/dwmblocks; make clean install
   cd
@@ -312,7 +317,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  debian|ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

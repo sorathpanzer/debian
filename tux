@@ -85,7 +85,11 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Debian|Ubuntu)	    POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
-      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
+      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then
+        sudo rpm-ostree install
+      else
+        sudo dnf install -y"
+      fi ;;
     AlmaLinux)          POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"

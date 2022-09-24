@@ -38,7 +38,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
-  GRUBBY=(        grubby                      grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
+  GRUBBY=(        "$NA"                       grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
   IMAGEMAGICK=(   imagemagick                 ImageMagick                 ImageMagick                 imagemagick                 ImageMagick                 imagemagick                 ImageMagick                 ImageMagick7-nox11  )
   IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
   LF=(            "$NA"                       "$NA"                       "$NA"                       lf                          lf                          lf                          lf                          lf                  )
@@ -82,7 +82,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
     Debian|Ubuntu)	    POS="0"
-      PKGINSTALL="sudo apt install" ;;
+      PKGINSTALL="sudo apt-get install" ;;
     Fedora)             POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
     AlmaLinux)          POS="2"
@@ -196,6 +196,8 @@ permit nopass sorath cmd setleds" | $SUDOAS tee /etc/doas.conf
 doas xbps-install -Syu
 doas xbps-install -Sy make pkg-config
 }
+
+DEBIAN_SETUP() { echo "Installing Packages..." }
 
 INSTALL_PACKAGES()
 {

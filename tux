@@ -82,7 +82,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
     Debian|Ubuntu)	    POS="0"
-      PKGINSTALL="sudo apt-get install" ;;
+      PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
     AlmaLinux)          POS="2"

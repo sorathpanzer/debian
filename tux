@@ -207,6 +207,11 @@ DEBIAN_SETUP()
   echo "Installing Packages..."
 }
 
+UBUNTU_SETUP()
+{
+  echo "Installing Packages..."
+}
+
 INSTALL_PACKAGES()
 {
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \

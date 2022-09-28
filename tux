@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.3.23
+# Version= 0.3.27
 
 # TODO: Before running this script you must install:
 # Debian -> curl

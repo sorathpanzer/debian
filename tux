@@ -24,7 +24,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch/Manjaro                Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
@@ -35,7 +35,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
-  FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
+  FIREFOX=(       "$NA"                       firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
@@ -204,12 +204,17 @@ doas xbps-install -Sy make pkg-config
 
 DEBIAN_SETUP()
 {
-  echo "Installing Packages..."
+  sudo apt-get -y install firefox-esr
 }
 
 UBUNTU_SETUP()
 {
-  echo "Installing Packages..."
+  sudo apt-get -y install firefox
+}
+
+ARCH_SETUP()
+{
+  echo "Installing..."
 }
 
 INSTALL_PACKAGES()

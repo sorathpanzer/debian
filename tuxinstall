@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# Version= 0.3.23
+# Version= 0.3.33
 
 # TODO: Before running this script you must install:
+# Debian -> curl
 # Fedora -> audit
 # NIXOS -> git, stow
 # VOID -> opendoas, curl (remove sudo)
@@ -23,7 +24,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Rhel/Alma/Rocky/Centos      Arch/Manjaro/EndevourOS     Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
@@ -34,26 +35,26 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           FFmpegThumbnailer           ffmpegthumbnailer   )
-  FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
+  FIREFOX=(       "$NA"                       firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
-  GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib-devel                giflib              )
-  GRUBBY=(        "$NA"                       grubby                      grubby                      grubby                      "$NA"                       grubby                      grubby                      "$NA"               )
+  GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib                      giflib-devel                giflib-devel                giflib-devel                giflib              )
+  GRUBBY=(        "$NA"                       grubby                      grubby                      "$NA"                       "$NA"                       grubby                      grubby                      "$NA"               )
   IMAGEMAGICK=(   imagemagick                 ImageMagick                 ImageMagick                 imagemagick                 ImageMagick                 imagemagick                 ImageMagick                 ImageMagick7-nox11  )
-  IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
+  IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2                      imlib2-devel                imlib2-devel                "$NA"                       imlib2              )
   LF=(            "$NA"                       "$NA"                       "$NA"                       lf                          lf                          lf                          lf                          lf                  )
-  LIBEXIF=(       libexif-dev                 libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif-devel               libexif             )
-  LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice         )
-  LIBREOFFPT=(    libreoffice-l10n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
-  LIBX11=(        libx11-dev                  libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11-devel                libX11              )
+  LIBEXIF=(       libexif-dev                 libexif-devel               libexif-devel               libexif                     libexif-devel               libexif-devel               libexif-devel               libexif             )
+  LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-still           libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice         )
+  LIBREOFFPT=(    libreoffice-l10n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  libreoffice-still-pt        libreoffice-i18n-pt         libreoffice-langpack-pt-PT  libreoffice-langpack-pt-PT  pt-libreoffice      )
+  LIBX11=(        libx11-dev                  libX11-devel                libX11-devel                libx11                      libX11-devel                libX11-devel                libX11-devel                libX11              )
   LIBXFT=(        libxft-dev                  libXft-devel                libXft-devel                libxft                      libXft-devel                libxft                      libXft                      libXft              )
-  LIBXINERAMA=(   libxinerama-dev             libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
+  LIBXINERAMA=(   libxinerama-dev             libXinerama-devel           libXinerama-devel           libxinerama                 libXinerama-devel           libXinerama-devel           libXinerama-devel           libXinerama         )
   LIGHT=(         light                       light                       "$NA"                       light                       light                       light                       light                       "$NA"               )
   LMSENSORS=(     lm-sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm-sensors                  lm_sensors                  "$NA"               )
   NTFS3G=(        ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     fusefs-ntfs         )
   PANDOCPDF=(     pandoc                      pandoc-pdf                  "$NA"                       pandoc                      pandoc                      pandoc                      pandoc                      "$NA"               )
   PICOM=(         picom                       picom                       "$NA"                       picom                       picom                       picom                       picom                       picom               )
-  POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler-utils               poppler-utils               poppler-utils               poppler-utils               poppler-utils       )
+  POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler                     poppler-utils               poppler-utils               poppler-utils               poppler-utils       )
   PAUTILS=(       pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            pulseaudio                  pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            "$NA"               )
   PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       python3-devel               "$NA"                       "$NA"                       python311           )
   PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  python3-pip                 python3-pip                 python3-pip                 py39-pip            )
@@ -69,7 +70,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   UDISKIE=(       udiskie                     udiskie                     "$NA"                       udiskie                     udiskie                     udiskie                     udiskie                     "$NA"               )
   XDOTOOL=(       xdotool                     xdotool                     "$NA"                       xdotool                     xdotool                     xdotool                     xdotool                     xdotool             )
   XF86INTEL=(     xserver-xorg-video-intel    xorg-x11-drv-intel          "$NA"                       xf86-video-intel            xf86-video-intel            xf86-video-intel            xf86-video-intel            xf86-video-intel    )
-  XINIT=(         xinit                       xorg-x11-xinit              xorg-x11-xinit              xinit                       xinit                       xinit                       xinit                       xinit               )
+  XINIT=(         xinit                       xorg-x11-xinit              xorg-x11-xinit              xorg-xinit                  xinit                       xinit                       xinit                       xinit               )
   XINPUT=(        xinput                      xinput                      xinput                      xorg-xinput                 xinput                      xinput                      xinput                      xinput              )
   XORGSERVER=(    xserver-xorg                xorg-x11-server-Xorg        xorg-x11-server-Xorg        xorg-server                 xorg-minimal                xorg-server                 xorg-server                 xorg-minimal        )
   XRANDR=(        x11-xserver-utils           xrandr                      xrandr                      xorg-xrandr                 xrandr                      xrandr                      xrandr                      xrandr              )
@@ -84,11 +85,11 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Debian|Ubuntu)	    POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
-      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree install || sudo dnf install -y" ;;
+      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
     AlmaLinux)          POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
-      PKGINSTALL="sudo pacman -Syu" ;;
+      PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
     Void)               POS="4"
       PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="5"
@@ -108,6 +109,10 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
 FEDORA_SETUP()
 {
+    [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
+    deltarpm=True
+    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+
     echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
     [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
@@ -199,7 +204,17 @@ doas xbps-install -Sy make pkg-config
 
 DEBIAN_SETUP()
 {
-  echo "Installing Packages..."
+  sudo apt-get -y install firefox-esr
+}
+
+UBUNTU_SETUP()
+{
+  sudo apt-get -y install firefox
+}
+
+ARCH_SETUP()
+{
+  echo "Installing..."
 }
 
 INSTALL_PACKAGES()

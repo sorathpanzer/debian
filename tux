@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.3.27
+# Version= 0.3.33
 
 # TODO: Before running this script you must install:
 # Debian -> curl
@@ -24,7 +24,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu               Fedora                      Rhel                        Arch/Manjaro                Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Rhel/Alma/Rocky/Centos      Arch/Manjaro/EndevourOS     Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )

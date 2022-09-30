@@ -82,7 +82,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    Debian|Ubuntu)	    POS="0"
+    Debian|Ubuntu|Devuan)	    POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
@@ -212,6 +212,11 @@ UBUNTU_SETUP()
   sudo apt-get -y install firefox
 }
 
+DEVUAN_SETUP()
+{
+  sudo apt-get -y install firefox-esr
+}
+
 ARCH_SETUP()
 {
   echo "Installing..."
@@ -332,7 +337,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

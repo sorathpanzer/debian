@@ -86,11 +86,11 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    Debian|Ubuntu|Devuan)	    POS="0"
+    Debian|Ubuntu|Devuan)	POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
-    Fedora)             POS="1"
+    Fedora)               POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
-    AlmaLinux|Rocky)          POS="2"
+    AlmaLinux|Rocky|Red)  POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
@@ -161,6 +161,11 @@ ALMALINUX_SETUP()
 }
 
 ROCKY_SETUP()
+{
+  ALMALINUX_SETUP
+}
+
+RED_SETUP()
 {
   ALMALINUX_SETUP
 }
@@ -346,7 +351,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Red|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

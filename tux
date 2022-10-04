@@ -29,7 +29,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Alma/Rocky/Centos      Arch/Manjaro/EndevourOS     Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Alma/Rocky/Centos           Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
@@ -98,14 +98,14 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Void)               POS="4"
       PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="5"
-      PKGINSTALL="sudo apk install -y" ;;
+      PKGINSTALL="doas apk install -y" ;;
     OpenSuse)           POS="6"
       PKGINSTALL="sudo zypper install -y" ;;
     FreeBSD)            POS="7"
       PKGINSTALL="doas pkg install -y" ;;
   esac
 
-  if [ $RELEASE = Void ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"

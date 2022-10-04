@@ -160,7 +160,7 @@ ALMALINUX_SETUP()
     defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
 }
 
-ROCKY_LINUX()
+ROCKY_SETUP()
 {
   ALMALINUX_SETUP
 }
@@ -346,7 +346,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

@@ -2,6 +2,10 @@
 
 # Version= 0.3.33
 
+# TODO: Improvements in the script
+# -> Global System init support
+# -> autologin in Devuan
+
 # TODO: Before running this script you must install:
 # Debian -> curl
 # Fedora -> audit
@@ -86,7 +90,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)             POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
-    AlmaLinux)          POS="2"
+    AlmaLinux|Rocky)          POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
@@ -154,6 +158,11 @@ ALMALINUX_SETUP()
     echo "max_parallel_downloads=10
     deltarpm=True
     defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+}
+
+ROCKY_LINUX()
+{
+  ALMALINUX_SETUP
 }
 
 FREEBSD_SETUP()
@@ -337,7 +346,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

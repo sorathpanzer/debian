@@ -2,7 +2,7 @@
 
 # Version= 0.3.33
 
-#fedora void rhel
+#fedora void rhel centos
 # TODO: Improvements in the script
 # -> Global System init support
 # -> autologin in Devuan
@@ -91,7 +91,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)               POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
-    AlmaLinux|Rocky|Centos)  POS="2"
+    AlmaLinux|Rocky|CentOS)  POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
@@ -353,7 +353,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Centos|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

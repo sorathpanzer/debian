@@ -2,6 +2,7 @@
 
 # Version= 0.3.33
 
+#fedora void rhel
 # TODO: Improvements in the script
 # -> Global System init support
 # -> autologin in Devuan
@@ -28,7 +29,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Rhel/Alma/Rocky/Centos      Arch/Manjaro/EndevourOS     Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Alma/Rocky/Centos      Arch/Manjaro/EndevourOS     Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               android-tools               android-tools       )
@@ -90,7 +91,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)               POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
-    AlmaLinux|Rocky|Red)  POS="2"
+    AlmaLinux|Rocky|Centos)  POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
@@ -142,7 +143,7 @@ ALMALINUX_SETUP()
 {
     echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
     sudo dnf update -y
-    sudo dnf install --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm
+    #sudo dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm
     sudo dnf install -y epel-release
     sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
     sudo dnf config-manager --set-enabled crb
@@ -166,7 +167,7 @@ ROCKY_SETUP()
   ALMALINUX_SETUP
 }
 
-RED_SETUP()
+CENTOS_SETUP()
 {
   ALMALINUX_SETUP
 }
@@ -352,7 +353,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Red|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|Centos|Arch|Void|Alpine|OpenSuse)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

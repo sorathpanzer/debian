@@ -98,7 +98,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Void)               POS="4"
       PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="5"
-      PKGINSTALL="doas apk install -y" ;;
+      PKGINSTALL="doas apk add" ;;
     OpenSuse)           POS="6"
       PKGINSTALL="sudo zypper install -y" ;;
     FreeBSD)            POS="7"
@@ -234,6 +234,11 @@ DEVUAN_SETUP()
 }
 
 ARCH_SETUP()
+{
+  echo "Installing..."
+}
+
+ALPINE_SETUP()
 {
   echo "Installing..."
 }

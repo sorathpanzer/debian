@@ -13,6 +13,7 @@
 # NIXOS -> git, stow
 # VOID -> opendoas, curl (remove sudo)
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
+# Alpine -> curl, lsblk, make
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
 exec &> >(tee -a "install.log") 2>install.error
@@ -240,7 +241,7 @@ ARCH_SETUP()
 
 ALPINE_SETUP()
 {
-  echo "Installing..."
+  doas apk add lsblk make
 }
 
 INSTALL_PACKAGES()

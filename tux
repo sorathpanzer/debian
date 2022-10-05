@@ -100,7 +100,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="5"
       PKGINSTALL="doas apk add" ;;
-    OpenSuse)           POS="6"
+    openSUSE)           POS="6"
       PKGINSTALL="sudo zypper install -y" ;;
     FreeBSD)            POS="7"
       PKGINSTALL="doas pkg install -y" ;;
@@ -245,6 +245,11 @@ ALPINE_SETUP()
   doas setup-xorg-base
 }
 
+OPENSUSE_SETUP()
+{
+  echo "Installing..."
+}
+
 INSTALL_PACKAGES()
 {
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
@@ -360,7 +365,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|OpenSuse)
+  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|openSUSE)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

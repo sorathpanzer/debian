@@ -198,6 +198,19 @@ FREEBSD_SETUP()
   cd $HOME
 }
 
+OPENBSD_SETUP()
+{
+  cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
+  cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
+  cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
+  cd $HOME/.config/suckless/dwm-6.3; doas make clean install
+  cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
+  cd $HOME/.config/suckless/st-0.8.5; doas make clean install
+  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
+  cd $HOME/.config/suckless/sxiv; doas make clean install
+  cd $HOME
+}
+
 NIXOS_SETUP()
 {
   mkdir .config
@@ -380,7 +393,7 @@ case "${RELEASE}" in
     INSTALL_PACKAGES
     CONFIGURE_HOME
     CONFIGURE_SYSTEM ;;
-  FreeBSD)
+  FreeBSD|OpenBSD)
     INSTALL_PACKAGES
     CONFIGURE_HOME
     $UPPERCASE_SETUP ;;

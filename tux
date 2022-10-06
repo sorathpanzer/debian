@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# Version= 0.3.48
+# Version= 0.3.51
 
-#fedora void rhel centos
 # TODO: Improvements in the script
 # -> Global System init support
 # -> autologin in Devuan
@@ -63,7 +62,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   PICOM=(         picom                       picom                       "$NA"                       picom                       picom                       picom                       picom                       picom               )
   POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler                     poppler-utils               poppler-utils               poppler-tools               poppler-utils       )
   PAUTILS=(       pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            pulseaudio                  pulseaudio-utils            pulseaudio-utils            pulseaudio-utils            "$NA"               )
-  PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       python3-devel               python3-dev                 "$NA"                       python311           )
+  PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       python3-devel               python3-dev                 python3-devel               python311           )
   PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  python3-pip                 py3-pip                     python3-pip                 py39-pip            )
   PYTHON3SIX=(    python3-six                 python3-six                 python-six                  python-six                  python3-six                 py3-six                     python3-six                 py39-six            )
   QEMU=(          qemu                        qemu                        qemu-img                    qemu-base                   qemu                        qemu                        qemu                        qemu                )
@@ -248,7 +247,12 @@ ALPINE_SETUP()
 
 OPENSUSE_SETUP()
 {
-  echo "Installing..."
+  sudo zypper install -y make ncurses-devel posix_cc
+
+  TUMBLEWEED=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
+  if [ $TUMBLEWEED = Tumbleweed ]; then
+    sudo zypper install -y android-tools
+  fi
 }
 
 INSTALL_PACKAGES()

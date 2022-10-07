@@ -108,7 +108,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     FreeBSD)            POS="7"
       PKGINSTALL="doas pkg install -y" ;;
     OpenBSD)            POS="8"
-      PKGINSTALL="doas pkg_add -i -y" ;;
+      PKGINSTALL="doas pkg_add -i" ;;
   esac
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
@@ -200,6 +200,7 @@ FREEBSD_SETUP()
 
 OPENBSD_SETUP()
 {
+  doas pkg_add -i gcc%11
   cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
   cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
   cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk

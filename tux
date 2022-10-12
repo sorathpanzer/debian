@@ -11,7 +11,6 @@
 # Debian -> curl
 # Fedora -> audit
 # NIXOS -> git, stow
-# VOID -> opendoas, curl (remove sudo)
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
 # Alpine -> curl, bash
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
@@ -219,7 +218,7 @@ permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
   doas xbps-remove sudo
-  doas xbps-install -Sy make pkg-config rpmextract snapper
+  doas xbps-install -Sy make pkg-config rpmextract snapper opendoas
   curl https://www.kraxel.org/repos/jenkins/edk2/edk2.git-0-20220719.209.gf0064ac3af.EOL.no.nore.updates.x86_64.rpm -o edk2.rpm
   rpmextract edk2.rpm
 

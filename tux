@@ -57,7 +57,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   LIGHT=(         light                       light                       "$NA"                       light                       light                       light                       "$NA"                       "$NA"               )
   LMSENSORS=(     lm-sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm-sensors                  sensors                     "$NA"               )
   NTFS3G=(        ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     fusefs-ntfs         )
-  OVMF=(          ovmf                        edk2-ovmf                   edk2-ovmf                   edk2-ovmf                   $NA                         ovmf                        ovmf                        "$NA"               )
+  OVMF=(          ovmf                        edk2-ovmf                   edk2-ovmf                   edk2-ovmf                   "$NA"                       ovmf                        ovmf                        "$NA"               )
   PANDOCPDF=(     pandoc                      pandoc-pdf                  "$NA"                       pandoc                      pandoc                      "$NA"                       pandoc                      "$NA"               )
   PICOM=(         picom                       picom                       "$NA"                       picom                       picom                       picom                       picom                       picom               )
   POPPLERUTILS=(  poppler-utils               poppler-utils               poppler                     poppler                     poppler-utils               poppler-utils               poppler-tools               poppler-utils       )
@@ -218,12 +218,12 @@ permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
   sudo xbps-install -Sy make pkg-config rpmextract snapper opendoas
-  doas xbps-remove sudo
+  doas xbps-remove sudo base-system
   curl https://www.kraxel.org/repos/jenkins/edk2/edk2.git-0-20220719.209.gf0064ac3af.EOL.no.nore.updates.x86_64.rpm -o edk2.rpm
   rpmextract edk2.rpm
 
   doas snapper -c root create-config /
-  doascbtrfs subvolume delete /.snapshots
+  doas btrfs subvolume delete /.snapshots
   doas mkdir /.snapshots
   doas sed -i '/@snapshots/s/^#//' /etc/fstab
 }

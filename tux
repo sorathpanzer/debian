@@ -29,7 +29,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Ubuntu/Devuan        Fedora                      Alma/Rocky/Centos           Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
+# DISTRO=(        Debian/Devuan               Fedora                      Alma/Rocky/Centos           Arch                        Void                        Alpine                      OpenSuse                    FreeBSD             )
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
   ADBLOCK=(       "$NA"                       "$NA"                       "$NA"                       "$NA"                       python3-adblock             "$NA"                       "$NA"                       py39-adblock        )
   ANDROIDTOOLS=(  android-tools-adb           android-tools               "$NA"                       android-tools               android-tools               android-tools               "$NA"                       android-tools       )
@@ -40,7 +40,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                       dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer   )
-  FIREFOX=(       "$NA"                       firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
+  FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
   FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib                      giflib-devel                giflib-dev                  giflib-devel                giflib              )
@@ -88,7 +88,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    Debian|Ubuntu|Devuan)	POS="0"
+    Debian|Devuan)	POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)               POS="1"
       PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
@@ -138,29 +138,32 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=True
 cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive.repo
+
+ $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 ALMALINUX_SETUP()
 {
-    echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
-    sudo dnf update -y
-    #sudo dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm
-    sudo dnf install -y epel-release
-    sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
-    sudo dnf config-manager --set-enabled crb
-    sudo dnf install -y tar
+ echo "Defaults:$USERNAME timestamp_timeout=60" | sudo tee /etc/sudoers.d/sorath
+ sudo dnf update -y
+ #sudo dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-$(rpm -E %rhel).noarch.rpm
+ sudo dnf install -y epel-release
+ sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+ sudo dnf config-manager --set-enabled crb
+ sudo dnf install -y tar
 
-    sh <(curl -L https://nixos.org/nix/install) --no-daemon
-    sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
-    . $HOME/.nix-profile/etc/profile.d/nix.sh
+ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+ sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-    nix-env -iA nixpkgs.stow nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.xdotool nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-      nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
-      nixpkgs.picom nixpkgs.sox nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
+ nix-env -iA nixpkgs.stow nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.xdotool nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
+   nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
+   nixpkgs.picom nixpkgs.sox nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
 
-    echo "max_parallel_downloads=10
-    deltarpm=True
-    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+ echo "max_parallel_downloads=10
+ deltarpm=True
+ defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+ $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 ROCKY_SETUP()
@@ -225,9 +228,9 @@ permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
   doas mkdir /.snapshots
   doas sed -i '/@snapshots/s/^#//' /etc/fstab
 
-  cp -R /mnt/etc/sv/agetty-tty1 /mnt/etc/sv/agetty-autologin-tty1
-  cat <<EOF >  /mnt/etc/sv/agetty-autologin-tty1/conf
-  GETTY_ARGS="--autologin $USER_NAME --noclear"
+  cp -R /etc/sv/agetty-tty1 /mnt/etc/sv/agetty-autologin-tty1
+  cat <<EOF >  /etc/sv/agetty-autologin-tty1/conf
+  GETTY_ARGS="--autologin $USER --noclear"
   BAUD_RATE=38400
   TERM_NAME=linux
 EOF
@@ -235,17 +238,12 @@ EOF
 
 DEBIAN_SETUP()
 {
-  sudo apt-get -y install firefox-esr
-}
-
-UBUNTU_SETUP()
-{
-  sudo apt-get -y install firefox
+  echo "Installing..."
 }
 
 DEVUAN_SETUP()
 {
-  sudo apt-get -y install firefox-esr
+  echo "Installing..."
 }
 
 ARCH_SETUP()
@@ -267,6 +265,7 @@ OPENSUSE_SETUP()
   if [ $TUMBLEWEED = Tumbleweed ]; then
     sudo zypper install -y android-tools
   fi
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 INSTALL_PACKAGES()
@@ -341,8 +340,14 @@ INSTALL_PACKAGES()
   {
   $SUDOAS usermod -s /usr/bin/zsh $USER
   echo "$USERNAME" | $SUDOAS tee -a /etc/shutdown.allow
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
   #echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
+
+  #echo 'Section "Device"
+  #Identifier "Intel Graphics"
+  #Driver "intel"
+  #Option "TearFree" "true"
+  #Option "DRI" "False"
+  #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   echo '/* Allow members of the wheel group to execute any actions
@@ -353,13 +358,6 @@ INSTALL_PACKAGES()
       return polkit.Result.YES;
     }
   });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
-
-  #echo 'Section "Device"
-  #Identifier "Intel Graphics"
-  #Driver "intel"
-  #Option "TearFree" "true"
-  #Option "DRI" "False"
-  #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
   if [ $RELEASE != Void ]; then
     echo "[Unit]
@@ -389,7 +387,7 @@ INSTALL_PACKAGES()
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Ubuntu|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|openSUSE)
+  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|openSUSE)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

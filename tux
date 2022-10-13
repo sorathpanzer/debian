@@ -191,8 +191,8 @@ FREEBSD_SETUP()
   cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
   #cd $HOME/.config/suckless/sxiv; doas make clean install
   cd $HOME
-  curl https://www.kraxel.org/repos/jenkins/edk2/edk2.git-0-20220719.209.gf0064ac3af.EOL.no.nore.updates.x86_64.rpm -o edk2.rpm
-  tar xf edk2.rpm -C /usr/share
+  doas mkdir -p /usr/share/edk2/ovmf
+  doas cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
 }
 
 NIXOS_SETUP()
@@ -218,14 +218,19 @@ permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
   sudo xbps-install -Sy make pkg-config rpmextract snapper opendoas
-  doas xbps-remove sudo base-system
-  curl https://www.kraxel.org/repos/jenkins/edk2/edk2.git-0-20220719.209.gf0064ac3af.EOL.no.nore.updates.x86_64.rpm -o edk2.rpm
-  rpmextract edk2.rpm
+  doas xbps-remove -y sudo base-system
 
   doas snapper -c root create-config /
   doas btrfs subvolume delete /.snapshots
   doas mkdir /.snapshots
   doas sed -i '/@snapshots/s/^#//' /etc/fstab
+
+  cp -R /mnt/etc/sv/agetty-tty1 /mnt/etc/sv/agetty-autologin-tty1
+  cat <<EOF >  /mnt/etc/sv/agetty-autologin-tty1/conf
+  GETTY_ARGS="--autologin $USER_NAME --noclear"
+  BAUD_RATE=38400
+  TERM_NAME=linux
+EOF
 }
 
 DEBIAN_SETUP()
@@ -324,6 +329,11 @@ INSTALL_PACKAGES()
       rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
       $SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
+  fi
+
+  if [ $RELEASE = Void ]; then
+    doas mkdir -p /usr/share/edk2/ovmf
+    doas cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
   fi
   }
 

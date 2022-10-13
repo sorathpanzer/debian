@@ -228,13 +228,9 @@ permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
   doas mkdir /.snapshots
   doas sed -i '/@snapshots/s/^#//' /etc/fstab
 
-  #doas cp -R /etc/sv/agetty-tty1 /etc/sv/agetty-autologin-tty1
-  echo "GETTY_ARGS="--autologin $USER --noclear"
+  echo "\"GETTY_ARGS="--autologin $USER --noclear"
 BAUD_RATE=38400
-TERM_NAME=linux" | doas tee /etc/sv/agetty-tty1/conf
-
-  doas rm /etc/runit/runsvdir/default/agetty-tty1
-  doas ln -srf /etc/sv/agetty-autologin-tty1 /etc/runit/runsvdir/default/
+TERM_NAME=linux"\" | doas tee /etc/sv/agetty-tty1/conf
 }
 
 DEBIAN_SETUP()

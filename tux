@@ -221,16 +221,17 @@ permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
   sudo xbps-install -Sy make pkg-config snapper opendoas
-  #doas xbps-remove -y sudo base-system
 
-  doas snapper -c root create-config /
-  doas btrfs subvolume delete /.snapshots
-  doas mkdir /.snapshots
-  doas sed -i '/@snapshots/s/^#//' /etc/fstab
+  sudo snapper -c root create-config /
+  sudo btrfs subvolume delete /.snapshots
+  sudo mkdir /.snapshots
+  sudo sed -i '/@snapshots/s/^#//' /etc/fstab
 
-  echo "\"GETTY_ARGS="--autologin $USER --noclear"
+  echo "GETTY_ARGS=\"--autologin $USER --noclear\"
 BAUD_RATE=38400
-TERM_NAME=linux"\" | doas tee /etc/sv/agetty-tty1/conf
+TERM_NAME=linux" | sudo tee /etc/sv/agetty-tty1/conf
+
+sudo xbps-remove -y sudo base-system
 }
 
 DEBIAN_SETUP()

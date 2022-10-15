@@ -56,6 +56,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   LIBXINERAMA=(   libxinerama-dev             libXinerama-devel           libXinerama-devel           libxinerama                 libXinerama-devel           libxinerama-dev             libXinerama-devel           libXinerama         )
   LIGHT=(         light                       light                       "$NA"                       light                       light                       light                       "$NA"                       "$NA"               )
   LMSENSORS=(     lm-sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm_sensors                  lm-sensors                  sensors                     "$NA"               )
+  NMTUI=(         "$NA"                       NetworkManager-tui          NetworkManager-tui          "$NA"                       "$NA"                       networkmanager-tui          NetworkManager-tui          "$NA"               )
   NTFS3G=(        ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     ntfs-3g                     fusefs-ntfs         )
   OVMF=(          ovmf                        edk2-ovmf                   edk2-ovmf                   edk2-ovmf                   "$NA"                       ovmf                        ovmf                        "$NA"               )
   PANDOCPDF=(     pandoc                      pandoc-pdf                  "$NA"                       pandoc                      pandoc                      "$NA"                       pandoc                      "$NA"               )
@@ -274,7 +275,7 @@ INSTALL_PACKAGES()
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 

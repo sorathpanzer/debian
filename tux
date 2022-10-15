@@ -222,7 +222,7 @@ permit nopass sorath cmd reboot
 permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
-  sudo xbps-install -Sy make pkg-config snapper opendoas setxkbmap
+  sudo xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio
 
   sudo snapper -c root create-config /
   sudo btrfs subvolume delete /.snapshots

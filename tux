@@ -339,14 +339,14 @@ INSTALL_PACKAGES()
   {
   $SUDOAS usermod -s /usr/bin/zsh $USER
   echo "$USERNAME" | $SUDOAS tee -a /etc/shutdown.allow
-  #echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
+  echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-  #echo 'Section "Device"
-  #Identifier "Intel Graphics"
-  #Driver "intel"
-  #Option "TearFree" "true"
-  #Option "DRI" "False"
-  #EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
+  echo 'Section "Device"
+  Identifier "Intel Graphics"
+  Driver "intel"
+  Option "TearFree" "true"
+  Option "DRI" "False"
+  EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   echo '/* Allow members of the wheel group to execute any actions

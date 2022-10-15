@@ -67,6 +67,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  python3-pip                 py3-pip                     python3-pip                 py39-pip            )
   PYTHON3SIX=(    python3-six                 python3-six                 python-six                  python-six                  python3-six                 py3-six                     python3-six                 py39-six            )
   QEMU=(          qemu                        qemu                        qemu-img                    qemu-base                   qemu                        qemu                        qemu                        qemu                )
+  QUTEBROWSER=(   qutebrowser                 qutebrowser                 "$NA"                       qutebrowser                 qutebrowser                 qutebrowser                 qutebrowser                 qutebrowser         )
   SCROT=(         scrot                       scrot                       "$NA"                       scrot                       scrot                       scrot                       scrot                       scrot               )
   SOX=(           sox                         sox                         "$NA"                       sox                         sox                         sox                         sox                         sox                 )
   STOW=(          stow                        stow                        "$NA"                       stow                        stow                        stow                        stow                        stow                )
@@ -232,6 +233,7 @@ permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 BAUD_RATE=38400
 TERM_NAME=linux" | sudo tee /etc/sv/agetty-tty1/conf
 
+sudo ln -s /etc/sv/pipewire /var/service
 sudo xbps-remove -y sudo base-system
 }
 
@@ -275,7 +277,7 @@ INSTALL_PACKAGES()
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 

@@ -41,7 +41,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer   )
   FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
-  FLATPAK=(       "$NA"                       flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
+  FLATPAK=(       flatpak                     flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib                      giflib-devel                giflib-dev                  giflib-devel                giflib              )
   GRUBBY=(        "$NA"                       grubby                      grubby                      "$NA"                       "$NA"                       "$NA"                       grubby                      "$NA"               )
@@ -240,9 +240,17 @@ sudo xbps-remove -y sudo base-system
 DEBIAN_SETUP()
 {
   sudo apt update; sudo apt upgrade -y
-  sudo apt install -y pulseaudio pulsemixer man2html
+  sudo apt install -y pulseaudio pulsemixer man2html doas
   systemctl --user --now enable pulseaudio
   systemctl --user --now enable pipewire.service pipewire-pulse
+
+    echo "permit persist $USERNAME as root
+permit nopass sorath as root cmd wg-quick
+permit nopass sorath cmd wg
+permit nopass sorath cmd reboot
+permit nopass sorath cmd poweroff
+permit nopass sorath cmd setleds
+permit nopass sorath cmd apt" | sudo tee /etc/doas.conf
 }
 
 DEVUAN_SETUP()
@@ -284,7 +292,7 @@ INSTALL_PACKAGES()
 
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-  if [ $RELEASE = Fedora ] || [ $RELEASE = "AlmaLinux" ]; then
+  if [ $RELEASE = Fedora ] || [ $RELEASE = "AlmaLinux" ] || [ $RELEASE = Debian ]; then
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     sudo flatpak install org.signal.Signal -y
     [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y

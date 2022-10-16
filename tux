@@ -239,12 +239,15 @@ sudo xbps-remove -y sudo base-system
 
 DEBIAN_SETUP()
 {
-  echo "Installing..."
+  sudo apt update; sudo apt upgrade -y
+  sudo apt install -y pulseaudio pulsemixer man2html
+  systemctl --user --now enable pulseaudio
+  systemctl --user --now enable pipewire.service pipewire-pulse
 }
 
 DEVUAN_SETUP()
 {
-  echo "Installing..."
+  DEBIAN_SETUP
 }
 
 ARCH_SETUP()

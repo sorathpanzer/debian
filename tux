@@ -222,7 +222,7 @@ permit nopass sorath cmd reboot
 permit nopass sorath cmd poweroff
 permit nopass sorath cmd setleds" | sudo tee /etc/doas.conf
 
-  sudo xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio
+  sudo xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio xdg-utils
 
   sudo snapper -c root create-config /
   sudo btrfs subvolume delete /.snapshots
@@ -234,6 +234,7 @@ BAUD_RATE=38400
 TERM_NAME=linux" | sudo tee /etc/sv/agetty-tty1/conf
 
 sudo ln -s /etc/sv/pipewire /var/service
+sudo ln -s /etc/sv/acpid /var/service
 sudo xbps-remove -y sudo base-system
 }
 
@@ -337,10 +338,10 @@ INSTALL_PACKAGES()
 
     if [ ! -z $LVM_PASSWORD ]; then
       echo "Open vault password:"
-      mkdir Vault
+      mkdir /run/media/$USER/Vault
       echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
-      $SUDOAS mount /dev/mapper/Vault Vault
-      rsync -avrop Vault/Documentos/BackHome/ /home/$USERNAME
+      $SUDOAS mount /dev/mapper/Vault /run/media/$USER/Vault
+      rsync -avrop /run/media/$USER/Vault/Documentos/BackHome/ /home/$USER
       $SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
   fi

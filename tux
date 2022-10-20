@@ -358,11 +358,11 @@ INSTALL_PACKAGES()
 
     if [ ! -z $LVM_PASSWORD ]; then
       echo "Open vault password:"
-      mkdir /run/media/$USER/Vault
+      mkdir Vault
       echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
-      $SUDOAS mount /dev/mapper/Vault /run/media/$USER/Vault
-      rsync -avrop /run/media/$USER/Vault/Documentos/BackHome/ /home/$USER
-      $SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
+      $SUDOAS mount /dev/mapper/Vault Vault
+      rsync -avrop Vault/Documentos/BackHome/ /home/$USER
+      #$SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
   fi
 

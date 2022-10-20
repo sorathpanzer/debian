@@ -288,6 +288,16 @@ ALPINE_SETUP()
   doas sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
   doas sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
   doas grub-mkconfig -o /boot/grub/grub.cfg
+
+  echo 'polkit.addAdminRule(function(action, subject) {
+    return ["unix-group:wheel"];
+});' | doas tee /etc/polkit-1/rules.d/50-default.rules
+
+#echo 'polkit.addRule(function(action, subject) {
+    #if (subject.isInGroup("wheel")) {
+      #return polkit.Result.YES;
+    #}
+  #});' | doas tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 }
 
 OPENSUSE_SETUP()

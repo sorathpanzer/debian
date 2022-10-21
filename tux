@@ -384,7 +384,7 @@ INSTALL_PACKAGES()
 
   CONFIGURE_SYSTEM()
   {
-  $SUDOAS usermod -s /usr/bin/zsh $USER
+  $SUDOAS usermod -s /bin/zsh $USER
   echo "$USERNAME" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
@@ -396,6 +396,7 @@ INSTALL_PACKAGES()
   Option "DRI" "False"
   EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
+  if [ $RELEASE != Void ] || [ $RELEASE != Alpine ]; then
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   echo '/* Allow members of the wheel group to execute any actions
   * without password authentication, similar to "sudo NOPASSWD:"
@@ -406,7 +407,6 @@ INSTALL_PACKAGES()
     }
   });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-  if [ $RELEASE != Void ] || [ $RELEASE != Alpine ]; then
     echo "[Unit]
   Description=Lock X session using slock for user %i
   Before=sleep.target

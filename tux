@@ -108,7 +108,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="doas pkg install -y" ;;
   esac
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
+  if [ $RELEASE = Void ] | [ $RELEASE = Alpine ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -265,18 +265,28 @@ ARCH_SETUP()
 
 ALPINE_SETUP()
 {
+  echo "" | doas tee /etc/motd
+
   echo "permit persist $USERNAME as root
   permit nopass sorath as root cmd wg-quick
   permit nopass sorath cmd wg
   permit nopass sorath cmd reboot
   permit nopass sorath cmd poweroff
+  permit nopass sorath cmd mount
   permit nopass sorath cmd setleds
   permit nopass sorath cmd rc-service
   permit nopass sorath cmd apk" | doas tee /etc/doas.d/doas.conf
 
-  echo "" | doas tee /etc/motd
+  echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/apk/repositories
+
   doas adduser sorath input
   doas adduser sorath users
+  doas adduser sorath plugdev
+  doas adduser sorath qemu
+  #doas adduser sorath kvm
+
+  doas apk -U upgrade
   doas apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
     alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse util-linux elogind polkit-elogind
   doas rc-service dbus start; doas rc-update add dbus
@@ -289,15 +299,9 @@ ALPINE_SETUP()
   doas sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
   doas grub-mkconfig -o /boot/grub/grub.cfg
 
-  echo 'polkit.addAdminRule(function(action, subject) {
-    return ["unix-group:wheel"];
-});' | doas tee /etc/polkit-1/rules.d/50-default.rules
-
-#echo 'polkit.addRule(function(action, subject) {
-    #if (subject.isInGroup("wheel")) {
-      #return polkit.Result.YES;
-    #}
-  #});' | doas tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+  doas setup-xorg-base
+  doas rm -r /media/${cdrom,usb}
+  doas mkdir /media/Vault
 }
 
 OPENSUSE_SETUP()
@@ -323,7 +327,7 @@ INSTALL_PACKAGES()
 
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
-  if [ $RELEASE != NixOS ] || [ $RELEASE != "FreeBSD" ]; then
+  if [ $RELEASE != NixOS ] | [ $RELEASE != "FreeBSD" ]; then
     $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     $SUDOAS flatpak install org.signal.Signal -y
     [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
@@ -396,7 +400,7 @@ INSTALL_PACKAGES()
   Option "DRI" "False"
   EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
 
-  if [ $RELEASE != Void ] || [ $RELEASE != Alpine ]; then
+  if [ $RELEASE != Void ] | [ $RELEASE != Alpine ]; then
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   echo '/* Allow members of the wheel group to execute any actions
   * without password authentication, similar to "sudo NOPASSWD:"

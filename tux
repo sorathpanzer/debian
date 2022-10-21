@@ -274,7 +274,7 @@ ALPINE_SETUP()
   permit nopass sorath cmd rc-service
   permit nopass sorath cmd apk" | doas tee /etc/doas.d/doas.conf
 
-  echo "" | Dias tee /etc/motd
+  echo "" | doas tee /etc/motd
   doas adduser sorath input
   doas adduser sorath users
   doas apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \

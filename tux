@@ -41,7 +41,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                         feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer   )
   FIREFOX=(       firefox-esr                 firefox                     firefox                     firefox                     firefox                     firefox                     firefox                     firefox-esr         )
-  FLATPAK=(       flatpak                     flatpak                     "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"                       "$NA"               )
+  FLATPAK=(       flatpak                     flatpak                     "$NA"                       "$NA"                       "$NA"                       flatpak                     "$NA"                       "$NA"               )
   FZF=(           fzf                         fzf                         "$NA"                       fzf                         fzf                         fzf                         fzf                         fzf                 )
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib                      giflib-devel                giflib-dev                  giflib-devel                giflib              )
   GRUBBY=(        "$NA"                       grubby                      grubby                      "$NA"                       "$NA"                       "$NA"                       grubby                      "$NA"               )
@@ -272,9 +272,9 @@ ALPINE_SETUP()
   permit nopass sorath cmd poweroff
   permit nopass sorath cmd setleds
   permit nopass sorath cmd rc-service
-  permit nopass sorath cmd apk" | sudo tee /etc/doas.d/doas.conf
+  permit nopass sorath cmd apk" | doas tee /etc/doas.d/doas.conf
 
-  doas echo "" > /etc/motd
+  echo "" | Dias tee /etc/motd
   doas adduser sorath input
   doas adduser sorath users
   doas apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
@@ -324,8 +324,8 @@ INSTALL_PACKAGES()
   [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
 
   if [ $RELEASE != NixOS ] || [ $RELEASE != "FreeBSD" ]; then
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    sudo flatpak install org.signal.Signal -y
+    $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    $SUDOAS flatpak install org.signal.Signal -y
     [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
   fi
 }

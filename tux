@@ -309,6 +309,9 @@ doas chmod +x /etc/local.d/cpufreq.start
   doas rm -r /media/${cdrom,usb}
   doas mkdir /media/Vault
 
+  doas mkdir /etc/udhcpc
+  echo 'RESOLV_CONF="no"' | doas tee /etc/udhcpc/udhcpc.conf
+
   echo "nameserver 84.200.69.80
 nameserver 84.200.70.40" | doas tee /etc/resolv.conf
 }

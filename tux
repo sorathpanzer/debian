@@ -280,6 +280,11 @@ ALPINE_SETUP()
   echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/apk/repositories
 
+  echo '#!/bin/sh
+
+echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | doas tee /etc/local.d/cpufreq.start
+doas chmod +x /etc/local.d/cpufreq.start
+
   doas adduser sorath input
   doas adduser sorath users
   doas adduser sorath plugdev
@@ -291,6 +296,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/ap
     alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse util-linux elogind polkit-elogind
   doas rc-service dbus start; doas rc-update add dbus
   doas rc-service alsa start; doas rc-update add alsa
+  doas rc-service local start; doas rc-update add local default
   doas rc-service elogind start; doas rc-update add elogind
   doas rc-update del networking boot
   doas sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
@@ -302,6 +308,9 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/ap
   doas setup-xorg-base
   doas rm -r /media/${cdrom,usb}
   doas mkdir /media/Vault
+
+  echo "nameserver 84.200.69.80
+nameserver 84.200.70.40" | doas tee /etc/resolv.conf
 }
 
 OPENSUSE_SETUP()

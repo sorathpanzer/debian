@@ -270,9 +270,9 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/ap
 echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | doas tee /etc/local.d/cpufreq.start
 doas chmod +x /etc/local.d/cpufreq.start
 
-  doas adduser sorath input
-  doas adduser sorath users
-  doas adduser sorath plugdev
+  doas adduser $USER input
+  doas adduser $USER users
+  doas adduser $USER plugdev
 
   doas apk -U upgrade
   doas apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
@@ -430,7 +430,7 @@ INSTALL_PACKAGES()
 
     $SUDOAS systemctl enable suspend@$USER.service
     $SUDOAS touch /etc/sudoers.d/$USER
-    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/sorath
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/bin/ostree,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
   fi
   }
 

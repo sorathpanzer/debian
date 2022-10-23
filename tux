@@ -91,7 +91,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     Debian|Devuan)	POS="0"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)               POS="1"
-      PKGINSTALL="[ -x "$(command -v rpm-ostree)" ]; then && sudo rpm-ostree install || sudo dnf install -y" ;;
+      PKGINSTALL="sudo rpm-ostree install" ;;
     AlmaLinux|Rocky|CentOS)  POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
@@ -120,7 +120,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   permit nopass $USER cmd mount
   permit nopass $USER cmd setleds
   permit nopass $USER cmd rc-service
-  permit nopass $USER cmd apk" | doas tee /etc/doas.d/doas.conf
+  permit nopass $USER cmd apk" | $SUDOAS tee /etc/doas.d/doas.conf
 
 }
 

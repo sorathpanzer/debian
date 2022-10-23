@@ -35,7 +35,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   BTRFSPROGS=(    btrfs-progs                 btrfs-progs                 "$NA"                       btrfs-progs                 btrfs-progs                 btrfs-progs                 btrfsprogs                    "$NA"               )
   CRONTABS=(      python3-crontab             crontabs                    crontabs                    "$NA"                       "$NA"                       "$NA"                       python3-crontab               py39-python-crontab )
   DBUSX11=(       dbus-x11                    dbus-x11                    dbus-x11                    dbus                        dbus-x11                    dbus-x11                    dbus-1-x11                    dbus                )
-  DOAS=(          doas                        opendoas                    "$NA"                       opendoas                    opendoas                    doas                        opendoas                      doas                )
+  DOAS=(          "$NA"                       opendoas                    "$NA"                       opendoas                    opendoas                    doas                        opendoas                      doas                )
   DUNST=(         dunst                       dunst                       "$NA"                       dunst                       dunst                       dunst                       dunst                         dunst               )
   FEH=(           feh                         feh                         "$NA"                       feh                         feh                         feh                         feh                           feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer           ffmpegthumbnailer           "$NA"                       ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer           ffmpegthumbnailer             ffmpegthumbnailer   )
@@ -112,6 +112,8 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     SUDOAS="sudo"
   fi
 
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
+    mkdir /etc/doas.d
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg
@@ -121,22 +123,22 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   permit nopass $USER cmd setleds
   permit nopass $USER cmd rc-service
   permit nopass $USER cmd apk" | $SUDOAS tee /etc/doas.d/doas.conf
-
+  fi
 }
 
 FEDORA_SETUP()
 {
     [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
     deltarpm=True
-    defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+    defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
 
-    echo "Defaults:$USER timestamp_timeout=60" | sudo tee /etc/sudoers.d/$USER
-    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
     $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
-    [ -x "$(command -v rpm-ostree)" ] && sudo sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-    sudo sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-    [ -x "$(command -v rpm-ostree)" ] && sudo systemctl enable rpm-ostreed-automatic.timer
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+    $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
     echo '[updates-archive]
 name=Fedora $releasever - $basearch - Updates Archive
@@ -148,19 +150,17 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=True
-cost=10000 # default is 1000' | sudo tee /etc/yum.repos.d/fedora-updates-archive.repo
-
- $SUDOAS grubby --update-kernel=ALL --args=quiet
+cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo
 }
 
 ALMALINUX_SETUP()
 {
- echo "Defaults:$USER timestamp_timeout=60" | sudo tee /etc/sudoers.d/$USER
- sudo dnf update -y
- sudo dnf install -y epel-release
- sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
- sudo dnf config-manager --set-enabled crb
- sudo dnf install -y tar
+ echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+ $SUDOAS dnf update -y
+ $SUDOAS dnf install -y epel-release
+ $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+ $SUDOAS dnf config-manager --set-enabled crb
+ $SUDOAS dnf install -y tar
 
  sh <(curl -L https://nixos.org/nix/install) --no-daemon
  sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
@@ -172,7 +172,7 @@ ALMALINUX_SETUP()
 
  echo "max_parallel_downloads=10
  deltarpm=True
- defaultyes=True" | sudo tee -a /etc/dnf/dnf.conf
+ defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
  $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
@@ -188,24 +188,24 @@ CENTOS_SETUP()
 
 FREEBSD_SETUP()
 {
-  doas pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
-  doas sysrc dbus_enable=YES
-  doas sysrc openntpd_enable=YES
-  doas sysrc hald_enable=YES
-  doas sysrc moused_enable=YES
-  doas sysrc linux_enable=YES
-  echo "kern.evdev.rcpt_mask=3" | doas tee -a /etc/sysctl.conf
+  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
+  $SUDOAS sysrc dbus_enable=YES
+  $SUDOAS sysrc openntpd_enable=YES
+  $SUDOAS sysrc hald_enable=YES
+  $SUDOAS sysrc moused_enable=YES
+  $SUDOAS sysrc linux_enable=YES
+  echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
   cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
   cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
-  cd $HOME/.config/suckless/dwm-6.3; doas make install clean
-  cd $HOME/.config/suckless/dmenu-5.1; doas make install clean
-  cd $HOME/.config/suckless/st-0.8.5; doas make install clean
-  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make install clean
-  #cd $HOME/.config/suckless/sxiv; doas make install clean
+  cd $HOME/.config/suckless/dwm-6.3; $SUDOAS make install clean
+  cd $HOME/.config/suckless/dmenu-5.1; $SUDOAS make install clean
+  cd $HOME/.config/suckless/st-0.8.5; $SUDOAS make install clean
+  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
+  #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
   cd $HOME
-  doas mkdir -p /usr/share/edk2/ovmf
-  doas cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+  $SUDOAS mkdir -p /usr/share/edk2/ovmf
+  $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
 }
 
 NIXOS_SETUP()
@@ -216,8 +216,8 @@ NIXOS_SETUP()
   cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
   cp .config/suckless/dmenu-5.1/config.nixos .config/suckless/dmenu-5.1/config.mk
   cp .config/suckless/st-0.8.5/config.nixos .config/suckless/st-0.8.5/config.mk
-  sudo mv configuration.nix /etc/nixos
-  sudo nixos-rebuild boot
+  $SUDOAS mv configuration.nix /etc/nixos
+  $SUDOAS nixos-rebuild boot
 }
 
 VOID_SETUP()
@@ -241,8 +241,8 @@ sudo xbps-remove -y sudo base-system
 
 DEBIAN_SETUP()
 {
-  sudo apt update; sudo apt upgrade -y
-  sudo apt install -y pulseaudio pulsemixer man2html doas
+  $SUDOAS apt update; $SUDOAS apt upgrade -y
+  $SUDOAS apt install -y pulseaudio pulsemixer man2html
   systemctl --user --now enable pulseaudio
   systemctl --user --now enable pipewire.service pipewire-pulse
 }
@@ -259,54 +259,50 @@ ARCH_SETUP()
 
 ALPINE_SETUP()
 {
-  echo "" | doas tee /etc/motd
+  echo "" | $SUDOAS tee /etc/motd
 
   echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | doas tee /etc/apk/repositories
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
 
   echo '#!/bin/sh
 
-echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | doas tee /etc/local.d/cpufreq.start
-doas chmod +x /etc/local.d/cpufreq.start
+echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | $SUDOAS tee /etc/local.d/cpufreq.start
+$SUDOAS chmod +x /etc/local.d/cpufreq.start
 
-  doas adduser $USER input
-  doas adduser $USER users
-  doas adduser $USER plugdev
-
-  doas apk -U upgrade
-  doas apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
+  $SUDOAS adduser $USER input
+  $SUDOAS apk -U upgrade
+  $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
     alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse util-linux elogind polkit-elogind
-  doas rc-service dbus start; doas rc-update add dbus
-  doas rc-service alsa start; doas rc-update add alsa
-  doas rc-service local start; doas rc-update add local default
-  doas rc-service elogind start; doas rc-update add elogind
-  doas rc-update del networking boot
-  doas sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  doas sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
-  doas sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
-  doas sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
-  doas grub-mkconfig -o /boot/grub/grub.cfg
+  $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
+  $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
+  $SUDOAS rc-service local start; $SUDOAS rc-update add local default
+  $SUDOAS rc-service elogind start; $SUDOAS rc-update add elogind
+  $SUDOAS rc-update del networking boot
+  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
+  $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
+  $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
+  $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
+  $SUDOAS grub-mkconfig -o /boot/grub/grub.cfg
 
-  doas setup-xorg-base
-  doas rm -r /media/${cdrom,usb}
-  doas mkdir /media/Vault
+  $SUDOAS setup-xorg-base
+  $SUDOAS rm -r /media/${cdrom,usb}
+  $SUDOAS mkdir /media/Vault
 
-  doas mkdir /etc/udhcpc
-  echo 'RESOLV_CONF="no"' | doas tee /etc/udhcpc/udhcpc.conf
+  $SUDOAS mkdir /etc/udhcpc
+  echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
 
   echo "nameserver 84.200.69.80
-nameserver 84.200.70.40" | doas tee /etc/resolv.conf
+nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 }
 
 OPENSUSE_SETUP()
 {
-  sudo zypper install -y make ncurses-devel posix_cc
+  $SUDOAS zypper install -y make ncurses-devel posix_cc
 
   TUMBLEWEED=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
-    sudo zypper install -y android-tools
+    $SUDOAS zypper install -y android-tools
   fi
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 INSTALL_PACKAGES()
@@ -319,17 +315,24 @@ INSTALL_PACKAGES()
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
     ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]}
 
-  [ -x "$(command -v rpm-ostree)" ] && sudo rpm-ostree ex apply-live --allow-replacement
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
 
   if [ $RELEASE != NixOS ] | [ $RELEASE != "FreeBSD" ]; then
     $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     $SUDOAS flatpak install org.signal.Signal -y
-    [ $RELEASE = "AlmaLinux" ] && sudo flatpak install org.qutebrowser.qutebrowser -y
-    [ $RELEASE = "Alpine" ] && sudo flatpak install org.libreoffice.LibreOffice -y
+    [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser -y
+    [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   fi
 
+
+if [ $RELEASE = Fedora ] || [ $RELEASE = openSUSE ]; then
+    $SUDOAS grubby --update-kernel=ALL --args=quiet
+fi
+
+if [ $RELEASE = Alpine ]; then
   $SUDOAS adduser $USER plugdev
   $SUDOAS adduser $USER qemu
+fi
 }
 
   CONFIGURE_HOME()
@@ -379,8 +382,8 @@ INSTALL_PACKAGES()
   fi
 
   if [ $RELEASE = Void ]; then
-    doas mkdir -p /usr/share/edk2/ovmf
-    doas cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+    $SUDOAS mkdir -p /usr/share/edk2/ovmf
+    $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
   fi
   }
 
@@ -390,7 +393,7 @@ INSTALL_PACKAGES()
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-  doas mkdir /etc/X11/xorg.conf.d
+  $SUDOAS mkdir /etc/X11/xorg.conf.d
   echo 'Section "Device"
   Identifier "Intel Graphics"
   Driver "intel"

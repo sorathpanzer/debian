@@ -151,6 +151,9 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=True
 cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo
+
+$SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
+$SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 }
 
 ALMALINUX_SETUP()

@@ -76,7 +76,7 @@ cp /etc/apk/repositories "${mnt}"/etc/apk/
 apk add --root "${mnt}" \
 	--initdb --progress --update-cache --clean-protected \
 	acct linux-lts alpine-base zfs zfs-udev eudev e2fsprogs grub grub-bios grub-efi \
-	chrony openssh-server openssh-client openssl bash
+	bash
 
 # --quiet \
 
@@ -126,8 +126,6 @@ rc-update add zfs-mount sysinit
 rc-update add zfs-zed sysinit
 rc-update add acpid default
 rc-update add crond default
-rc-update add sshd default
-rc-update add chronyd default
 rc-update add networking boot
 rc-update add urandom boot
 # set up hostid

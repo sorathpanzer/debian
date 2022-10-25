@@ -64,7 +64,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   PYTHON=(        "$NA"                       python3-devel               python3-devel               "$NA"                       python3-devel               python3-dev                 python3-devel                 python311           )
   PYTHON3PIP=(    python3-pip                 python3-pip                 python-pip                  python-pip                  python3-pip                 py3-pip                     python3-pip                   py39-pip            )
   PYTHON3SIX=(    python3-six                 python3-six                 python-six                  python-six                  python3-six                 py3-six                     python3-six                   py39-six            )
-  QEMU=(          qemu                        qemu                        qemu-img                    qemu-base                   qemu                        qemu                        qemu                          qemu                )
+  QEMU=(          qemu                        qemu                        qemu-img                    qemu-base                   qemu                        qemu                        qemu-system-x86_64            qemu                )
   QUTEBROWSER=(   qutebrowser                 qutebrowser                 "$NA"                       qutebrowser                 qutebrowser                 qutebrowser                 qutebrowser                   qutebrowser         )
   SCROT=(         scrot                       scrot                       "$NA"                       scrot                       scrot                       scrot                       scrot                         scrot               )
   SOX=(           sox                         sox                         "$NA"                       sox                         sox                         sox                         sox                           sox                 )
@@ -274,8 +274,9 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
 
   $SUDOAS adduser $USER input
   $SUDOAS apk -U upgrade
-  $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu mesa-dri-gallium libva-intel-driver \
-    alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse util-linux elogind polkit-elogind
+  $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
+    mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
+    util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu
   $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
   $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
   $SUDOAS rc-service local start; $SUDOAS rc-update add local default
@@ -296,6 +297,9 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
 
   echo "nameserver 84.200.69.80
 nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
+
+  $SUDOAS mkdir -p /usr/share/edk2/ovmf
+  $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
 }
 
 OPENSUSE_SETUP()
@@ -335,6 +339,8 @@ fi
 if [ $RELEASE = Alpine ]; then
   $SUDOAS adduser $USER plugdev
   $SUDOAS adduser $USER qemu
+  $SUDOAS adduser $USER kvm
+  $SUDOAS adduser $USER libvirt
 fi
 }
 

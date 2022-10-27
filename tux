@@ -45,7 +45,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   GIFLIB=(        libgif-dev                  giflib-devel                giflib-devel                giflib                      giflib-devel                giflib-dev                  giflib-devel                giflib              )
   GRUBBY=(        "$NA"                       grubby                      grubby                      "$NA"                       "$NA"                       "$NA"                       grubby                      "$NA"               )
   IMAGEMAGICK=(   imagemagick                 ImageMagick                 ImageMagick                 imagemagick                 ImageMagick                 imagemagick                 ImageMagick                 ImageMagick7-nox11  )
-  IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2                      imlib2-devel                imlib2-dev                  "$NA"                       imlib2              )
+  IMLIB2=(        libimlib2-dev               imlib2-devel                imlib2-devel                imlib2                      imlib2-devel                imlib2-dev                  imlib2-devel                imlib2              )
   LF=(            "$NA"                       "$NA"                       "$NA"                       lf                          lf                          "$NA"                       "$NA"                       lf                  )
   LIBEXIF=(       libexif-dev                 libexif-devel               libexif-devel               libexif                     libexif-devel               libexif-dev                 libexif-devel               libexif             )
   LIBREOFFICE=(   libreoffice-calc            libreoffice-calc            libreoffice-calc            libreoffice-still           libreoffice-calc            "$NA"                       libreoffice-calc            libreoffice         )
@@ -199,11 +199,11 @@ FREEBSD_SETUP()
   $SUDOAS sysrc linux_enable=YES
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
-  cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
-  cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
+  cp .config/suckless/dmenu-5.2/config.bsd .config/suckless/dmenu-5.2/config.mk
+  cp .config/suckless/st-0.9/config.bsd .config/suckless/st-0.9/config.mk
   cd $HOME/.config/suckless/dwm-6.3; $SUDOAS make install clean
-  cd $HOME/.config/suckless/dmenu-5.1; $SUDOAS make install clean
-  cd $HOME/.config/suckless/st-0.8.5; $SUDOAS make install clean
+  cd $HOME/.config/suckless/dmenu-5.2; $SUDOAS make install clean
+  cd $HOME/.config/suckless/st-0.9; $SUDOAS make install clean
   cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
   #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
   cd $HOME
@@ -217,8 +217,8 @@ NIXOS_SETUP()
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
   sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
   cp .config/suckless/dwm-6.3/config.nixos .config/suckless/dwm-6.3/config.mk
-  cp .config/suckless/dmenu-5.1/config.nixos .config/suckless/dmenu-5.1/config.mk
-  cp .config/suckless/st-0.8.5/config.nixos .config/suckless/st-0.8.5/config.mk
+  cp .config/suckless/dmenu-5.2/config.nixos .config/suckless/dmenu-5.2/config.mk
+  cp .config/suckless/st-0.9/config.nixos .config/suckless/st-0.9/config.mk
   $SUDOAS mv configuration.nix /etc/nixos
   $SUDOAS nixos-rebuild boot
 }
@@ -276,7 +276,7 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
   $SUDOAS apk -U upgrade
   $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
-    util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu
+    util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu coreutils
   $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
   $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
   $SUDOAS rc-service local start; $SUDOAS rc-update add local default
@@ -367,10 +367,10 @@ fi
 
     cp $HOME/.config/suckless/dwm-6.3/config.tux $HOME/.config/suckless/dwm-6.3/config.mk
     cd $HOME/.config/suckless/dwm-6.3; make install clean
-    cp $HOME/.config/suckless/dmenu-5.1/config.tux $HOME/.config/suckless/dmenu-5.1/config.mk
-    cd $HOME/.config/suckless/dmenu-5.1; make install clean
-    cp $HOME/.config/suckless/st-0.8.5/config.tux $HOME/.config/suckless/st-0.8.5/config.mk
-    cd $HOME/.config/suckless/st-0.8.5; make install clean
+    cp $HOME/.config/suckless/dmenu-5.2/config.tux $HOME/.config/suckless/dmenu-5.2/config.mk
+    cd $HOME/.config/suckless/dmenu-5.2; make install clean
+    cp $HOME/.config/suckless/st-0.9/config.tux $HOME/.config/suckless/st-0.9/config.mk
+    cd $HOME/.config/suckless/st-0.9; make install clean
     cd $HOME/.config/suckless/dwmblocks; make install clean
     cd $HOME/.config/suckless/sxiv; make install clean
     cd

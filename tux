@@ -290,7 +290,7 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
 
   $SUDOAS setup-xorg-base
   $SUDOAS rm -r /media/${cdrom,usb}
-  $SUDOAS mkdir /media/Vault
+  $SUDOAS mkdir -p /media/Vault
 
   $SUDOAS mkdir /etc/udhcpc
   echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
@@ -304,6 +304,16 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
 OPENSUSE_SETUP()
 {
+  $SUDOAS touch /.root.key
+  $SUDOAS chmod 600 /.root.key
+  $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
+  $SUDOAS cryptsetup luksAddKey /dev/nvme0n1p2 /.root.key
+  $SUDOAS sed -i 's/none/\/.root.key/g' /etc/crypttab
+  echo -e 'install_items+=" /.root.key "' | $SUDOAS tee --append /etc/dracut.conf.d/99-root-key.conf > /dev/null
+  echo "/boot/ root:root 700" | $SUDO tee -a /etc/permissions.local
+  $SUDOAS chkstat --system --set
+  $SUDOAS dracut -f
+
   $SUDOAS zypper install -y make ncurses-devel posix_cc
 
   TUMBLEWEED=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')

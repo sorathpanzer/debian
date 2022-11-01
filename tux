@@ -37,6 +37,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11              dbus                dbus-x11            dbus-x11            dbus-1-x11                 dbus                )
   DOAS=(          "$NA"                     opendoas              "$NA"                 opendoas            opendoas            doas                opendoas                   doas                )
   DUNST=(         dunst                     dunst                 "$NA"                 dunst               dunst               dunst               dunst                      dunst               )
+	EMACS=(					emacs-nox									emacs-nox							emacs-nox							emacs-nox						emacs								emacs-nox						emacs-nox									 emacs-nox					 )												
   FEH=(           feh                       feh                   "$NA"                 feh                 feh                 feh                 feh                        feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer         ffmpegthumbnailer     "$NA"                 ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer          ffmpegthumbnailer   )
   FIREFOX=(       firefox-esr               firefox               firefox               firefox             firefox             firefox             MozillaFirefox             firefox-esr         )
@@ -235,7 +236,7 @@ VOID_SETUP()
 
   echo "GETTY_ARGS=\"--autologin $USER --noclear\"
 BAUD_RATE=38400
-TERM_NAME=linux" | sudo tee /etc/sv/agetty-tty1/conf
+TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
 
 sudo ln -s /etc/sv/pipewire /var/service
 sudo ln -s /etc/sv/acpid /var/service
@@ -307,12 +308,15 @@ OPENSUSE_SETUP()
   $SUDOAS touch /.root.key
   $SUDOAS chmod 600 /.root.key
   $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
+	echo "ENTER THE PASSPHRASE OF THE DEVICE"
   $SUDOAS cryptsetup luksAddKey /dev/nvme0n1p2 /.root.key
   $SUDOAS sed -i 's/none/\/.root.key/g' /etc/crypttab
   echo -e 'install_items+=" /.root.key "' | $SUDOAS tee --append /etc/dracut.conf.d/99-root-key.conf > /dev/null
-  echo "/boot/ root:root 700" | $SUDO tee -a /etc/permissions.local
+  echo "/boot/ root:root 700" | $SUDOAS tee -a /etc/permissions.local
   $SUDOAS chkstat --system --set
   $SUDOAS dracut -f
+  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
+  $SUDOAS grub2-mkconfig -o /boot/grub2/grub.cfg
 
   $SUDOAS zypper install -y make ncurses-devel posix_cc
 
@@ -330,7 +334,7 @@ INSTALL_PACKAGES()
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACS[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
 

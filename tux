@@ -114,7 +114,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   fi
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
-    mkdir /etc/doas.d
+    mkdir -p /etc/doas.d
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg
@@ -328,7 +328,7 @@ OPENSUSE_SETUP()
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh \
+  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \

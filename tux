@@ -427,6 +427,9 @@ fi
     $SUDOAS mkdir -p /usr/share/edk2/ovmf
     $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
   fi
+
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
   }
 
   CONFIGURE_SYSTEM()

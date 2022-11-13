@@ -6,12 +6,14 @@
 # -> Global System init support
 # -> autologin in Devuan
 # In OpenSuse there is no android-tools lf trash-cli light by default
+# In OpenBSD install qutebrowser separatily
 
 # TODO: Before running this script you must install:
 # Debian -> curl
 # Fedora -> audit
 # NIXOS -> git, stow
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
+# OpenBSD ->  curl bash
 # Alpine -> curl, bash
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
 
@@ -28,64 +30,65 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Devuan             Fedora                Alma/Rocky/Centos     Arch                Void                Alpine              OpenSuse                   FreeBSD             )
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
-  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                 "$NA"               python3-adblock     "$NA"               "$NA"                      py39-adblock        )
-  ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                 android-tools       android-tools       android-tools       "$NA"                      android-tools       )
-  BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                 btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                 "$NA"               )
-  CRONTABS=(      python3-crontab           crontabs              crontabs              "$NA"               "$NA"               "$NA"               python3-crontab            py39-python-crontab )
-  DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11              dbus                dbus-x11            dbus-x11            dbus-1-x11                 dbus                )
-  DOAS=(          "$NA"                     opendoas              "$NA"                 opendoas            opendoas            doas                opendoas                   doas                )
-  DUNST=(         dunst                     dunst                 "$NA"                 dunst               dunst               dunst               dunst                      dunst               )
-  EMACS=(	  emacs-nox		    emacs-nox		  emacs-nox		emacs-nox	    emacs		emacs-nox	    emacs-nox		       emacs-nox	   )	
-  FEH=(           feh                       feh                   "$NA"                 feh                 feh                 feh                 feh                        feh                 )
-  FFTHUMBNAILER=( ffmpegthumbnailer         ffmpegthumbnailer     "$NA"                 ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer          ffmpegthumbnailer   )
-  FIREFOX=(       firefox-esr               firefox               firefox               firefox             firefox             firefox             MozillaFirefox             firefox-esr         )
-  FLATPAK=(       flatpak                   flatpak               "$NA"                 "$NA"               "$NA"               flatpak             "$NA"                      "$NA"               )
-  FZF=(           fzf                       fzf                   "$NA"                 fzf                 fzf                 fzf                 fzf                        fzf                 )
-  GIFLIB=(        libgif-dev                giflib-devel          giflib-devel          giflib              giflib-devel        giflib-dev          giflib-devel               giflib              )
-  GRUBBY=(        "$NA"                     grubby                grubby                "$NA"               "$NA"               "$NA"               grubby                     "$NA"               )
-  IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick           imagemagick         ImageMagick         imagemagick         ImageMagick                ImageMagick7-nox11  )
-  IMLIB2=(        libimlib2-dev             imlib2-devel          imlib2-devel          imlib2              imlib2-devel        imlib2-dev          imlib2-devel               imlib2              )
-  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  lf                  "$NA"               "$NA"                      lf                  )
-  LIBEXIF=(       libexif-dev               libexif-devel         libexif-devel         libexif             libexif-devel       libexif-dev         libexif-devel              libexif             )
-  LIBREOFFICE=(   libreoffice-calc          libreoffice-calc      libreoffice-calc      libreoffice-still   libreoffice-calc    "$NA"               libreoffice-calc           libreoffice         )
-  LIBX11=(        libx11-dev                libX11-devel          libX11-devel          libx11              libX11-devel        libx11-dev          libX11-devel               libX11              )
-  LIBXFT=(        libxft-dev                libXft-devel          libXft-devel          libxft              libXft-devel        libxft-dev          libXft-devel               libXft              )
-  LIBXINERAMA=(   libxinerama-dev           libXinerama-devel     libXinerama-devel     libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel          libXinerama         )
-  LIGHT=(         light                     light                 "$NA"                 light               light               light               "$NA"                      "$NA"               )
-  LMSENSORS=(     lm-sensors                lm_sensors            lm_sensors            lm_sensors          lm_sensors          lm-sensors          sensors                    "$NA"               )
-  NMTUI=(         "$NA"                     NetworkManager-tui    NetworkManager-tui    "$NA"               "$NA"               networkmanager-tui  "$NA"                      "$NA"               )
-  NTFS3G=(        ntfs-3g                   ntfs-3g               ntfs-3g               ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g                    fusefs-ntfs         )
-  OVMF=(          ovmf                      edk2-ovmf             edk2-ovmf             edk2-ovmf           "$NA"               ovmf                ovmf                       "$NA"               )
-  PANDOCPDF=(     pandoc                    pandoc-pdf            "$NA"                 pandoc              pandoc              "$NA"               pandoc                     "$NA"               )
-  PICOM=(         picom                     picom                 "$NA"                 picom               picom               picom               picom                      picom               )
-  POPPLERUTILS=(  poppler-utils             poppler-utils         poppler               poppler             poppler-utils       poppler-utils       poppler-tools              poppler-utils       )
-  PAUTILS=(       pulseaudio-utils          pulseaudio-utils      pulseaudio-utils      pulseaudio          pulseaudio-utils    pulseaudio-utils    pulseaudio-utils           "$NA"               )
-  PYTHON=(        "$NA"                     python3-devel         python3-devel         "$NA"               python3-devel       python3-dev         python3-devel              python311           )
-  PYTHON3PIP=(    python3-pip               python3-pip           python-pip            python-pip          python3-pip         py3-pip             python3-pip                py39-pip            )
-  PYTHON3SIX=(    python3-six               python3-six           python-six            python-six          python3-six         py3-six             python3-six                py39-six            )
-  QEMU=(          qemu                      qemu                  qemu-img              qemu-base           qemu                qemu-system-x86_64  qemu                       qemu                )
-  QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                 qutebrowser         qutebrowser         qutebrowser         qutebrowser                qutebrowser         )
-  SCROT=(         scrot                     scrot                 "$NA"                 scrot               scrot               scrot               scrot                      scrot               )
-  SOX=(           sox                       sox                   "$NA"                 sox                 sox                 sox                 sox                        sox                 )
-  STOW=(          stow                      stow                  "$NA"                 stow                stow                stow                stow                       stow                )
-  TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                 telegram-desktop    telegram-desktop    telegram-desktop    telegram-desktop           telegram-desktop    )
-  TIG=(           tig                       tig                   tig                   tig                 tig                 tig                 "$NA"                      tig                 )
-  TRASHCLI=(      trash-cli                 trash-cli             "$NA"                 trash-cli           trash-cli           trash-cli           "$NA"                      "$NA"               )
-  UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                 "$NA"               ueberzug            "$NA"               "$NA"                      py39-ueberzug       )
-  UDISKIE=(       udiskie                   udiskie               "$NA"                 udiskie             udiskie             udiskie             udiskie                    "$NA"               )
-  XDOTOOL=(       xdotool                   xdotool               "$NA"                 xdotool             xdotool             xdotool             xdotool                    xdotool             )
-  XF86INTEL=(     xserver-xorg-video-intel  xorg-x11-drv-intel    "$NA"                 xf86-video-intel    xf86-video-intel    xf86-video-intel    xf86-video-intel           xf86-video-intel    )
-  XINIT=(         xinit                     xorg-x11-xinit        xorg-x11-xinit        xorg-xinit          xinit               xinit               xinit                      xinit               )
-  XINPUT=(        xinput                    xinput                xinput                xorg-xinput         xinput              xinput              xinput                     xinput              )
-  XORGSERVER=(    xserver-xorg              xorg-x11-server-Xorg  xorg-x11-server-Xorg  xorg-server         xorg-minimal        xorg-server         xorg-x11-server            xorg-minimal        )
-  XRANDR=(        x11-xserver-utils         xrandr                xrandr                xorg-xrandr         xrandr              xrandr              xrandr                     xrandr              )
-  XRDB=(          x11-xserver-utils         xrdb                  xrdb                  xorg-xrdb           xrdb                xrdb                xrdb                       xrdb                )
-  XSET=(          x11-xserver-utils         xset                  xset                  xorg-xset           xset                xset                xset                       xset                )
-  YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl            youtube-dl          youtube-dl          youtube-dl          youtube-dl                 youtube_dl          )
-  ZATHURA=(       zathura                   zathura               "$NA"                 zathura             zathura             zathura             zathura                    zathura             )
-  ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   "$NA"                 zathura-pdf-poppler zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler )
+# DISTRO=(        Debian/Devuan             Fedora                Alma/Rocky/Centos     Arch                Void                Alpine              OpenSuse                   FreeBSD              OpenBSD             )
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
+  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                 "$NA"               python3-adblock     "$NA"               "$NA"                      py39-adblock         py3-adblock         )
+  ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                 android-tools       android-tools       android-tools       "$NA"                      android-tools        "$NA"               )
+  BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                 btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                 "$NA"                "$NA"               )
+  CRONTABS=(      python3-crontab           crontabs              crontabs              "$NA"               "$NA"               "$NA"               python3-crontab            py39-python-crontab  "$NA"               )
+  DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11              dbus                dbus-x11            dbus-x11            dbus-1-x11                 dbus                 dbus                )
+  DOAS=(          "$NA"                     opendoas              "$NA"                 opendoas            opendoas            doas                opendoas                   doas                 "$NA"               )
+  DUNST=(         dunst                     dunst                 "$NA"                 dunst               dunst               dunst               dunst                      dunst                dunst               )
+  EMACSNX=(	      emacs-nox		              emacs-nox		          emacs-nox		          emacs-nox	          emacs		            emacs-nox	          emacs-nox		               emacs-nox	          emacs-nosx          )
+  FEH=(           feh                       feh                   "$NA"                 feh                 feh                 feh                 feh                        feh                  feh                 )
+  FFTHUMBNAILER=( ffmpegthumbnailer         ffmpegthumbnailer     "$NA"                 ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer          ffmpegthumbnailer    ffmpegthumbnailer   )
+  FIREFOX=(       firefox-esr               firefox               firefox               firefox             firefox             firefox             MozillaFirefox             firefox-esr          firefox-esr         )
+  FLATPAK=(       flatpak                   flatpak               "$NA"                 "$NA"               "$NA"               flatpak             "$NA"                      "$NA"                "$NA"               )
+  FZF=(           fzf                       fzf                   "$NA"                 fzf                 fzf                 fzf                 fzf                        fzf                  fzf                 )
+  GCC=(           gcc                       gcc                   gcc                   gcc                 gcc                 gcc                 gcc                         gcc                 gcc%11              )
+  GIFLIB=(        libgif-dev                giflib-devel          giflib-devel          giflib              giflib-devel        giflib-dev          giflib-devel               giflib               giflib              )
+  GRUBBY=(        "$NA"                     grubby                grubby                "$NA"               "$NA"               "$NA"               grubby                     "$NA"                "$NA"               )
+  IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick           imagemagick         ImageMagick         imagemagick         ImageMagick                ImageMagick7-nox11   ImageMagick         )
+  IMLIB2=(        libimlib2-dev             imlib2-devel          imlib2-devel          imlib2              imlib2-devel        imlib2-dev          imlib2-devel               imlib2               imlib2              )
+  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  lf                  "$NA"               "$NA"                      lf                   lf                  )
+  LIBEXIF=(       libexif-dev               libexif-devel         libexif-devel         libexif             libexif-devel       libexif-dev         libexif-devel              libexif              libexif             )
+  LIBREOFFICE=(   libreoffice-calc          libreoffice-calc      libreoffice-calc      libreoffice-still   libreoffice-calc    "$NA"               libreoffice-calc           libreoffice          libreoffice         )
+  LIBX11=(        libx11-dev                libX11-devel          libX11-devel          libx11              libX11-devel        libx11-dev          libX11-devel               libX11               "$NA"               )
+  LIBXFT=(        libxft-dev                libXft-devel          libXft-devel          libxft              libXft-devel        libxft-dev          libXft-devel               libXft               "$NA"               )
+  LIBXINERAMA=(   libxinerama-dev           libXinerama-devel     libXinerama-devel     libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel          libXinerama          "$NA"               )
+  LIGHT=(         light                     light                 "$NA"                 light               light               light               "$NA"                      "$NA"                "$NA"               )
+  LMSENSORS=(     lm-sensors                lm_sensors            lm_sensors            lm_sensors          lm_sensors          lm-sensors          sensors                    "$NA"                "$NA"               )
+  NMTUI=(         "$NA"                     NetworkManager-tui    NetworkManager-tui    "$NA"               "$NA"               networkmanager-tui  "$NA"                      "$NA"                networkmanager-tui  )
+  NTFS3G=(        ntfs-3g                   ntfs-3g               ntfs-3g               ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g                    fusefs-ntfs          ntfs_3g             )
+  OVMF=(          ovmf                      edk2-ovmf             edk2-ovmf             edk2-ovmf           "$NA"               ovmf                ovmf                       "$NA"                "$NA"               )
+  PANDOCPDF=(     pandoc                    pandoc-pdf            "$NA"                 pandoc              pandoc              "$NA"               pandoc                     "$NA"                pandoc              )
+  PICOM=(         picom                     picom                 "$NA"                 picom               picom               picom               picom                      picom                picom               )
+  POPPLERUTILS=(  poppler-utils             poppler-utils         poppler               poppler             poppler-utils       poppler-utils       poppler-tools              poppler-utils        poppler-utils       )
+  PAUTILS=(       pulseaudio-utils          pulseaudio-utils      pulseaudio-utils      pulseaudio          pulseaudio-utils    pulseaudio-utils    pulseaudio-utils           "$NA"                pulseaudio          )
+  PYTHON=(        "$NA"                     python3-devel         python3-devel         "$NA"               python3-devel       python3-dev         python3-devel              python311            python3             )
+  PYTHON3PIP=(    python3-pip               python3-pip           python-pip            python-pip          python3-pip         py3-pip             python3-pip                py39-pip             py3-pip             )
+  PYTHON3SIX=(    python3-six               python3-six           python-six            python-six          python3-six         py3-six             python3-six                py39-six             py3-six             )
+  QEMU=(          qemu                      qemu                  qemu-img              qemu-base           qemu                qemu-system-x86_64  qemu                       qemu                 qemu                )
+  QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                 qutebrowser         qutebrowser         qutebrowser         qutebrowser                qutebrowser          qutebrowser         )
+  SCROT=(         scrot                     scrot                 "$NA"                 scrot               scrot               scrot               scrot                      scrot                scrot               )
+  SOX=(           sox                       sox                   "$NA"                 sox                 sox                 sox                 sox                        sox                  sox                 )
+  STOW=(          stow                      stow                  "$NA"                 stow                stow                stow                stow                       stow                 stow                )
+  TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                 telegram-desktop    telegram-desktop    telegram-desktop    telegram-desktop           telegram-desktop     "$NA"               )
+  TIG=(           tig                       tig                   tig                   tig                 tig                 tig                 "$NA"                      tig                  tig                 )
+  TRASHCLI=(      trash-cli                 trash-cli             "$NA"                 trash-cli           trash-cli           trash-cli           "$NA"                      "$NA"                "$NA"               )
+  UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                 "$NA"               ueberzug            "$NA"               "$NA"                      py39-ueberzug        "$NA"               )
+  UDISKIE=(       udiskie                   udiskie               "$NA"                 udiskie             udiskie             udiskie             udiskie                    "$NA"                "$NA"               )
+  XDOTOOL=(       xdotool                   xdotool               "$NA"                 xdotool             xdotool             xdotool             xdotool                    xdotool              xdotool             )
+  XF86INTEL=(     xserver-xorg-video-intel  xorg-x11-drv-intel    "$NA"                 xf86-video-intel    xf86-video-intel    xf86-video-intel    xf86-video-intel           xf86-video-intel     "$NA"               )
+  XINIT=(         xinit                     xorg-x11-xinit        xorg-x11-xinit        xorg-xinit          xinit               xinit               xinit                      xinit                "$NA"               )
+  XINPUT=(        xinput                    xinput                xinput                xorg-xinput         xinput              xinput              xinput                     xinput               "$NA"               )
+  XORGSERVER=(    xserver-xorg              xorg-x11-server-Xorg  xorg-x11-server-Xorg  xorg-server         xorg-minimal        xorg-server         xorg-x11-server            xorg-minimal         "$NA"               )
+  XRANDR=(        x11-xserver-utils         xrandr                xrandr                xorg-xrandr         xrandr              xrandr              xrandr                     xrandr               "$NA"               )
+  XRDB=(          x11-xserver-utils         xrdb                  xrdb                  xorg-xrdb           xrdb                xrdb                xrdb                       xrdb                 "$NA"               )
+  XSET=(          x11-xserver-utils         xset                  xset                  xorg-xset           xset                xset                xset                       xset                 "$NA"               )
+  YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl            youtube-dl          youtube-dl          youtube-dl          youtube-dl                 youtube_dl           youtube-dl          )
+  ZATHURA=(       zathura                   zathura               "$NA"                 zathura             zathura             zathura             zathura                    zathura              zathura             )
+  ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   "$NA"                 zathura-pdf-poppler zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler  zathura-pdf-poppler )
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
@@ -105,9 +108,11 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo zypper install -y" ;;
     FreeBSD)            POS="7"
       PKGINSTALL="doas pkg install -y" ;;
+    OpenBSD)            POS="8"
+      PKGINSTALL="doas pkg_add -i" ;;
   esac
 
-  if [ $RELEASE = Void ] | [ $RELEASE = Alpine ]; then
+  if [ $RELEASE = Void ] | [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -210,6 +215,20 @@ FREEBSD_SETUP()
   cd $HOME
   $SUDOAS mkdir -p /usr/share/edk2/ovmf
   $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+}
+
+OPENBSD_SETUP()
+{
+  #doas pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
+  cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
+  cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
+  cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
+  cd $HOME/.config/suckless/dwm-6.3; doas make clean install
+  cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
+  cd $HOME/.config/suckless/st-0.8.5; doas make clean install
+  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
+  cd $HOME/.config/suckless/sxiv; doas make clean install
+  cd $HOME
 }
 
 NIXOS_SETUP()
@@ -334,7 +353,7 @@ INSTALL_PACKAGES()
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACS[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
 
@@ -468,7 +487,7 @@ case "${RELEASE}" in
     INSTALL_PACKAGES
     CONFIGURE_HOME
     CONFIGURE_SYSTEM ;;
-  FreeBSD)
+  FreeBSD|OpenBSD)
     INSTALL_PACKAGES
     CONFIGURE_HOME
     $UPPERCASE_SETUP ;;

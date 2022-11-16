@@ -13,6 +13,7 @@
 # Fedora -> audit
 # NIXOS -> git, stow
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
+# Void -> doas, curl >>>>>>>> "permit $USER persist as root" to doas.conf
 # OpenBSD ->  curl bash
 # Alpine -> curl, bash
 # $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
@@ -245,21 +246,21 @@ NIXOS_SETUP()
 
 VOID_SETUP()
 {
-  sudo xbps-install -Syu
-  sudo xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio xdg-utils
+  $SUDOAS xbps-install -Syu
+  $SUDOAS xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio xdg-utils
 
-  sudo snapper -c root create-config /
-  sudo btrfs subvolume delete /.snapshots
-  sudo mkdir /.snapshots
-  sudo sed -i '/@snapshots/s/^#//' /etc/fstab
+  $SUDOAS snapper -c root create-config /
+  $SUDOAS btrfs subvolume delete /.snapshots
+  $SUDOAS mkdir /.snapshots
+  $SUDOAS sed -i '/@snapshots/s/^#//' /etc/fstab
 
   echo "GETTY_ARGS=\"--autologin $USER --noclear\"
 BAUD_RATE=38400
 TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
 
-sudo ln -s /etc/sv/pipewire /var/service
-sudo ln -s /etc/sv/acpid /var/service
-sudo xbps-remove -y sudo base-system
+$SUDOAS ln -s /etc/sv/pipewire /var/service
+$SUDOAS ln -s /etc/sv/acpid /var/service
+$SUDOAS xbps-remove -y sudo base-system
 }
 
 DEBIAN_SETUP()

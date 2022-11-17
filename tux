@@ -113,13 +113,13 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="doas pkg_add -i" ;;
   esac
 
-  if [ $RELEASE = Void ] | [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
   fi
 
-  if $RELEASE = Alpine ]; then
+  if [ $RELEASE = Alpine ]; then
     mkdir -p /etc/doas.d
     DOASCONF="/etc/doas.d/doas.conf"
   else

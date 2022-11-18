@@ -303,12 +303,15 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
   $SUDOAS apk -U upgrade
   $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
-    util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils
+    util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
   $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
   $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
   $SUDOAS rc-service local start; $SUDOAS rc-update add local default
   $SUDOAS rc-service elogind start; $SUDOAS rc-update add elogind
   $SUDOAS rc-update del networking boot
+  $SUDOAS rc-update del wpa_supplicant boot
+  $SUDOAS rc-update add iwd boot
+  $SUDOAS rc-update add networkmanager boot
   $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
   $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
@@ -327,6 +330,13 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
   $SUDOAS mkdir -p /usr/share/edk2/ovmf
   $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+
+  echo "dns=none
+
+  [device]
+  wifi.backend=iwd" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+
+  echo " " | sudo tee /etc/network/interfaces
 }
 
 OPENSUSE_SETUP()

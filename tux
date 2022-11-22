@@ -3,9 +3,8 @@
 # Version= 0.4.20
 
 # TODO: Improvements in the script
-# -> Global System init support
 # -> autologin in Devuan
-# In OpenSuse there is no android-tools lf trash-cli light by default
+# In OpenSuse there is no android-tools lf trash-cli light by default (problema cc ST terminal)
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
 
@@ -422,6 +421,11 @@ fi
     cp $HOME/.config/suckless/dmenu-5.2/config.tux $HOME/.config/suckless/dmenu-5.2/config.mk
     cd $HOME/.config/suckless/dmenu-5.2; make install clean
     cp $HOME/.config/suckless/st-0.9/config.tux $HOME/.config/suckless/st-0.9/config.mk
+
+    if [ $RELEASE = OpenSUSE ]; then
+      $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+    fi
+
     cd $HOME/.config/suckless/st-0.9; make install clean
     cd $HOME/.config/suckless/dwmblocks; make install clean
     cd $HOME/.config/suckless/sxiv; make install clean

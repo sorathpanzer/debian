@@ -51,7 +51,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   GRUBBY=(        "$NA"                     grubby                grubby                "$NA"               "$NA"               "$NA"               grubby                     "$NA"                "$NA"               )
   IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick           imagemagick         ImageMagick         imagemagick         ImageMagick                ImageMagick7-nox11   ImageMagick         )
   IMLIB2=(        libimlib2-dev             imlib2-devel          imlib2-devel          imlib2              imlib2-devel        imlib2-dev          imlib2-devel               imlib2               imlib2              )
-  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  lf                  "$NA"               "$NA"                      lf                   lf                  )
+  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  lf                  lf                  "$NA"                      lf                   lf                  )
   LIBEXIF=(       libexif-dev               libexif-devel         libexif-devel         libexif             libexif-devel       libexif-dev         libexif-devel              libexif              libexif             )
   LIBREOFFICE=(   libreoffice-calc          libreoffice-calc      libreoffice-calc      libreoffice-still   libreoffice-calc    "$NA"               libreoffice-calc           libreoffice          libreoffice         )
   LIBX11=(        libx11-dev                libX11-devel          libX11-devel          libx11              libX11-devel        libx11-dev          libX11-devel               libX11               "$NA"               )
@@ -62,7 +62,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   NMTUI=(         "$NA"                     NetworkManager-tui    NetworkManager-tui    "$NA"               "$NA"               networkmanager-tui  "$NA"                      "$NA"                networkmanager-tui  )
   NTFS3G=(        ntfs-3g                   ntfs-3g               ntfs-3g               ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g                    fusefs-ntfs          ntfs_3g             )
   OVMF=(          ovmf                      edk2-ovmf             edk2-ovmf             edk2-ovmf           "$NA"               ovmf                ovmf                       "$NA"                "$NA"               )
-  PANDOCPDF=(     pandoc                    pandoc-pdf            "$NA"                 pandoc              pandoc              "$NA"               pandoc                     "$NA"                pandoc              )
+  PANDOCPDF=(     pandoc                    pandoc-pdf            pandoc-pdf            pandoc              pandoc              "$NA"               pandoc                     "$NA"                pandoc              )
   PICOM=(         picom                     picom                 "$NA"                 picom               picom               picom               picom                      picom                picom               )
   POPPLERUTILS=(  poppler-utils             poppler-utils         poppler               poppler             poppler-utils       poppler-utils       poppler-tools              poppler-utils        poppler-utils       )
   PAUTILS=(       pulseaudio-utils          pulseaudio-utils      pulseaudio-utils      pulseaudio          pulseaudio-utils    pulseaudio-utils    pulseaudio-utils           "$NA"                pulseaudio          )
@@ -72,14 +72,14 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   QEMU=(          qemu                      qemu                  qemu-img              qemu-base           qemu                qemu-system-x86_64  qemu                       qemu                 qemu                )
   QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                 qutebrowser         qutebrowser         qutebrowser         qutebrowser                qutebrowser          qutebrowser         )
   SCROT=(         scrot                     scrot                 "$NA"                 scrot               scrot               scrot               scrot                      scrot                scrot               )
-  SOX=(           sox                       sox                   "$NA"                 sox                 sox                 sox                 sox                        sox                  sox                 )
-  STOW=(          stow                      stow                  "$NA"                 stow                stow                stow                stow                       stow                 stow                )
+  SOX=(           sox                       sox                   sox                   sox                 sox                 sox                 sox                        sox                  sox                 )
+  STOW=(          stow                      stow                  stow                  stow                stow                stow                stow                       stow                 stow                )
   TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                 telegram-desktop    telegram-desktop    telegram-desktop    telegram-desktop           telegram-desktop     "$NA"               )
   TIG=(           tig                       tig                   tig                   tig                 tig                 tig                 "$NA"                      tig                  tig                 )
   TRASHCLI=(      trash-cli                 trash-cli             "$NA"                 trash-cli           trash-cli           trash-cli           "$NA"                      "$NA"                "$NA"               )
   UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                 "$NA"               ueberzug            "$NA"               "$NA"                      py39-ueberzug        "$NA"               )
   UDISKIE=(       udiskie                   udiskie               "$NA"                 udiskie             udiskie             udiskie             udiskie                    "$NA"                "$NA"               )
-  XDOTOOL=(       xdotool                   xdotool               "$NA"                 xdotool             xdotool             xdotool             xdotool                    xdotool              xdotool             )
+  XDOTOOL=(       xdotool                   xdotool               xdotool               xdotool             xdotool             xdotool             xdotool                    xdotool              xdotool             )
   XF86INTEL=(     xserver-xorg-video-intel  xorg-x11-drv-intel    "$NA"                 xf86-video-intel    xf86-video-intel    xf86-video-intel    xf86-video-intel           xf86-video-intel     "$NA"               )
   XINIT=(         xinit                     xorg-x11-xinit        xorg-x11-xinit        xorg-xinit          xinit               xinit               xinit                      xinit                "$NA"               )
   XINPUT=(        xinput                    xinput                xinput                xorg-xinput         xinput              xinput              xinput                     xinput               "$NA"               )
@@ -88,8 +88,8 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   XRDB=(          x11-xserver-utils         xrdb                  xrdb                  xorg-xrdb           xrdb                xrdb                xrdb                       xrdb                 "$NA"               )
   XSET=(          x11-xserver-utils         xset                  xset                  xorg-xset           xset                xset                xset                       xset                 "$NA"               )
   YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl            youtube-dl          youtube-dl          youtube-dl          youtube-dl                 youtube_dl           youtube-dl          )
-  ZATHURA=(       zathura                   zathura               "$NA"                 zathura             zathura             zathura             zathura                    zathura              zathura             )
-  ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   "$NA"                 zathura-pdf-poppler zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler  zathura-pdf-poppler )
+  ZATHURA=(       zathura                   zathura               zathura               zathura             zathura             zathura             zathura                    zathura              zathura             )
+  ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   zathura-pdf-poppler   zathura-pdf-poppler zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler  zathura-pdf-poppler )
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
@@ -182,9 +182,9 @@ ALMALINUX_SETUP()
  sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
- nix-env -iA nixpkgs.stow nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.xdotool nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-   nixpkgs.trash-cli nixpkgs.zathura nixpkgs.pandoc  nixpkgs.qutebrowser nixpkgs.transmission-gtk  nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
-   nixpkgs.picom nixpkgs.sox nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
+ nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
+   nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
+   nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
 
  echo "max_parallel_downloads=10
  deltarpm=True

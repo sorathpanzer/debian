@@ -7,6 +7,7 @@
 # In OpenSuse there is no android-tools lf trash-cli light by default (problema cc ST terminal)
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
+# Flatpak in RHEL systems only install packages for AlmaLinux
 
 # TODO: Before running this script you must install:
 # Debian -> curl
@@ -182,8 +183,10 @@ ALMALINUX_SETUP()
  sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
+ nix-channel --update
+ nix-env -iA nixpkgs.nix nixpkgs.cacert
  nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-   nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop  nixpkgs.tdesktop nixpkgs.light \
+   nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
    nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
 
  echo "max_parallel_downloads=10
@@ -378,7 +381,7 @@ INSTALL_PACKAGES()
   if [ $RELEASE != NixOS ] | [ $RELEASE != "FreeBSD" ]; then
     $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     $SUDOAS flatpak install org.signal.Signal -y
-    [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser -y
+    [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser org.telegram.desktop -y
     [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   fi
 

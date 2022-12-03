@@ -522,7 +522,7 @@ case "${RELEASE}" in
     $UPPERCASE_SETUP ;;
   NixOS)
     CONFIGURE_HOME
-    $UPPERCASE_SETUP ;;
+    NIXOS_SETUP ;;
 esac
 
 cat install.error | grep error

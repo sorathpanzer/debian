@@ -8,6 +8,7 @@
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
 # Flatpak in RHEL systems only install packages for AlmaLinux
+# NixOS put setleds in sudoers
 
 # TODO: Before running this script you must install:
 # Debian -> curl
@@ -100,7 +101,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo rpm-ostree install" ;;
     AlmaLinux|Rocky|CentOS)  POS="2"
       PKGINSTALL="sudo dnf install -y" ;;
-    Arch)               POS="3"
+    Arch|Artix)               POS="3"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
     Void)               POS="4"
       PKGINSTALL="doas xbps-install -Sy" ;;
@@ -286,6 +287,11 @@ DEVUAN_SETUP()
 }
 
 ARCH_SETUP()
+{
+  echo "Installing..."
+}
+
+ARTIX_SETUP()
 {
   echo "Installing..."
 }
@@ -511,7 +517,7 @@ fi
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Void|Alpine|openSUSE)
+  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|ARTIX|Void|Alpine|openSUSE)
     ${UPPERCASE}_SETUP
     INSTALL_PACKAGES
     CONFIGURE_HOME

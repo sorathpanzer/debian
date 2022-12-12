@@ -53,7 +53,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   GRUBBY=(        "$NA"                     grubby                grubby                "$NA"               "$NA"               "$NA"               "$NA"               grubby                     "$NA"                "$NA"               )
   IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick           imagemagick         imagemagick         ImageMagick         imagemagick         ImageMagick                ImageMagick7-nox11   ImageMagick         )
   IMLIB2=(        libimlib2-dev             imlib2-devel          imlib2-devel          imlib2              imlib2              imlib2-devel        imlib2-dev          imlib2-devel               imlib2               imlib2              )
-  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  lf                  lf                  lf                  "$NA"                      lf                   lf                  )
+  LF=(            "$NA"                     "$NA"                 "$NA"                 lf                  "$NA"               lf                  lf                  "$NA"                      lf                   lf                  )
   LIBEXIF=(       libexif-dev               libexif-devel         libexif-devel         libexif             libexif             libexif-devel       libexif-dev         libexif-devel              libexif              libexif             )
   LIBREOFFICE=(   libreoffice-calc          libreoffice-calc      libreoffice-calc      libreoffice-still   libreoffice-fresh   libreoffice-calc    "$NA"               libreoffice-calc           libreoffice          libreoffice         )
   LIBX11=(        libx11-dev                libX11-devel          libX11-devel          libx11              libx11              libX11-devel        libx11-dev          libX11-devel               libX11               "$NA"               )
@@ -183,7 +183,7 @@ ALMALINUX_SETUP()
  $SUDOAS dnf install -y tar
 
  sh <(curl -L https://nixos.org/nix/install) --no-daemon
- sed -i 's/nixpkgs-unstable/nixos-22.05/g' .nix-channels
+ sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
  nix-channel --update
@@ -191,6 +191,7 @@ ALMALINUX_SETUP()
  nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
    nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
    nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
 
  echo "max_parallel_downloads=10
  deltarpm=True
@@ -295,7 +296,14 @@ ARCH_SETUP()
 
 ARTIX_SETUP()
 {
-  echo "Installing..."
+ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+ sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+ nix-channel --update
+ nix-env -iA nixpkgs.nix nixpkgs.cacert
+ nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
 }
 
 ALPINE_SETUP()

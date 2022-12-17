@@ -304,6 +304,8 @@ ARTIX_SETUP()
  nix-env -iA nixpkgs.nix nixpkgs.cacert
  nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
  . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+ sudo sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
 }
 
 ALPINE_SETUP()
@@ -429,7 +431,7 @@ fi
   touch /home/$USER/.cache/zsh/history
   sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
-  if [ $RELEASE != NixOS ]; then
+  if [ $RELEASE != NixOS ] || [ $RELEASE != FreeBSD ] || [ $RELEASE != OpenBSD ]; then
     if [ $RELEASE != Void ]; then
       pip install --user adblock
       pip install --user ueberzug
@@ -516,7 +518,7 @@ fi
     $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
     echo '[Service]
   ExecStart=
-  ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf
+  ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf
 
     $SUDOAS systemctl enable suspend@$USER.service
     $SUDOAS touch /etc/sudoers.d/$USER

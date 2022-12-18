@@ -14,7 +14,7 @@
 # Debian -> curl
 # Fedora -> audit
 # NIXOS -> git, stow
-# FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv" to doas.conf
+# FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
 # Void -> doas, curl >>>>>>>> "permit $USER persist as root" to doas.conf
 # OpenBSD ->  curl bash
 # Alpine -> curl, bash
@@ -212,11 +212,11 @@ CENTOS_SETUP()
 FREEBSD_SETUP()
 {
   $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
-  $SUDOAS sysrc dbus_enable=YES
-  $SUDOAS sysrc openntpd_enable=YES
-  $SUDOAS sysrc hald_enable=YES
-  $SUDOAS sysrc moused_enable=YES
-  $SUDOAS sysrc linux_enable=YES
+  echo "dbus_enable=YES
+  openntpd_enable=YES
+  hald_enable=YES
+  moused_enable=YES
+  linux_enable=YES" | $SUDOAS tee -a /etc/rc.conf
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cp .config/suckless/dwm-6.4/config.bsd .config/suckless/dwm-6.4/config.mk
   cp .config/suckless/dmenu-5.2/config.bsd .config/suckless/dmenu-5.2/config.mk

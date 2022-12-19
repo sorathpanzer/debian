@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.4.20
+# Version= 0.4.38
 
 # TODO: Improvements in the script
 # -> autologin in Devuan

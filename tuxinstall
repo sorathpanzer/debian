@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.4.38
+# Version= 0.4.39
 
 # TODO: Improvements in the script
 # -> autologin in Devuan
@@ -537,7 +537,7 @@ case "${RELEASE}" in
   FreeBSD|OpenBSD)
     INSTALL_PACKAGES
     CONFIGURE_HOME
-    $UPPERCASE_SETUP ;;
+    ${UPPERCASE_SETUP} ;;
   NixOS)
     CONFIGURE_HOME
     NIXOS_SETUP ;;

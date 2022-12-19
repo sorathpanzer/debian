@@ -96,25 +96,36 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
     Debian|Devuan)	POS="0"
+      SUCKMK="tux"
       PKGINSTALL="sudo apt-get -y install" ;;
     Fedora)               POS="1"
+      SUCKMK="tux"
       PKGINSTALL="sudo rpm-ostree install" ;;
     AlmaLinux|Rocky|CentOS)  POS="2"
+      SUCKMK="tux"
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
+      SUCKMK="tux"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
     Artix)               POS="4"
+      SUCKMK="tux"
       PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
     Void)               POS="5"
+      SUCKMK="tux"
       PKGINSTALL="doas xbps-install -Sy" ;;
     Alpine)             POS="6"
+      SUCKMK="tux"
       PKGINSTALL="doas apk add" ;;
     openSUSE)           POS="7"
+      SUCKMK="tux"
       PKGINSTALL="sudo zypper install -y" ;;
     FreeBSD)            POS="8"
+      SUCKMK="bsd"
       PKGINSTALL="doas pkg install -y" ;;
     OpenBSD)            POS="9"
+      SUCKMK="bsd"
       PKGINSTALL="doas pkg_add -i" ;;
+    NixOS)  SUCKMK="nixos" ;;
   esac
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
@@ -218,12 +229,6 @@ FREEBSD_SETUP()
   moused_enable=YES
   linux_enable=YES" | $SUDOAS tee -a /etc/rc.conf
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
-  cp .config/suckless/dwm-6.4/config.bsd .config/suckless/dwm-6.4/config.mk
-  cp .config/suckless/dmenu-5.2/config.bsd .config/suckless/dmenu-5.2/config.mk
-  cp .config/suckless/st-0.9/config.bsd .config/suckless/st-0.9/config.mk
-  cd $HOME/.config/suckless/dwm-6.4; $SUDOAS make install clean
-  cd $HOME/.config/suckless/dmenu-5.2; $SUDOAS make install clean
-  cd $HOME/.config/suckless/st-0.9; $SUDOAS make install clean
   cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
   #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
   cd $HOME
@@ -233,16 +238,7 @@ FREEBSD_SETUP()
 
 OPENBSD_SETUP()
 {
-  #doas pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
-  cp .config/suckless/dwm-6.3/config.bsd .config/suckless/dwm-6.3/config.mk
-  cp .config/suckless/dmenu-5.1/config.bsd .config/suckless/dmenu-5.1/config.mk
-  cp .config/suckless/st-0.8.5/config.bsd .config/suckless/st-0.8.5/config.mk
-  cd $HOME/.config/suckless/dwm-6.3; doas make clean install
-  cd $HOME/.config/suckless/dmenu-5.1; doas make clean install
-  cd $HOME/.config/suckless/st-0.8.5; doas make clean install
-  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; doas make clean install
-  cd $HOME/.config/suckless/sxiv; doas make clean install
-  cd $HOME
+  $SUDOAS pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
 }
 
 NIXOS_SETUP()
@@ -250,9 +246,6 @@ NIXOS_SETUP()
   mkdir .config
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
   sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-  cp .config/suckless/dwm-6.4/config.nixos .config/suckless/dwm-6.4/config.mk
-  cp .config/suckless/dmenu-5.2/config.nixos .config/suckless/dmenu-5.2/config.mk
-  cp .config/suckless/st-0.9/config.nixos .config/suckless/st-0.9/config.mk
   $SUDOAS mv configuration.nix /etc/nixos
   $SUDOAS nixos-rebuild boot
 }
@@ -431,27 +424,21 @@ fi
   touch /home/$USER/.cache/zsh/history
   sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
-  if [ $RELEASE != NixOS ] || [ $RELEASE != FreeBSD ] || [ $RELEASE != OpenBSD ]; then
-    if [ $RELEASE != Void ]; then
-      pip install --user adblock
-      pip install --user ueberzug
-    fi
-
-    cp $HOME/.config/suckless/dwm-6.4/config.tux $HOME/.config/suckless/dwm-6.4/config.mk
-    cd $HOME/.config/suckless/dwm-6.4; make install clean
-    cp $HOME/.config/suckless/dmenu-5.2/config.tux $HOME/.config/suckless/dmenu-5.2/config.mk
-    cd $HOME/.config/suckless/dmenu-5.2; make install clean
-    cp $HOME/.config/suckless/st-0.9/config.tux $HOME/.config/suckless/st-0.9/config.mk
-
-    if [ $RELEASE = OpenSUSE ]; then
-      $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-    fi
-
-    cd $HOME/.config/suckless/st-0.9; make install clean
-    cd $HOME/.config/suckless/dwmblocks; make install clean
-    cd $HOME/.config/suckless/sxiv; make install clean
-    cd
+  if [ $RELEASE != Void ]; then
+    pip install --user adblock
+    pip install --user ueberzug
   fi
+
+  cd $HOME/.config/suckless/dwmblocks; make install clean
+  cd $HOME/.config/suckless/sxiv; make install clean
+  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
+  cd $HOME/.config/suckless/dwm-6.4; make install clean
+  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
+  cd $HOME/.config/suckless/dmenu-5.2; make install clean
+  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
+  [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+  cd $HOME/.config/suckless/st-0.9; make install clean
+  cd
 
   if [ $RELEASE != FreeBSD ]; then
     NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
@@ -465,7 +452,6 @@ fi
       rsync -avrop Vault/Documentos/BackHome/ /home/$USER
       #$SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
-  fi
 
   if [ $RELEASE = Void ]; then
     $SUDOAS mkdir -p /usr/share/edk2/ovmf
@@ -500,7 +486,7 @@ fi
     }
   });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-  if [ $RELEASE != Void ] | [ $RELEASE != Alpine ]; then
+  if [ $RELEASE != Void ] | [ $RELEASE != Alpine ] | [ $RELEASE != FreeBSD ] | [ $RELEASE != OpenBSD ] | [ $RELEASE != NixOS ]; then
 
     echo "[Unit]
   Description=Lock X session using i3lock for user %i

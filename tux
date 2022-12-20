@@ -152,6 +152,12 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   permit nopass $USER cmd rc-service
   permit nopass $USER cmd apk" | $SUDOAS tee $DOASCONF
   fi
+
+  if [ $RELEASE = NixOS ]; then
+    $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
+    $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+    $SUDOAS nixos-rebuild switch
+  fi
 }
 
 FEDORA_SETUP()

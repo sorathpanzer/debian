@@ -8,7 +8,7 @@
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
 # Flatpak in RHEL systems only install packages for AlmaLinux
-# NixOS put setleds in sudoers
+# NixOS put setleds in sudoers >> if !NixOS in suckless, and copy mk files in NIXOS_SETUP
 
 # TODO: Before running this script you must install:
 # Debian -> curl
@@ -127,7 +127,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -429,7 +429,7 @@ fi
   touch /home/$USER/.cache/zsh/history
   sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
-  if [ $RELEASE != Void ] | [ $RELEASE != NixOS ]; then
+  if [ $RELEASE != Void ] || [ $RELEASE != NixOS ]; then
     pip install --user adblock
     pip install --user ueberzug
   fi
@@ -492,7 +492,7 @@ fi
     }
   });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
-  if [ $RELEASE != Void ] | [ $RELEASE != Alpine ] | [ $RELEASE != FreeBSD ] | [ $RELEASE != OpenBSD ] | [ $RELEASE != NixOS ]; then
+  if [ $RELEASE != Void ] || [ $RELEASE != Alpine ] || [ $RELEASE != FreeBSD ] || [ $RELEASE != OpenBSD ] || [ $RELEASE != NixOS ]; then
 
     echo "[Unit]
   Description=Lock X session using i3lock for user %i

@@ -452,6 +452,7 @@ fi
       rsync -avrop Vault/Documentos/BackHome/ /home/$USER
       #$SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
     fi
+  fi
 
   if [ $RELEASE = Void ]; then
     $SUDOAS mkdir -p /usr/share/edk2/ovmf

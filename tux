@@ -13,7 +13,6 @@
 # TODO: Before running this script you must install:
 # Debian -> curl
 # Fedora -> audit
-# NIXOS -> git, stow
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
 # Void -> doas, curl >>>>>>>> "permit $USER persist as root" to doas.conf
 # OpenBSD ->  curl bash
@@ -125,7 +124,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     OpenBSD)            POS="9"
       MK="bsd"
       PKGINSTALL="doas pkg_add -i" ;;
-    NixOS)  SUCKMK="nixos" ;;
+    NixOS)  MK="nixos" ;;
   esac
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then

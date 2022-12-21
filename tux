@@ -353,9 +353,9 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
   echo "dns=none
 
   [device]
-  wifi.backend=iwd" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+  wifi.backend=iwd" | $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf
 
-  echo " " | sudo tee /etc/network/interfaces
+  echo " " | $SUDOAS tee /etc/network/interfaces
 }
 
 OPENSUSE_SETUP()

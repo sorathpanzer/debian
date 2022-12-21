@@ -159,36 +159,6 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   fi
 }
 
-FEDORA_SETUP()
-{
-    [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
-    deltarpm=True
-    defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
-
-    echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-    $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
-
-    echo '[updates-archive]
-name=Fedora $releasever - $basearch - Updates Archive
-baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/$releasever/$basearch/
-enabled=AUTO_VALUE
-metadata_expire=6h
-repo_gpgcheck=0
-type=rpm
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=True
-cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo
-
-$SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
-$SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
-}
-
 ALMALINUX_SETUP()
 {
  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
@@ -213,97 +183,6 @@ ALMALINUX_SETUP()
  deltarpm=True
  defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
  $SUDOAS grubby --update-kernel=ALL --args=quiet
-}
-
-ROCKY_SETUP()
-{
-  ALMALINUX_SETUP
-}
-
-CENTOS_SETUP()
-{
-  ALMALINUX_SETUP
-}
-
-FREEBSD_SETUP()
-{
-  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
-  echo "dbus_enable=YES
-  openntpd_enable=YES
-  hald_enable=YES
-  moused_enable=YES
-  linux_enable=YES" | $SUDOAS tee -a /etc/rc.conf
-  echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
-  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
-  #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
-  cd $HOME
-  $SUDOAS mkdir -p /usr/share/edk2/ovmf
-  $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
-}
-
-OPENBSD_SETUP()
-{
-  $SUDOAS pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
-}
-
-NIXOS_SETUP()
-{
-  mkdir .config
-  curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
-  sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-  $SUDOAS mv configuration.nix /etc/nixos
-  $SUDOAS nixos-rebuild boot
-}
-
-VOID_SETUP()
-{
-  $SUDOAS xbps-install -Syu
-  $SUDOAS xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio xdg-utils
-
-  $SUDOAS snapper -c root create-config /
-  $SUDOAS btrfs subvolume delete /.snapshots
-  $SUDOAS mkdir /.snapshots
-  $SUDOAS sed -i '/@snapshots/s/^#//' /etc/fstab
-
-  echo "GETTY_ARGS=\"--autologin $USER --noclear\"
-BAUD_RATE=38400
-TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
-
-$SUDOAS ln -s /etc/sv/pipewire /var/service
-$SUDOAS ln -s /etc/sv/acpid /var/service
-$SUDOAS xbps-remove -y sudo base-system
-}
-
-DEBIAN_SETUP()
-{
-  $SUDOAS apt update; $SUDOAS apt upgrade -y
-  $SUDOAS apt install -y pulseaudio pulsemixer man2html
-  systemctl --user --now enable pulseaudio
-  systemctl --user --now enable pipewire.service pipewire-pulse
-}
-
-DEVUAN_SETUP()
-{
-  DEBIAN_SETUP
-}
-
-ARCH_SETUP()
-{
-  echo "Installing..."
-}
-
-ARTIX_SETUP()
-{
- sh <(curl -L https://nixos.org/nix/install) --no-daemon
- sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
- . $HOME/.nix-profile/etc/profile.d/nix.sh
-
- nix-channel --update
- nix-env -iA nixpkgs.nix nixpkgs.cacert
- nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
- . $HOME/.nix-profile/etc/profile.d/nix.sh
-
- sudo sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
 }
 
 ALPINE_SETUP()
@@ -358,6 +237,103 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
   echo " " | $SUDOAS tee /etc/network/interfaces
 }
 
+ARCH_SETUP()
+{
+  echo "Installing..."
+}
+
+ARTIX_SETUP()
+{
+ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+ sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+ nix-channel --update
+ nix-env -iA nixpkgs.nix nixpkgs.cacert
+ nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
+ . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+ sudo sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
+}
+
+CENTOS_SETUP()
+{
+  ALMALINUX_SETUP
+}
+
+DEBIAN_SETUP()
+{
+  $SUDOAS apt update; $SUDOAS apt upgrade -y
+  $SUDOAS apt install -y pulseaudio pulsemixer man2html
+  systemctl --user --now enable pulseaudio
+  systemctl --user --now enable pipewire.service pipewire-pulse
+}
+
+DEVUAN_SETUP()
+{
+  DEBIAN_SETUP
+}
+
+FEDORA_SETUP()
+{
+    [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
+    deltarpm=True
+    defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
+
+    echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+    $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
+
+    echo '[updates-archive]
+name=Fedora $releasever - $basearch - Updates Archive
+baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/$releasever/$basearch/
+enabled=AUTO_VALUE
+metadata_expire=6h
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=True
+cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo
+
+$SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
+$SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
+}
+
+FREEBSD_SETUP()
+{
+  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
+  echo "dbus_enable=YES
+  openntpd_enable=YES
+  hald_enable=YES
+  moused_enable=YES
+  linux_enable=YES" | $SUDOAS tee -a /etc/rc.conf
+  echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
+  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
+  #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
+  cd $HOME
+  $SUDOAS mkdir -p /usr/share/edk2/ovmf
+  $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+}
+
+NIXOS_SETUP()
+{
+  mkdir .config
+  curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
+  sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
+  $SUDOAS mv configuration.nix /etc/nixos
+  $SUDOAS nixos-rebuild boot
+}
+
+OPENBSD_SETUP()
+{
+  $SUDOAS pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
+}
+
 OPENSUSE_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
@@ -380,6 +356,30 @@ OPENSUSE_SETUP()
   if [ $TUMBLEWEED = Tumbleweed ]; then
     $SUDOAS zypper install -y android-tools
   fi
+}
+
+ROCKY_SETUP()
+{
+  ALMALINUX_SETUP
+}
+
+VOID_SETUP()
+{
+  $SUDOAS xbps-install -Syu
+  $SUDOAS xbps-install -Sy make pkg-config snapper opendoas setxkbmap pulseaudio xdg-utils
+
+  $SUDOAS snapper -c root create-config /
+  $SUDOAS btrfs subvolume delete /.snapshots
+  $SUDOAS mkdir /.snapshots
+  $SUDOAS sed -i '/@snapshots/s/^#//' /etc/fstab
+
+  echo "GETTY_ARGS=\"--autologin $USER --noclear\"
+BAUD_RATE=38400
+TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
+
+$SUDOAS ln -s /etc/sv/pipewire /var/service
+$SUDOAS ln -s /etc/sv/acpid /var/service
+$SUDOAS xbps-remove -y sudo base-system
 }
 
 INSTALL_PACKAGES()

@@ -127,7 +127,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ] || [ $RELEASE = Arch ] || [ $RELEASE = Artix ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -140,7 +140,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     DOASCONF="/etc/doas.conf"
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ] || [ $RELEASE = Arch ] || [ $RELEASE = Artix ]; then
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg
@@ -149,6 +149,9 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   permit nopass $USER cmd mount
   permit nopass $USER cmd setleds
   permit nopass $USER cmd rc-service
+  permit nopass $USER cmd nix-channel
+  permit nopass $USER cmd nixos-rebuild
+  permit nopass $USER cmd pacman
   permit nopass $USER cmd apk" | $SUDOAS tee $DOASCONF
   fi
 
@@ -239,21 +242,24 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
 ARCH_SETUP()
 {
-  echo "Installing..."
+  sudo pacman -S opendoas
+  sudo pacman -Rns sudo
 }
 
 ARTIX_SETUP()
 {
- sh <(curl -L https://nixos.org/nix/install) --no-daemon
- sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
- . $HOME/.nix-profile/etc/profile.d/nix.sh
+  sudo pacman -S opendoas
+  sudo pacman -Rns sudo
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
- nix-channel --update
- nix-env -iA nixpkgs.nix nixpkgs.cacert
- nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
- . $HOME/.nix-profile/etc/profile.d/nix.sh
+  nix-channel --update
+  nix-env -iA nixpkgs.nix nixpkgs.cacert
+  nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
- sudo sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
+  $SUDOAS sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
 }
 
 CENTOS_SETUP()

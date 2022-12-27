@@ -92,7 +92,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl            youtube-dl          youtube-dl          youtube-dl          youtube-dl          youtube-dl                 youtube_dl           youtube-dl          )
   ZATHURA=(       zathura                   zathura               zathura               zathura             zathura             zathura             zathura             zathura                    zathura              zathura             )
   ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   zathura-pdf-poppler   zathura-pdf-poppler "$NA"               zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler  zathura-pdf-poppler )
-  ZFS=(           zfsutils-linux            zfs-fuse              "$NA"                 "zfs-utils"         "$NA"               zfs                 zfs                 "$NA"                      "$NA"                "$NA"               )
+  ZFS=(           zfsutils-linux            "$NA"                 "$NA"                 "zfs-utils"         "$NA"               zfs                 zfs                 "$NA"                      "$NA"                "$NA"               )
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
@@ -323,6 +323,7 @@ FEDORA_SETUP()
 
     echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
     [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
+    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree install toolbox
     $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
     [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
@@ -343,6 +344,12 @@ cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-arch
 
 $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
 $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
+
+toolbox create
+toolbox run dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
+toolbox run dnf install -y kernel-devel
+toolbox run dnf install -y zfs
+toolbox run modprobe zfs
 }
 
 FREEBSD_SETUP()
@@ -436,11 +443,11 @@ INSTALL_PACKAGES()
 {
   $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
-    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} \
+    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
 
@@ -505,7 +512,6 @@ if [ $RELEASE != FreeBSD ]; then
     echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
     $SUDOAS mount /dev/mapper/Vault Vault
     rsync -avrop Vault/Documentos/BackHome/ /home/$USER
-    #$SUDOAS cp $HOME/Documentos/wg0.conf /etc/wireguard
   fi
 fi
 
@@ -543,7 +549,7 @@ polkit.addRule(function(action, subject) {
 });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
 
 if [ $RELEASE != NixOS ]; then
-  echo "192.168.1.104:/mnt/Bunker/Vault	/home/sorath/TrueNAS	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+  echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
 fi
 
 if [ $RELEASE != Void ] || [ $RELEASE != Alpine ] || [ $RELEASE != FreeBSD ] || [ $RELEASE != OpenBSD ] || [ $RELEASE != NixOS ]; then

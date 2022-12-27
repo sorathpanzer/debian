@@ -32,7 +32,7 @@ RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' 
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Devuan             Fedora                Alma/Rocky/Centos     Arch                Artix                Void                Alpine              OpenSuse                   FreeBSD              OpenBSD             )
+# DISTRO=(        Debian/Devuan             Fedora                Alma/Rocky/Centos     Arch                Artix               Void                Alpine              OpenSuse                   FreeBSD              OpenBSD             )
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
   ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                 "$NA"               "$NA"               python3-adblock     "$NA"               "$NA"                      py39-adblock         py3-adblock         )
   ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                 android-tools       "$NA"               android-tools       android-tools       "$NA"                      android-tools        "$NA"               )
@@ -60,6 +60,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   LIBXINERAMA=(   libxinerama-dev           libXinerama-devel     libXinerama-devel     libxinerama         libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel          libXinerama          "$NA"               )
   LIGHT=(         light                     light                 "$NA"                 light               "$NA"               light               light               "$NA"                      "$NA"                "$NA"               )
   LMSENSORS=(     lm-sensors                lm_sensors            lm_sensors            lm_sensors          lm_sensors          lm_sensors          lm-sensors          sensors                    "$NA"                "$NA"               )
+  NFSUTILS=(      nfs-common                nfs-utils             nfs-utils             nfs-utils           nfs-utils           nfs-utils           nfs-utils           nfs-utils                  "$NA"                "$NA"               )
   NMTUI=(         "$NA"                     NetworkManager-tui    NetworkManager-tui    "$NA"               "$NA"               "$NA"               networkmanager-tui  "$NA"                      "$NA"                networkmanager-tui  )
   NTFS3G=(        ntfs-3g                   ntfs-3g               ntfs-3g               ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g                    fusefs-ntfs          ntfs_3g             )
   OVMF=(          ovmf                      edk2-ovmf             edk2-ovmf             edk2-ovmf           edk2-ovmf           "$NA"               ovmf                ovmf                       "$NA"                "$NA"               )
@@ -74,10 +75,10 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                 qutebrowser         qutebrowser         qutebrowser         qutebrowser         qutebrowser                qutebrowser          qutebrowser         )
   SCROT=(         scrot                     scrot                 "$NA"                 scrot               scrot               scrot               scrot               scrot                      scrot                scrot               )
   SOX=(           sox                       sox                   sox                   sox                 sox                 sox                 sox                 sox                        sox                  sox                 )
-  STOW=(          stow                      stow                  stow                  stow                "$NA"                stow                stow                stow                       stow                 stow                )
-  TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                 telegram-desktop    "$NA"    telegram-desktop    telegram-desktop    telegram-desktop           telegram-desktop     "$NA"               )
-  TIG=(           tig                       tig                   tig                   tig                 "$NA"                 tig                 tig                 "$NA"                      tig                  tig                 )
-  TRASHCLI=(      trash-cli                 trash-cli             "$NA"                 trash-cli           "$NA"           trash-cli           trash-cli           "$NA"                      "$NA"                "$NA"               )
+  STOW=(          stow                      stow                  stow                  stow                "$NA"               stow                stow                stow                       stow                 stow                )
+  TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                 telegram-desktop    "$NA"               telegram-desktop    telegram-desktop    telegram-desktop           telegram-desktop     "$NA"               )
+  TIG=(           tig                       tig                   tig                   tig                 "$NA"               tig                 tig                 "$NA"                      tig                  tig                 )
+  TRASHCLI=(      trash-cli                 trash-cli             "$NA"                 trash-cli           "$NA"               trash-cli           trash-cli           "$NA"                      "$NA"                "$NA"               )
   UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                 "$NA"               "$NA"               ueberzug            "$NA"               "$NA"                      py39-ueberzug        "$NA"               )
   UDISKIE=(       udiskie                   udiskie               "$NA"                 udiskie             udiskie             udiskie             udiskie             udiskie                    "$NA"                "$NA"               )
   XDOTOOL=(       xdotool                   xdotool               xdotool               xdotool             xdotool             xdotool             xdotool             xdotool                    xdotool              xdotool             )
@@ -91,6 +92,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl            youtube-dl          youtube-dl          youtube-dl          youtube-dl          youtube-dl                 youtube_dl           youtube-dl          )
   ZATHURA=(       zathura                   zathura               zathura               zathura             zathura             zathura             zathura             zathura                    zathura              zathura             )
   ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   zathura-pdf-poppler   zathura-pdf-poppler "$NA"               zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler zathura-pdf-poppler  zathura-pdf-poppler )
+  ZFS=(           zfsutils-linux            zfs-fuse              "$NA"                 "zfs-utils"         "$NA"               zfs                 zfs                 "$NA"                      "$NA"                "$NA"               )
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
@@ -127,7 +129,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ] || [ $RELEASE = Arch ] || [ $RELEASE = Artix ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -140,7 +142,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     DOASCONF="/etc/doas.conf"
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ] || [ $RELEASE = Arch ] || [ $RELEASE = Artix ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg
@@ -165,27 +167,31 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 ALMALINUX_SETUP()
 {
  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
- $SUDOAS dnf update -y
- $SUDOAS dnf install -y epel-release
- $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
- $SUDOAS dnf config-manager --set-enabled crb
- $SUDOAS dnf install -y tar
+  $SUDOAS dnf update -y
+  $SUDOAS dnf install -y epel-release
+  $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+  $SUDOAS dnf config-manager --set-enabled crb
+  $SUDOAS dnf install -y tar
 
- sh <(curl -L https://nixos.org/nix/install) --no-daemon
- sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
- . $HOME/.nix-profile/etc/profile.d/nix.sh
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
- nix-channel --update
- nix-env -iA nixpkgs.nix nixpkgs.cacert
- nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-   nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
-   nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
- . $HOME/.nix-profile/etc/profile.d/nix.sh
+  nix-channel --update
+  nix-env -iA nixpkgs.nix nixpkgs.cacert
+  nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
+    nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
+    nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
+    . $HOME/.nix-profile/etc/profile.d/nix.sh
 
- echo "max_parallel_downloads=10
- deltarpm=True
- defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
- $SUDOAS grubby --update-kernel=ALL --args=quiet
+  echo "max_parallel_downloads=10
+  deltarpm=True
+  defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
+
+  $SUDOAS dnf install https://zfsonlinux.org/epel/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
+  $SUDOAS dnf install -y zfs
+  echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 }
 
 ALPINE_SETUP()
@@ -242,14 +248,33 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
 ARCH_SETUP()
 {
-  sudo pacman -S opendoas
-  sudo pacman -Rns sudo
+  $SUDOAS pacman -S --needed base-devel git
+  git clone https://aur.archlinux.org/trizen.git
+  cd trizen
+  makepkg -si
+  cd ..
+  rm -R trizen
+
+  curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
+  $SUDOAS pacman-key --lsign-key $(curl -L https://git.io/JsfVS)
+  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
+
+  $SUDOAS tee -a /etc/pacman.conf <<- 'EOF'
+
+#[archzfs-testing]
+#Include = /etc/pacman.d/mirrorlist-archzfs
+
+[archzfs]
+Include = /etc/pacman.d/mirrorlist-archzfs
+EOF
+
+$SUDOAS pacman -Syu
+$SUDOAS pacman -S linux-lts-headers zfs-dkms zfs-utils
 }
 
 ARTIX_SETUP()
 {
-  sudo pacman -S opendoas
-  sudo pacman -Rns sudo
+  ARCH_SETUP
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
   . $HOME/.nix-profile/etc/profile.d/nix.sh
@@ -273,6 +298,16 @@ DEBIAN_SETUP()
   $SUDOAS apt install -y pulseaudio pulsemixer man2html
   systemctl --user --now enable pulseaudio
   systemctl --user --now enable pipewire.service pipewire-pulse
+  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS /etc/apt/sources.list.d/bullseye-backports.list
+  $SUDOAS tee /etc/apt/preferences.d/90_zfs <<- 'EOF'
+Package: src:zfs-linux
+Pin: release n=bullseye-backports
+Pin-Priority: 990
+EOF
+
+  $SUDOAS apt update
+  $SUDOAS apt install dpkg-dev linux-headers-generic linux-image-generic
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()
@@ -317,7 +352,10 @@ FREEBSD_SETUP()
   openntpd_enable=YES
   hald_enable=YES
   moused_enable=YES
-  linux_enable=YES" | $SUDOAS tee -a /etc/rc.conf
+  nfs_client_enable="YES"
+  linux_enable=YES
+  #rpc_lockd_enable="YES"
+  #rpc_statd_enable="YES"" | $SUDOAS tee -a /etc/rc.conf
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
   #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
@@ -330,7 +368,8 @@ NIXOS_SETUP()
 {
   mkdir .config
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
-  sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
+  #sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
+  sed -i s/HOSTID/$(head -c 8 /etc/machine-id)/g configuration.nix
   $SUDOAS mv configuration.nix /etc/nixos
   $SUDOAS nixos-rebuild boot
 }
@@ -361,7 +400,12 @@ OPENSUSE_SETUP()
   TUMBLEWEED=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
     $SUDOAS zypper install -y android-tools
+    $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
+  else
+    zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
+    $SUDOAS zypper refresh
+    $SUDOAS zypper install zfs
 }
 
 ROCKY_SETUP()
@@ -497,6 +541,10 @@ polkit.addRule(function(action, subject) {
     return polkit.Result.YES;
   }
 });' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+
+if [ $RELEASE != NixOS ]; then
+  echo "192.168.1.104:/mnt/Bunker/Vault	/home/sorath/TrueNAS	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+fi
 
 if [ $RELEASE != Void ] || [ $RELEASE != Alpine ] || [ $RELEASE != FreeBSD ] || [ $RELEASE != OpenBSD ] || [ $RELEASE != NixOS ]; then
 

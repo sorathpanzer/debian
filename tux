@@ -136,7 +136,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     sudo nixos-rebuild switch
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -149,7 +149,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     DOASCONF="/etc/doas.conf"
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg

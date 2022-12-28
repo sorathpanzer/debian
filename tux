@@ -107,10 +107,10 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
       PKGINSTALL="sudo dnf install -y" ;;
     Arch)               POS="3"
       MK="tux"
-      PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
+      PKGINSTALL="sudo pacman --noconfirm -S" ;;
     Artix)               POS="4"
       MK="tux"
-      PKGINSTALL="sudo pacman --noconfirm -Syu" ;;
+      PKGINSTALL="sudo pacman --noconfirm -S" ;;
     Void)               POS="5"
       MK="tux"
       PKGINSTALL="doas xbps-install -Sy" ;;
@@ -248,7 +248,7 @@ nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
 ARCH_SETUP()
 {
-  $SUDOAS pacman -S --needed base-devel git
+  $SUDOAS $PKGINSTALL --needed base-devel git
   git clone https://aur.archlinux.org/trizen.git
   cd trizen
   makepkg -si
@@ -268,8 +268,8 @@ ARCH_SETUP()
 Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
 
-$SUDOAS pacman -Syu
-$SUDOAS pacman -S linux-lts-headers zfs-dkms zfs-utils
+$SUDOAS pacman --noconfirm -Syu
+$SUDOAS $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
 }
 
 ARTIX_SETUP()
@@ -450,7 +450,6 @@ INSTALL_PACKAGES()
     [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser org.telegram.desktop -y
     [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   fi
-
 
 if [ $RELEASE = Fedora ] || [ $RELEASE = openSUSE ]; then
     $SUDOAS grubby --update-kernel=ALL --args=quiet

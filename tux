@@ -130,6 +130,12 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     NixOS)  MK="nixos" ;;
   esac
 
+  if [ $RELEASE = NixOS ]; then
+    sudo sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
+    sudo sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+    sudo nixos-rebuild switch
+  fi
+
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
     SUDOAS="doas"
   else
@@ -156,12 +162,6 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   permit nopass $USER cmd nixos-rebuild
   permit nopass $USER cmd pacman
   permit nopass $USER cmd apk" | $SUDOAS tee $DOASCONF
-  fi
-
-  if [ $RELEASE = NixOS ]; then
-    $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
-    $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
-    $SUDOAS nixos-rebuild switch
   fi
 }
 
@@ -474,16 +474,18 @@ if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ 
   pip install --user adblock
 fi
 
-cd $HOME/.config/suckless/dwmblocks; make install clean
-cd $HOME/.config/suckless/sxiv; make install clean
-cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
-cd $HOME/.config/suckless/dwm-6.4; make install clean
-cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
-cd $HOME/.config/suckless/dmenu-5.2; make install clean
-cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
-[ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-cd $HOME/.config/suckless/st-0.9; make install clean
-cd
+if [ $RELEASE != NixOS ]; then
+  cd $HOME/.config/suckless/dwmblocks; make install clean
+  cd $HOME/.config/suckless/sxiv; make install clean
+  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
+  cd $HOME/.config/suckless/dwm-6.4; make install clean
+  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
+  cd $HOME/.config/suckless/dmenu-5.2; make install clean
+  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
+  [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+  cd $HOME/.config/suckless/st-0.9; make install clean
+  cd
+fi
 
 if [ $RELEASE != FreeBSD ]; then
   NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')

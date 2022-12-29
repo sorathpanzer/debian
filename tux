@@ -45,7 +45,7 @@ CONFIGURE_PACKAGES()
   FEH=(           feh                       feh                   "$NA"                   feh                 feh                 feh                 feh                 feh                         feh                   feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer         ffmpegthumbnailer     "$NA"                   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer           ffmpegthumbnailer     ffmpegthumbnailer   )
   FIREFOX=(       firefox-esr               firefox               firefox                 firefox             firefox             firefox             firefox             MozillaFirefox              firefox-esr           firefox-esr         )
-  FLATPAK=(       flatpak                   flatpak               "$NA"                   "$NA"               "$NA"               "$NA"               flatpak             "$NA"                       "$NA"                 "$NA"               )
+  FLATPAK=(       flatpak                   flatpak               flatpak                 flatpak             flatpak             flatpak             flatpak             flatpak                     "$NA"                 "$NA"               )
   FZF=(           fzf                       fzf                   "$NA"                   fzf                 fzf                 fzf                 fzf                 fzf                         fzf                   fzf                 )
   GCC=(           gcc                       gcc                   gcc                     gcc                 gcc                 gcc                 gcc                 gcc                         gcc                   gcc%11              )
   GIFLIB=(        libgif-dev                giflib-devel          giflib-devel            giflib              giflib              giflib-devel        giflib-dev          giflib-devel                giflib                giflib              )
@@ -186,11 +186,11 @@ ALMALINUX_SETUP()
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
   . $HOME/.nix-profile/etc/profile.d/nix.sh
-
   nix-channel --update
+
   nix-env -iA nixpkgs.nix nixpkgs.cacert
   nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
-    nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
+    nixpkgs.trash-cli nixpkgs.transmission-gtk nixpkgs.light \
     nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
       . $HOME/.nix-profile/etc/profile.d/nix.sh
 
@@ -288,10 +288,10 @@ ARTIX_SETUP()
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
   . $HOME/.nix-profile/etc/profile.d/nix.sh
-
   nix-channel --update
+
   nix-env -iA nixpkgs.nix nixpkgs.cacert
-  nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.tdesktop nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
+  nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
   . $HOME/.nix-profile/etc/profile.d/nix.sh
 
   $SUDOAS sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
@@ -561,12 +561,9 @@ EOF
     echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
   fi
 
-####################################################################################################################
-
   $SUDOAS usermod -s /bin/zsh $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  $SUDOAS flatpak install org.signal.Signal -y
-  [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser org.telegram.desktop -y
+  $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
@@ -579,7 +576,6 @@ EOF
   fi
 
   if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
-
     $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
 [Unit]
 Description=Lock X session using i3lock for user %i

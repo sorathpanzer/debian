@@ -134,7 +134,7 @@ CONFIGURE_PACKAGES()
     sudo sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
     sudo sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
 
-    sudo sed -i '$d' /etc/nixos/configuration.nix
+    sudo sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' /etc/nixos/configuration.nix
     sudo tee -a /etc/nixos/configuration.nix << EOF
 security.sudo.configFile = ''
   Defaults:$USER timestamp_timeout=60

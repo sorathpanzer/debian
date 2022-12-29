@@ -158,7 +158,7 @@ sudo nixos-rebuild switch
     DOASCONF="/etc/doas.conf"
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     $SUDOAS tee $DOASCONF << EOF
 permit persist $USER as root
 permit nopass $USER as root cmd wg-quick
@@ -168,8 +168,6 @@ permit nopass $USER cmd poweroff
 permit nopass $USER cmd mount
 permit nopass $USER cmd setleds
 permit nopass $USER cmd rc-service
-permit nopass $USER cmd nix-channel
-permit nopass $USER cmd nixos-rebuild
 permit nopass $USER cmd pacman
 permit nopass $USER cmd apk
 EOF

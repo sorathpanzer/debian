@@ -28,12 +28,12 @@ DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {
-RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
-UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
+  RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+  UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
-# DISTRO=(        Debian/Devuan             Fedora                AlmaLinux/Rocky/CentOS  Arch                Artix               Void                Alpine              OpenSuse                    FreeBSD               OpenBSD             )
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
+  # DISTRO=(      Debian/Devuan             Fedora                AlmaLinux/Rocky/CentOS  Arch                Artix               Void                Alpine              OpenSuse                    FreeBSD               OpenBSD             )
+  #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
   ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         python-adblock              py39-adblock          py3-adblock         )
   ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                   android-tools       "$NA"               android-tools       android-tools       "$NA"                       android-tools         "$NA"               )
   BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                   btrfs-progs         btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                  "$NA"                 "$NA"               )
@@ -142,7 +142,7 @@ security.sudo.configFile = ''
 }
 EOF
 
-    sudo nixos-rebuild switch
+sudo nixos-rebuild switch
   fi
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
@@ -178,7 +178,7 @@ EOF
 
 ALMALINUX_SETUP()
 {
- echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $SUDOAS dnf update -y
   $SUDOAS dnf install -y epel-release
   $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
@@ -194,9 +194,9 @@ ALMALINUX_SETUP()
   nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
     nixpkgs.trash-cli nixpkgs.qutebrowser nixpkgs.transmission-gtk nixpkgs.signal-desktop nixpkgs.tdesktop nixpkgs.light \
     nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
-    . $HOME/.nix-profile/etc/profile.d/nix.sh
+      . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  $SUDOAS tee -a /etc/dnf/dnf.conf << EOF
+      $SUDOAS tee -a /etc/dnf/dnf.conf << EOF
 max_parallel_downloads=10
 deltarpm=True
 defaultyes=True
@@ -213,18 +213,19 @@ ALPINE_SETUP()
   echo "" | $SUDOAS tee /etc/motd
 
   echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
+  http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
 
   echo '#!/bin/sh
 
-echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | $SUDOAS tee /etc/local.d/cpufreq.start
-$SUDOAS chmod +x /etc/local.d/cpufreq.start
+  echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | $SUDOAS tee /etc/local.d/cpufreq.start
+  $SUDOAS chmod +x /etc/local.d/cpufreq.start
 
   $SUDOAS adduser $USER input
   $SUDOAS apk -U upgrade
   $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
     util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
+
   $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
   $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
   $SUDOAS rc-service local start; $SUDOAS rc-update add local default
@@ -247,7 +248,7 @@ $SUDOAS chmod +x /etc/local.d/cpufreq.start
   echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
 
   echo "nameserver 84.200.69.80
-nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
+  nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
 
   echo "dns=none
 
@@ -279,8 +280,8 @@ ARCH_SETUP()
 Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
 
-$SUDOAS pacman --noconfirm -Syu
-$SUDOAS $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
+  $SUDOAS pacman --noconfirm -Syu
+  $SUDOAS $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
 }
 
 ARTIX_SETUP()
@@ -316,9 +317,9 @@ Pin: release n=bullseye-backports
 Pin-Priority: 990
 EOF
 
-  $SUDOAS apt update
-  $SUDOAS apt install dpkg-dev linux-headers-generic linux-image-generic
-  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
+$SUDOAS apt update
+$SUDOAS apt install dpkg-dev linux-headers-generic linux-image-generic
+$SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()
@@ -328,19 +329,19 @@ DEVUAN_SETUP()
 
 FEDORA_SETUP()
 {
-    [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
-    deltarpm=True
-    defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
+  [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
+  deltarpm=True
+  defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
 
-    echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
-    $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-    $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-    [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
+  $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
+  [ -x "$(command -v rpm-ostree)" ] && ( $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf )
+  $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
-    $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
+  $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
 '[updates-archive]
 name=Fedora $releasever - $basearch - Updates Archive
 baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/$releasever/$basearch/
@@ -354,12 +355,12 @@ skip_if_unavailable=True
 cost=10000 # default is 1000'
 EOF
 
-$SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
-$SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
+  $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
+  $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 
-[ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
-[ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y kernel-devel
-[ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y zfs
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y kernel-devel
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y zfs
 }
 
 FREEBSD_SETUP()
@@ -404,7 +405,7 @@ OPENSUSE_SETUP()
   $SUDOAS touch /.root.key
   $SUDOAS chmod 600 /.root.key
   $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
-	echo "ENTER THE PASSPHRASE OF THE DEVICE"
+  echo "ENTER THE PASSPHRASE OF THE DEVICE"
   $SUDOAS cryptsetup luksAddKey /dev/nvme0n1p2 /.root.key
   $SUDOAS sed -i 's/none/\/.root.key/g' /etc/crypttab
   echo -e 'install_items+=" /.root.key "' | $SUDOAS tee --append /etc/dracut.conf.d/99-root-key.conf > /dev/null
@@ -423,8 +424,8 @@ OPENSUSE_SETUP()
   else
     zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
-    $SUDOAS zypper refresh
-    $SUDOAS zypper install zfs
+  $SUDOAS zypper refresh
+  $SUDOAS zypper install zfs
 }
 
 ROCKY_SETUP()
@@ -443,12 +444,12 @@ VOID_SETUP()
   $SUDOAS sed -i '/@snapshots/s/^#//' /etc/fstab
 
   echo "GETTY_ARGS=\"--autologin $USER --noclear\"
-BAUD_RATE=38400
-TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
+  BAUD_RATE=38400
+  TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
 
-$SUDOAS ln -s /etc/sv/pipewire /var/service
-$SUDOAS ln -s /etc/sv/acpid /var/service
-$SUDOAS xbps-remove -y sudo base-system
+  $SUDOAS ln -s /etc/sv/pipewire /var/service
+  $SUDOAS ln -s /etc/sv/acpid /var/service
+  $SUDOAS xbps-remove -y sudo base-system
 }
 
 INSTALL_PACKAGES()
@@ -458,86 +459,86 @@ INSTALL_PACKAGES()
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
-    ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} \
+    ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} \
     ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
 
-if [ $RELEASE = Fedora ] || [ $RELEASE = openSUSE ]; then
+  if [ $RELEASE = Fedora ] || [ $RELEASE = openSUSE ]; then
     $SUDOAS grubby --update-kernel=ALL --args=quiet
-fi
+  fi
 
-if [ $RELEASE = Alpine ]; then
-  $SUDOAS adduser $USER plugdev
-  $SUDOAS adduser $USER qemu
-  $SUDOAS adduser $USER kvm
-  $SUDOAS adduser $USER libvirt
-fi
+  if [ $RELEASE = Alpine ]; then
+    $SUDOAS adduser $USER plugdev
+    $SUDOAS adduser $USER qemu
+    $SUDOAS adduser $USER kvm
+    $SUDOAS adduser $USER libvirt
+  fi
 }
 
 CONFIGURE_HOME()
 {
-[ -e .profile ] && rm .profile
-mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
-mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-touch /home/$USER/.local/recently-used.xbel
-git config --global user.name "$GIT_USERNAME"
-git config --global user.email "$GIT_EMAIL"
-echo "Cloning my dotfiles..."
-git clone $DOTFILES /home/$USER/.config/dotgit
-git config --global credential.helper store
-mkdir -p /home/$USER/.cache/zsh
-touch /home/$USER/.cache/zsh/history
-sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
+  [ -e .profile ] && rm .profile
+  mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
+  mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  touch /home/$USER/.local/recently-used.xbel
+  git config --global user.name "$GIT_USERNAME"
+  git config --global user.email "$GIT_EMAIL"
+  echo "Cloning my dotfiles..."
+  git clone $DOTFILES /home/$USER/.config/dotgit
+  git config --global credential.helper store
+  mkdir -p /home/$USER/.cache/zsh
+  touch /home/$USER/.cache/zsh/history
+  sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
-if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then
-  pip install --user adblock
-fi
+  if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then
+    pip install --user adblock
+  fi
 
   cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
   cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
   cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
 
-if [ $RELEASE != NixOS ]; then
-  cd $HOME/.config/suckless/dwmblocks; make install clean
-  cd $HOME/.config/suckless/sxiv; make install clean
-  cd $HOME/.config/suckless/dwm-6.4; make install clean
-  cd $HOME/.config/suckless/dmenu-5.2; make install clean
-  [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-  cd $HOME/.config/suckless/st-0.9; make install clean
-  cd
-fi
-
-if [ $RELEASE != FreeBSD ]; then
-  NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
-  SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
-
-  if [ ! -z $LVM_PASSWORD ]; then
-    echo "Open vault password:"
-    mkdir Vault
-    echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
-    $SUDOAS mount /dev/mapper/Vault Vault
-    rsync -avrop Vault/Documentos/BackHome/ /home/$USER
+  if [ $RELEASE != NixOS ]; then
+    cd $HOME/.config/suckless/dwmblocks; make install clean
+    cd $HOME/.config/suckless/sxiv; make install clean
+    cd $HOME/.config/suckless/dwm-6.4; make install clean
+    cd $HOME/.config/suckless/dmenu-5.2; make install clean
+    [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+    cd $HOME/.config/suckless/st-0.9; make install clean
+    cd
   fi
-fi
 
-if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
-  $SUDOAS mkdir -p /usr/share/edk2/ovmf
-  $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
-fi
+  if [ $RELEASE != FreeBSD ]; then
+    NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
+    SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
-~/.local/share/nvim/site/pack/packer/start/packer.nvim
+    if [ ! -z $LVM_PASSWORD ]; then
+      echo "Open vault password:"
+      mkdir Vault
+      echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
+      $SUDOAS mount /dev/mapper/Vault Vault
+      rsync -avrop Vault/Documentos/BackHome/ /home/$USER
+    fi
+  fi
+
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
+    $SUDOAS mkdir -p /usr/share/edk2/ovmf
+    $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+  fi
+
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+    ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 }
 
 CONFIGURE_SYSTEM()
 {
-$SUDOAS mkdir -p /media/Bunker
-echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
-echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
+  $SUDOAS mkdir -p /media/Bunker
+  echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
+  echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-$SUDOAS mkdir /etc/X11/xorg.conf.d
-$SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
+  $SUDOAS mkdir /etc/X11/xorg.conf.d
+  $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
 Section "Device"
 Identifier "Intel Graphics"
 Driver "intel"
@@ -546,8 +547,8 @@ Option "DRI" "False"
 EndSection
 EOF
 
-$SUDOAS mkdir -p /etc/polkit-1/rules.d/
-$SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules << EOF
+  $SUDOAS mkdir -p /etc/polkit-1/rules.d/
+  $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules << EOF
 /* Allow members of the wheel group to execute any actions
 * without password authentication, similar to "sudo NOPASSWD:"
 */
@@ -558,9 +559,9 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-if [ $RELEASE != NixOS ]; then
-  echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
-fi
+  if [ $RELEASE != NixOS ]; then
+    echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+  fi
 
 ####################################################################################################################
 
@@ -569,19 +570,19 @@ fi
   $SUDOAS flatpak install org.signal.Signal -y
   [ $RELEASE = "AlmaLinux" ] && $SUDOAS flatpak install org.qutebrowser.qutebrowser org.telegram.desktop -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
-  $SUDOAS mkdir -p /etc/modules-load.d/zfs.conf
+  $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 
-if ! [[ $RELEASE = Arch || $RELEASE = Void ]]; then
-  git clone https://github.com/sorathpanzer/ueberzug.git && cd ueberzug
-  pip install --user -e .
-  cd
-  rm -R ueberzug
-fi
+  if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
+    git clone https://github.com/sorathpanzer/ueberzug.git && cd ueberzug
+    pip install --user -e .
+    cd
+    $SUDOAS rm -R ueberzug
+  fi
 
-if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
+  if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
 
-  $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
+    $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
 [Unit]
 Description=Lock X session using i3lock for user %i
 Before=sleep.target
@@ -595,16 +596,16 @@ ExecStartPre=/usr/bin/i3lock -c 000000
 WantedBy=sleep.target"
 EOF
 
-  $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
-  $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
-  echo '[Service]
-ExecStart=
-ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf ### Change username
+    $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
+    $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
+    echo '[Service]
+    ExecStart=
+    ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf ### Change username
 
-  $SUDOAS systemctl enable suspend@$USER.service
-  $SUDOAS touch /etc/sudoers.d/$USER
-  echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
-fi
+    $SUDOAS systemctl enable suspend@$USER.service
+    $SUDOAS touch /etc/sudoers.d/$USER
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
+  fi
 }
 
 CONFIGURE_PACKAGES

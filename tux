@@ -7,17 +7,13 @@
 # In OpenSuse there is no android-tools lf trash-cli light by default (problema cc ST terminal)
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
-# Flatpak in RHEL systems only install packages for AlmaLinux
 # NixOS put setleds in sudoers >> if !NixOS in suckless, and copy mk files in NIXOS_SETUP
 
 # TODO: Before running this script you must install:
-# Debian -> curl
-# Fedora -> audit
 # FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
-# Void -> doas, curl >>>>>>>> "permit $USER persist as root" to doas.conf
-# OpenBSD ->  curl bash
-# Alpine -> curl, bash
-# $PULSEAUDIOUTILS not installed by default problem with missing 64bit support
+# Void -> doas >>>>>>>> "permit $USER persist as root" to doas.conf
+# OpenBSD -> bash
+# Alpine -> bash
 
 exec &> >(tee -a "install.log") 2>install.error
 
@@ -479,6 +475,7 @@ CONFIGURE_HOME()
   [ -e .profile ] && rm .profile
   mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
   mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  $SUDOAS mkdir -p /media/Bunker
   touch /home/$USER/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
@@ -531,7 +528,6 @@ CONFIGURE_HOME()
 
 CONFIGURE_SYSTEM()
 {
-  $SUDOAS mkdir -p /media/Bunker
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 

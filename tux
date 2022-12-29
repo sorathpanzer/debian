@@ -159,18 +159,20 @@ EOF
   fi
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
-    echo "permit persist $USER as root
-  permit nopass $USER as root cmd wg-quick
-  permit nopass $USER cmd wg
-  permit nopass $USER cmd reboot
-  permit nopass $USER cmd poweroff
-  permit nopass $USER cmd mount
-  permit nopass $USER cmd setleds
-  permit nopass $USER cmd rc-service
-  permit nopass $USER cmd nix-channel
-  permit nopass $USER cmd nixos-rebuild
-  permit nopass $USER cmd pacman
-  permit nopass $USER cmd apk" | $SUDOAS tee $DOASCONF
+    $SUDOAS tee $DOASCONF << EOF
+permit persist $USER as root
+permit nopass $USER as root cmd wg-quick
+permit nopass $USER cmd wg
+permit nopass $USER cmd reboot
+permit nopass $USER cmd poweroff
+permit nopass $USER cmd mount
+permit nopass $USER cmd setleds
+permit nopass $USER cmd rc-service
+permit nopass $USER cmd nix-channel
+permit nopass $USER cmd nixos-rebuild
+permit nopass $USER cmd pacman
+permit nopass $USER cmd apk
+EOF
   fi
 }
 
@@ -194,9 +196,12 @@ ALMALINUX_SETUP()
     nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
     . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  echo "max_parallel_downloads=10
-  deltarpm=True
-  defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
+  $SUDOAS tee -a /etc/dnf/dnf.conf << EOF
+max_parallel_downloads=10
+deltarpm=True
+defaultyes=True
+EOF
+
   $SUDOAS grubby --update-kernel=ALL --args=quiet
 
   $SUDOAS dnf install https://zfsonlinux.org/epel/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
@@ -265,7 +270,7 @@ ARCH_SETUP()
   $SUDOAS pacman-key --lsign-key $(curl -L https://git.io/JsfVS)
   curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
 
-  $SUDOAS tee -a /etc/pacman.conf <<- 'EOF'
+  $SUDOAS tee -a /etc/pacman.conf << EOF
 
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs
@@ -305,7 +310,7 @@ DEBIAN_SETUP()
   systemctl --user --now enable pulseaudio
   systemctl --user --now enable pipewire.service pipewire-pulse
   echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS /etc/apt/sources.list.d/bullseye-backports.list
-  $SUDOAS tee /etc/apt/preferences.d/90_zfs <<- 'EOF'
+  $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
 Package: src:zfs-linux
 Pin: release n=bullseye-backports
 Pin-Priority: 990
@@ -335,7 +340,8 @@ FEDORA_SETUP()
     $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
     [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
-    echo '[updates-archive]
+    $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
+'[updates-archive]
 name=Fedora $releasever - $basearch - Updates Archive
 baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/$releasever/$basearch/
 enabled=1
@@ -345,7 +351,8 @@ type=rpm
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=True
-cost=10000 # default is 1000' | $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo
+cost=10000 # default is 1000'
+EOF
 
 $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
 $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
@@ -358,14 +365,18 @@ $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 FREEBSD_SETUP()
 {
   $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
-  echo "dbus_enable=YES
-  openntpd_enable=YES
-  hald_enable=YES
-  moused_enable=YES
-  nfs_client_enable="YES"
-  linux_enable=YES
-  #rpc_lockd_enable="YES"
-  #rpc_statd_enable="YES"" | $SUDOAS tee -a /etc/rc.conf
+
+  $SUDOAS tee -a /etc/rc.conf << EOF
+dbus_enable=YES
+openntpd_enable=YES
+hald_enable=YES
+moused_enable=YES
+nfs_client_enable="YES"
+linux_enable=YES
+#rpc_lockd_enable="YES"
+#rpc_statd_enable="YES""
+EOF
+
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
   #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
@@ -526,22 +537,26 @@ echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
 echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
 $SUDOAS mkdir /etc/X11/xorg.conf.d
-echo 'Section "Device"
+$SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
+Section "Device"
 Identifier "Intel Graphics"
 Driver "intel"
 Option "TearFree" "true"
 Option "DRI" "False"
-EndSection' | $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf
+EndSection
+EOF
 
 $SUDOAS mkdir -p /etc/polkit-1/rules.d/
-echo '/* Allow members of the wheel group to execute any actions
+$SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules << EOF
+/* Allow members of the wheel group to execute any actions
 * without password authentication, similar to "sudo NOPASSWD:"
 */
 polkit.addRule(function(action, subject) {
   if (subject.isInGroup("wheel")) {
     return polkit.Result.YES;
   }
-});' | $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules
+});
+EOF
 
 if [ $RELEASE != NixOS ]; then
   echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
@@ -557,17 +572,17 @@ fi
   $SUDOAS mkdir -p /etc/modules-load.d/zfs.conf
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 
-# IF NOT EQUAL THAN
-if [ $RELEASE = Arch ] | [ $RELEASE = Void ]; then
+if ! [[ $RELEASE = Arch || $RELEASE = Void ]]; then
   git clone https://github.com/sorathpanzer/ueberzug.git && cd ueberzug
   pip install --user -e .
   cd
   rm -R ueberzug
 fi
 
-if [ $RELEASE = Void ] | [ $RELEASE = Alpine ] | [ $RELEASE = Artix ]; then
+if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
 
-  echo "[Unit]
+  $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
+[Unit]
 Description=Lock X session using i3lock for user %i
 Before=sleep.target
 [Service]
@@ -577,7 +592,8 @@ Environment=DISPLAY=:0
 ExecStart=/usr/bin/xset dpms force suspend
 ExecStartPre=/usr/bin/i3lock -c 000000
 [Install]
-WantedBy=sleep.target" | $SUDOAS tee /etc/systemd/system/suspend@.service
+WantedBy=sleep.target"
+EOF
 
   $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
   $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf

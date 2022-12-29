@@ -390,7 +390,7 @@ NIXOS_SETUP()
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
   #sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
   sed -i s/HOSTID/$(head -c 8 /etc/machine-id)/g configuration.nix
-  $SUDOAS mv configuration.nix /etc/nixos
+  $SUDOAS cp configuration.nix /etc/nixos/configuration.nix
   $SUDOAS nixos-rebuild boot
 }
 

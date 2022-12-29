@@ -337,26 +337,26 @@ FEDORA_SETUP()
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
   $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-  [ -x "$(command -v rpm-ostree)" ] && ( $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf )
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
   $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
   $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
-'[updates-archive]
-name=Fedora $releasever - $basearch - Updates Archive
-baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/$releasever/$basearch/
+[updates-archive]
+name=Fedora \$releasever - \$basearch - Updates Archive
+baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/\$releasever/\$basearch/
 enabled=1
 metadata_expire=6h
 repo_gpgcheck=0
 type=rpm
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
 skip_if_unavailable=True
 cost=10000 # default is 1000'
 EOF
 
-  $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
-  $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
+  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 
   [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
   [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y kernel-devel

@@ -133,6 +133,15 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
   if [ $RELEASE = NixOS ]; then
     sudo sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
     sudo sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+
+    sudo sed -i '$d' /etc/nixos/configuration.nix
+    sudo tee -a /etc/nixos/configuration.nix << EOF
+security.sudo.configFile = ''
+  Defaults:$USER timestamp_timeout=60
+'';
+}
+EOF
+
     sudo nixos-rebuild switch
   fi
 
@@ -149,7 +158,7 @@ UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
     DOASCONF="/etc/doas.conf"
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ] || [ $RELEASE = NixOS ]; then
     echo "permit persist $USER as root
   permit nopass $USER as root cmd wg-quick
   permit nopass $USER cmd wg
@@ -474,14 +483,15 @@ if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ 
   pip install --user adblock
 fi
 
+  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
+  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
+  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
+
 if [ $RELEASE != NixOS ]; then
   cd $HOME/.config/suckless/dwmblocks; make install clean
   cd $HOME/.config/suckless/sxiv; make install clean
-  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
   cd $HOME/.config/suckless/dwm-6.4; make install clean
-  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
   cd $HOME/.config/suckless/dmenu-5.2; make install clean
-  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
   [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
   cd $HOME/.config/suckless/st-0.9; make install clean
   cd

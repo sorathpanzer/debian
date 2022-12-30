@@ -14,6 +14,7 @@
 # FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
 # Void -> doas >>>>>>>> "permit $USER persist as root" to doas.conf
 # OpenBSD|Alpine -> bash
+# Devuan -> curl (delete "cdrom" line from sources.list)
 
 exec 1> >(tee "install.log") 2> >(tee "install.error")
 
@@ -296,34 +297,31 @@ CENTOS_SETUP()
 
 DEBIAN_SETUP()
 {
-  $SUDOAS apt update; $SUDOAS apt upgrade -y
-  $SUDOAS apt install -y pulseaudio pulsemixer man2html
+  $SUDOAS PKGINSTALL pulseaudio pulsemixer man2html
   systemctl --user --now enable pulseaudio
   systemctl --user --now enable pipewire.service pipewire-pulse
-  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS /etc/apt/sources.list.d/bullseye-backports.list
+  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
   $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
 Package: src:zfs-linux
 Pin: release n=bullseye-backports
 Pin-Priority: 990
 EOF
 
-$SUDOAS apt update
-$SUDOAS apt install dpkg-dev linux-headers-generic linux-image-generic
-$SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
+  $SUDOAS apt-get update; $SUDOAS apt upgrade -y
+  $SUDOAS $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()
 {
-  $SUDOAS sed '/cdrom/d' /etc/apt/sources.list
-
   INIT="$(which rc-status | which sv)"
-  if [ "$INIT" = "/usr/bin/sv" ]; then
-  $SUDOAS sed -i '$d' /etc/service/getty-tty1/run
+    if [ "$INIT" = "/usr/bin/sv" ]; then
+    $SUDOAS sed -i '$d' /etc/service/getty-tty1/run
   echo "exec chpst -P getty --autologin $USER 38400 tty1 linux" | $SUDOAS tee -a /etc/service/getty-tty1/run
   fi
 
-  if [ "$INIT" = "/bin/rc-status" ] || [ -z "$INIT" ]
-  $SUDOAS sed -i "s/noclear/autologin $USER/g" /etc/inittab
+  if [ "$INIT" = "/bin/rc-status" ] || [ -z "$INIT" ]; then
+    $SUDOAS sed -i "s/noclear/autologin $USER/g" /etc/inittab
   fi
 
   DEBIAN_SETUP

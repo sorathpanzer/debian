@@ -309,7 +309,7 @@ EOF
 
   $SUDOAS apt-get update; $SUDOAS apt upgrade -y
   $SUDOAS $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
-  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
+  $SUDOAS DEBIAN_FRONTEND=noninteractive $PKGINSTALL zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()

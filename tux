@@ -297,7 +297,7 @@ CENTOS_SETUP()
 
 DEBIAN_SETUP()
 {
-  $SUDOAS PKGINSTALL pulseaudio pulsemixer man2html
+  $SUDOAS $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
   echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list

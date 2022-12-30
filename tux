@@ -560,7 +560,7 @@ EOF
 
   if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
     git clone https://github.com/sorathpanzer/ueberzug.git
-    pip install --user -e ./ueberzug
+    pip install --user ./ueberzug
     $SUDOAS rm -R ueberzug
   fi
 

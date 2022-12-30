@@ -202,8 +202,9 @@ ALPINE_SETUP()
 {
   echo "" | $SUDOAS tee /etc/motd
 
-  echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-  https://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
+  $SUDOAS setup-xorg-base
+  #echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+  #https://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
 
   echo '#!/bin/sh
 
@@ -230,7 +231,6 @@ ALPINE_SETUP()
   $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
   $SUDOAS grub-mkconfig -o /boot/grub/grub.cfg
 
-  $SUDOAS setup-xorg-base
   $SUDOAS rm -r /media/{cdrom,usb}
   $SUDOAS mkdir -p /media/Vault
 

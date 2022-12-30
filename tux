@@ -157,10 +157,10 @@ sudo nixos-rebuild switch
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     $SUDOAS tee $DOASCONF << EOF
 permit persist $USER as root
-permit nopass $USER cmd $(which reboot)
-permit nopass $USER cmd $(which poweroff)
-permit nopass $USER cmd $(which mount)
-permit nopass $USER cmd $(which setleds)
+permit nopass $USER cmd reboot
+permit nopass $USER cmd poweroff
+permit nopass $USER cmd mount
+permit nopass $USER cmd setleds
 EOF
   fi
 }

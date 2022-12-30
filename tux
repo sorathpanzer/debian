@@ -298,8 +298,8 @@ CENTOS_SETUP()
 DEBIAN_SETUP()
 {
   $SUDOAS PKGINSTALL pulseaudio pulsemixer man2html
-  systemctl --user --now enable pulseaudio
-  systemctl --user --now enable pipewire.service pipewire-pulse
+  [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
+  [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
   echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
   $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
 Package: src:zfs-linux
@@ -309,7 +309,7 @@ EOF
 
   $SUDOAS apt-get update; $SUDOAS apt upgrade -y
   $SUDOAS $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
-  $SUDOAS DEBIAN_FRONTEND=noninteractive $PKGINSTALL zfs-dkms zfsutils-linux
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()
@@ -575,7 +575,7 @@ EOF
   fi
 
   if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
-    $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
+    [[ $RELEASE != Devuan ]] && $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
 [Unit]
 Description=Lock X session using i3lock for user %i
 Before=sleep.target
@@ -589,15 +589,15 @@ ExecStartPre=/usr/bin/i3lock -c 000000
 WantedBy=sleep.target"
 EOF
 
-    $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
-    $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
-    $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf << EOF
+    [[ $RELEASE != Devuan ]] && $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
+    [[ $RELEASE != Devuan ]] && $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
+    [[ $RELEASE != Devuan ]] && $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf << EOF
 [Service]
 ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I \$TERM
 EOF
+  [[ $RELEASE != Devuan ]] && $SUDOAS systemctl enable suspend@$USER.service
 
-    $SUDOAS systemctl enable suspend@$USER.service
     $SUDOAS touch /etc/sudoers.d/$USER
     echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
   fi

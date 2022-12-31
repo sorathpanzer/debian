@@ -178,14 +178,14 @@ ALMALINUX_SETUP()
 
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
-  source $HOME/.nix-profile/etc/profile.d/nix.sh
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
   nix-channel --update
 
   nix-env -iA nixpkgs.nix nixpkgs.cacert
   nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
     nixpkgs.trash-cli nixpkgs.transmission-gtk nixpkgs.light \
     nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
-      source $HOME/.nix-profile/etc/profile.d/nix.sh
+      . $HOME/.nix-profile/etc/profile.d/nix.sh
 
       $SUDOAS tee -a /etc/dnf/dnf.conf << EOF
 max_parallel_downloads=10
@@ -280,12 +280,12 @@ ARTIX_SETUP()
   ARCH_SETUP
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
-  source $HOME/.nix-profile/etc/profile.d/nix.sh
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
   nix-channel --update
 
   nix-env -iA nixpkgs.nix nixpkgs.cacert
   nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
-  source $HOME/.nix-profile/etc/profile.d/nix.sh
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
   $SUDOAS sed -i "s/agetty.*/agetty --autologin \$USER --noclear tty1 38400 linux" /etc/dinit.d/getty.d/tty1
 }

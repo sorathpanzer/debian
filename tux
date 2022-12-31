@@ -32,7 +32,7 @@ CONFIGURE_PACKAGES()
   NA=" "
   # DISTRO=(      Debian/Devuan             Fedora                AlmaLinux/Rocky/CentOS  Arch                Artix               Void                Alpine              OpenSuse                    FreeBSD               OpenBSD             )
   #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
-  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         python310-adblock           py39-adblock          py3-adblock         )
+  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         "$NA"                       py39-adblock          py3-adblock         )
   ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                   android-tools       "$NA"               android-tools       android-tools       "$NA"                       android-tools         "$NA"               )
   BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                   btrfs-progs         btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                  "$NA"                 "$NA"               )
   CRONTABS=(      python3-crontab           crontabs              crontabs                "$NA"               "$NA"               "$NA"               "$NA"               python3-crontab             py39-python-crontab   "$NA"               )
@@ -434,13 +434,13 @@ OPENSUSE_SETUP()
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
-    $SUDOAS $PKGINSTALL android-tools
+    $SUDOAS $PKGINSTALL android-tools python310-adblock
     $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
   else
-    zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
+    $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
   $SUDOAS zypper refresh
-  $SUDOAS $PKGINSTALL zfs
+  $PKGINSTALL zfs
 }
 
 ROCKY_SETUP()

@@ -165,6 +165,21 @@ permit nopass $USER cmd mount
 permit nopass $USER cmd setleds
 EOF
   fi
+
+  if [ $RELEASE = NixOS ]; then
+    $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
+    $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+
+    $SUDOAS sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' /etc/nixos/configuration.nix
+    $SUDOAS tee -a /etc/nixos/configuration.nix << EOF
+security.sudo.configFile = ''
+  Defaults:$USER timestamp_timeout=60
+'';
+}
+EOF
+
+sudo nixos-rebuild switch
+  fi
 }
 
 ALMALINUX_SETUP()

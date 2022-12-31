@@ -419,13 +419,13 @@ OPENSUSE_SETUP()
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
-    $SUDOAS zypper install -y android-tools
+    $SUDOAS $PKGINSTALL android-tools
     $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
   else
     zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
   $SUDOAS zypper refresh
-  $SUDOAS zypper install zfs
+  $SUDOAS $PKGINSTALL zfs
 }
 
 ROCKY_SETUP()

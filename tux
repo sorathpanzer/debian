@@ -354,7 +354,8 @@ FEDORA_SETUP()
   [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-  $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+  #$SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
+  #$SUDOAS usermod -s /usr/bin/zsh $USER
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
   $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
@@ -577,7 +578,7 @@ EOF
     echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
   fi
 
-  $SUDOAS usermod -s /bin/zsh $USER
+  #$SUDOAS usermod -s /bin/zsh $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y

@@ -351,7 +351,7 @@ FEDORA_SETUP()
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
   $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm
-  [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc
+  [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libx11-devel imlib2-devel
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
   $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd

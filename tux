@@ -266,7 +266,7 @@ ALPINE_SETUP()
 
 ARCH_SETUP()
 {
-  $SUDOAS $PKGINSTALL --needed base-devel git
+  $PKGINSTALL --needed base-devel git
   git clone https://aur.archlinux.org/trizen.git
   cd trizen || exit
   makepkg -si
@@ -287,7 +287,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
 
   $SUDOAS pacman --noconfirm -Syu
-  $SUDOAS $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
+  $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
 }
 
 ARTIX_SETUP()
@@ -312,7 +312,7 @@ CENTOS_SETUP()
 
 DEBIAN_SETUP()
 {
-  $SUDOAS $PKGINSTALL pulseaudio pulsemixer man2html
+  $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
   echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
@@ -323,7 +323,7 @@ Pin-Priority: 990
 EOF
 
   $SUDOAS apt-get update; $SUDOAS apt upgrade -y
-  $SUDOAS $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
+  $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
   $SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
 }
 
@@ -354,8 +354,6 @@ FEDORA_SETUP()
   [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-  #$SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
-  #$SUDOAS usermod -s /usr/bin/zsh $USER
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
   $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
@@ -436,7 +434,7 @@ OPENSUSE_SETUP()
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
-    $SUDOAS $PKGINSTALL android-tools python310-adblock
+    $PKGINSTALL android-tools python310-adblock
     $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
   else
     $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
@@ -578,7 +576,7 @@ EOF
     echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
   fi
 
-  #$SUDOAS usermod -s /bin/zsh $USER
+  #$SUDOAS usermod -s $(which zsh) $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y

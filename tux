@@ -47,6 +47,7 @@ CONFIGURE_PACKAGES()
   FZF=(           fzf                       fzf                   "$NA"                   fzf                 fzf                 fzf                 fzf                 fzf                         fzf                   fzf                 )
   GCC=(           gcc                       "$NA"                 gcc                     gcc                 gcc                 "$NA"               "$NA"               gcc                         gcc                   gcc%11              )
   GIFLIB=(        libgif-dev                "$NA"                 giflib-devel            giflib              giflib              giflib-devel        giflib-dev          giflib-devel                giflib                giflib              )
+  GIT=(           git                       "$NA"                 git                     git                 git                 git                 git                 git                         git                   git                 )
   GRUBBY=(        "$NA"                     "$NA"                 grubby                  "$NA"               "$NA"               "$NA"               "$NA"               grubby                      "$NA"                 "$NA"               )
   IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick             imagemagick         imagemagick         ImageMagick         imagemagick         ImageMagick                 ImageMagick7-nox11    ImageMagick         )
   IMLIB2=(        libimlib2-dev             "$NA"                 imlib2-devel            imlib2              imlib2              imlib2-devel        imlib2-dev          imlib2-devel                imlib2                imlib2              )
@@ -469,10 +470,10 @@ VOID_SETUP()
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
+  $PKGINSTALL ffmpeg groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
-    ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
+    ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} ${GIT[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} ${GCC[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} \
     ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]} ${DOAS[$POS]}

@@ -480,13 +480,6 @@ INSTALL_PACKAGES()
     ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]} ${DOAS[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-
-  if [ $RELEASE = Alpine ]; then
-    $SUDOAS adduser $USER plugdev
-    $SUDOAS adduser $USER qemu
-    $SUDOAS adduser $USER kvm
-    $SUDOAS adduser $USER libvirt
-  fi
 }
 
 CONFIGURE_HOME()
@@ -545,6 +538,10 @@ CONFIGURE_HOME()
 
 CONFIGURE_SYSTEM()
 {
+  $SUDOAS adduser $USER plugdev
+  $SUDOAS adduser $USER qemu
+  $SUDOAS adduser $USER kvm
+  $SUDOAS adduser $USER libvirt
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 

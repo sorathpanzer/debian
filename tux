@@ -581,11 +581,11 @@ EOF
   $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 
-  if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
-    git clone https://github.com/sorathpanzer/ueberzug.git
-    pip install --user ./ueberzug
-    $SUDOAS rm -R ueberzug
-  fi
+  #if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
+    #git clone https://github.com/sorathpanzer/ueberzug.git
+    #pip install --user ./ueberzug
+    #$SUDOAS rm -R ueberzug
+  #fi
 
   if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
     [[ $RELEASE != Devuan ]] && $SUDOAS tee /etc/systemd/system/suspend@.service << EOF

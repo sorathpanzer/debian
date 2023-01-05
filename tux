@@ -31,7 +31,7 @@ CONFIGURE_PACKAGES()
 
   NA=" "
   # DISTRO=(      Debian/Devuan             Fedora                AlmaLinux/Rocky/CentOS  Arch                Artix               Void                Alpine              OpenSuse                    FreeBSD               OpenBSD             )
-  #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
+  #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
   ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         "$NA"                       py39-adblock          py3-adblock         )
   ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                   android-tools       "$NA"               android-tools       android-tools       "$NA"                       android-tools         "$NA"               )
   BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                   btrfs-progs         btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                  "$NA"                 "$NA"               )

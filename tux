@@ -538,10 +538,13 @@ CONFIGURE_HOME()
 
 CONFIGURE_SYSTEM()
 {
-  $SUDOAS adduser $USER plugdev
-  $SUDOAS adduser $USER qemu
-  $SUDOAS adduser $USER kvm
-  $SUDOAS adduser $USER libvirt
+  if [ $RELEASE = Alpine ]; then
+    $SUDOAS adduser $USER plugdev
+    $SUDOAS adduser $USER qemu
+    $SUDOAS adduser $USER kvm
+    $SUDOAS adduser $USER libvirt
+  fi
+
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
@@ -571,7 +574,7 @@ EOF
     echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
   fi
 
-  #$SUDOAS usermod -s $(which zsh) $USER
+  $SUDOAS usermod -s $(which zsh) $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y

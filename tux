@@ -578,11 +578,9 @@ EOF
   $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 
-  if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
-    git clone https://github.com/sorathpanzer/ueberzug.git
-    pip install --user ./ueberzug
-    $SUDOAS rm -R ueberzug
-  fi
+  [ -x "$(command -v systemctl)" ] && git clone https://github.com/sorathpanzer/ueberzug.git
+  [ -x "$(command -v systemctl)" ] && pip install --user ./ueberzug
+  [ -d ./ueberzug ] && $SUDOAS rm -R ueberzug
 
   [ -x "$(command -v sudo)" ] &&  echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
 

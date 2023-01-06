@@ -545,8 +545,9 @@ CONFIGURE_SYSTEM()
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-  $SUDOAS mkdir /etc/X11/xorg.conf.d
-  $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
+  if [ -z $($SUDOAS dmesg | grep Hypervisor) ]; then
+    $SUDOAS mkdir /etc/X11/xorg.conf.d
+    $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
 Section "Device"
 Identifier "Intel Graphics"
 Driver "intel"
@@ -554,6 +555,7 @@ Option "TearFree" "true"
 Option "DRI" "False"
 EndSection
 EOF
+  fi
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules << EOF

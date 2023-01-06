@@ -464,7 +464,6 @@ VOID_SETUP()
 
   $SUDOAS ln -s /etc/sv/pipewire /var/service
   $SUDOAS ln -s /etc/sv/acpid /var/service
-  $SUDOAS xbps-remove -y sudo base-system
 }
 
 INSTALL_PACKAGES()
@@ -607,6 +606,7 @@ ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I \$TERM
 EOF
   $SUDOAS systemctl enable suspend@$USER.service
+  [ $RELEASE = Void ] && $SUDOAS xbps-remove -y sudo base-system
 }
 
 CONFIGURE_PACKAGES

@@ -4,15 +4,13 @@
 
 # TODO: Improvements in the script
 # lsblk (how to detect second drive)
-# -> autologin in Devuan
-# In OpenSuse there is no android-tools lf trash-cli light by default (problema cc ST terminal)
+# In OpenSuse there is no android-tools lf trash-cli light by default
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
-# NixOS put setleds in sudoers >> if !NixOS in suckless, and copy mk files in NIXOS_SETUP
+# NixOS put setleds in sudoers
 
 # TODO: Before running this script you must install:
 # FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
-# Void -> doas >>>>>>>> "permit $USER persist as root" to doas.conf
 # OpenBSD|Alpine -> bash
 # Devuan -> curl (delete "cdrom" line from sources.list)
 
@@ -37,7 +35,7 @@ CONFIGURE_PACKAGES()
   BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                   btrfs-progs         btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                  "$NA"                 "$NA"               )
   CRONTABS=(      python3-crontab           crontabs              crontabs                "$NA"               "$NA"               "$NA"               "$NA"               python3-crontab             py39-python-crontab   "$NA"               )
   DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11                dbus                dbus                dbus-x11            dbus-x11            dbus-1-x11                  dbus                  dbus                )
-  DOAS=(          "$NA"                     "$NA"                 "$NA"                   "$NA"               "$NA"               opendoas            doas                "$NA"                       doas                  "$NA"               )
+  DOAS=(          "$NA"                     "$NA"                 "$NA"                   "$NA"               "$NA"               "$NA"               doas                "$NA"                       doas                  "$NA"               )
   DUNST=(         dunst                     dunst                 "$NA"                   dunst               dunst               dunst               dunst               dunst                       dunst                 dunst               )
   EMACSNX=(       emacs-nox                 emacs-nox             emacs-nox               emacs-nox           emacs-nox           emacs               emacs-nox           emacs-nox                   emacs-nox             emacs-nosx          )
   FEH=(           feh                       feh                   "$NA"                   feh                 feh                 feh                 feh                 feh                         feh                   feh                 )
@@ -453,7 +451,7 @@ ROCKY_SETUP()
 VOID_SETUP()
 {
   $SUDOAS xbps-install -Syu
-  $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils
+  $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils opendoas
 
   $SUDOAS snapper -c root create-config /
   $SUDOAS btrfs subvolume delete /.snapshots

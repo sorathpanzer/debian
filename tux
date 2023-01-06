@@ -93,34 +93,34 @@ CONFIGURE_PACKAGES()
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    Debian|Devuan)	POS="0"
+    Debian|Devuan)	        POS="0"
       MK="tux"
       PKGINSTALL="sudo apt-get -y install" ;;
-    Fedora)               POS="1"
+    Fedora)                 POS="1"
       MK="tux"
       PKGINSTALL="sudo rpm-ostree install" ;;
-    AlmaLinux|Rocky|CentOS)  POS="2"
+    AlmaLinux|Rocky|CentOS) POS="2"
       MK="tux"
       PKGINSTALL="sudo dnf install -y" ;;
-    Arch)               POS="3"
+    Arch)                   POS="3"
       MK="tux"
       PKGINSTALL="sudo pacman --noconfirm -S" ;;
-    Artix)               POS="4"
+    Artix)                  POS="4"
       MK="tux"
       PKGINSTALL="sudo pacman --noconfirm -S" ;;
-    Void)               POS="5"
+    Void)                   POS="5"
       MK="tux"
       PKGINSTALL="doas xbps-install -Sy" ;;
-    Alpine)             POS="6"
+    Alpine)                 POS="6"
       MK="tux"
       PKGINSTALL="doas apk add" ;;
-    openSUSE)           POS="7"
+    openSUSE)               POS="7"
       MK="tux"
       PKGINSTALL="sudo zypper install -y" ;;
-    FreeBSD)            POS="8"
+    FreeBSD)                POS="8"
       MK="bsd"
       PKGINSTALL="doas pkg install -y" ;;
-    OpenBSD)            POS="9"
+    OpenBSD)                POS="9"
       MK="bsd"
       PKGINSTALL="doas pkg_add -i" ;;
     NixOS)  MK="nixos" ;;
@@ -264,6 +264,7 @@ ALPINE_SETUP()
 
 ARCH_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL --needed base-devel git
   git clone https://aur.archlinux.org/trizen.git
   cd trizen || exit
@@ -310,6 +311,7 @@ CENTOS_SETUP()
 
 DEBIAN_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
@@ -342,11 +344,11 @@ DEVUAN_SETUP()
 
 FEDORA_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
   deltarpm=True
   defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
 
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
   $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm
   [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel qemu-img qemu-system-x86
@@ -450,6 +452,7 @@ ROCKY_SETUP()
 
 VOID_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $SUDOAS xbps-install -Syu
   $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils opendoas
 
@@ -585,7 +588,7 @@ EOF
     $SUDOAS rm -R ueberzug
   fi
 
-  if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
+  if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix || $RELEASE = FreeBSD || $RELEASE = OpenBSD ]]; then
     [[ $RELEASE != Devuan ]] && $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
 [Unit]
 Description=Lock X session using i3lock for user %i
@@ -608,8 +611,9 @@ ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I \$TERM
 EOF
   [[ $RELEASE != Devuan ]] && $SUDOAS systemctl enable suspend@$USER.service
+  fi
 
-    $SUDOAS touch /etc/sudoers.d/$USER
+  if ! [[ $RELEASE = Alpine || $RELEASE = Artix || $RELEASE = FreeBSD || $RELEASE = OpenBSD ]]; then
     echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
   fi
 }

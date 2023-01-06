@@ -109,7 +109,7 @@ CONFIGURE_PACKAGES()
       PKGINSTALL="sudo pacman --noconfirm -S" ;;
     Void)                   POS="5"
       MK="tux"
-      PKGINSTALL="doas xbps-install -Sy" ;;
+      PKGINSTALL="sudo xbps-install -Sy" ;;
     Alpine)                 POS="6"
       MK="tux"
       PKGINSTALL="doas apk add" ;;

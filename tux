@@ -143,7 +143,7 @@ EOF
 sudo nixos-rebuild switch
   fi
 
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"

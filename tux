@@ -545,7 +545,7 @@ CONFIGURE_SYSTEM()
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-  if [ -z $($SUDOAS dmesg | grep Hypervisor) ]; then
+  if [ -z "$($SUDOAS dmesg | grep Hypervisor)" ]; then
     $SUDOAS mkdir /etc/X11/xorg.conf.d
     $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
 Section "Device"
@@ -607,7 +607,7 @@ EOF
 ExecStart=
 ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I \$TERM
 EOF
-  $SUDOAS systemctl enable suspend@$USER.service
+  [ -x "$(command -v systemctl)" ] && $SUDOAS systemctl enable suspend@$USER.service
   [ $RELEASE = Void ] && $SUDOAS xbps-remove -y sudo base-system
 }
 

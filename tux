@@ -12,7 +12,6 @@
 # TODO: Before running this script you must install:
 # FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
 # OpenBSD|Alpine -> bash
-# Devuan -> curl (delete "cdrom" line from sources.list)
 
 exec 1> >(tee "install.log") 2> >(tee "install.error")
 

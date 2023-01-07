@@ -229,7 +229,6 @@ ALPINE_SETUP()
 
   $SUDOAS rc-update add local default
   $SUDOAS rc-update del networking boot
-  $SUDOAS rc-update del wpa_supplicant boot
   $SUDOAS rc-update add iwd boot
   $SUDOAS rc-update add networkmanager boot
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf

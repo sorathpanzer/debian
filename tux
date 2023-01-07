@@ -490,7 +490,7 @@ CONFIGURE_HOME()
     pip install --user adblock
   fi
 
-  for n in dwm-6.4 dmenu-5.2 st0.9; do
+  for n in dwm-6.4 dmenu-5.2 st-0.9; do
     cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
   done
 
@@ -525,7 +525,7 @@ CONFIGURE_HOME()
 CONFIGURE_SYSTEM()
 {
   $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  $SUDOAS grub-mkconfig -o /boot/$(ls /boot | grep grub)/grub.cfg
+  $SUDOAS $(ls /usr/bin | grep mkconfig) -o /boot/$(ls /boot | grep grub)/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 

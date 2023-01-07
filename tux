@@ -3,7 +3,6 @@
 # Version= 0.4.7
 
 # TODO: Improvements in the script
-# lsblk (how to detect second drive)
 # In OpenSuse there is no android-tools lf trash-cli light by default
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
@@ -236,11 +235,9 @@ ALPINE_SETUP()
   $SUDOAS rc-update del wpa_supplicant boot
   $SUDOAS rc-update add iwd boot
   $SUDOAS rc-update add networkmanager boot
-  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
   $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
   $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
-  $SUDOAS grub-mkconfig -o /boot/grub/grub.cfg
 
   $SUDOAS rm -r /media/{cdrom,usb}
   $SUDOAS mkdir -p /media/Vault
@@ -425,8 +422,6 @@ OPENSUSE_SETUP()
   echo "/boot/ root:root 700" | $SUDOAS tee -a /etc/permissions.local
   $SUDOAS chkstat --system --set
   $SUDOAS dracut -f
-  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  $SUDOAS grub2-mkconfig -o /boot/grub2/grub.cfg
 
   $PKGINSTALL make ncurses-devel posix_cc grubby
 
@@ -542,6 +537,8 @@ CONFIGURE_SYSTEM()
     $SUDOAS adduser $USER libvirt
   fi
 
+  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
+  $SUDOAS grub-mkconfig -o /boot/$(ls /boot | grep grub)/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 

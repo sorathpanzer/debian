@@ -525,7 +525,7 @@ CONFIGURE_HOME()
 CONFIGURE_SYSTEM()
 {
   $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  $SUDOAS $(ls /usr/bin | grep mkconfig) -o /boot/$(ls /boot | grep grub)/grub.cfg
+  $SUDOAS "$(ls /usr/sbin | grep mkconfig)" -o /boot/"$(ls /boot | grep grub)"/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
@@ -555,7 +555,7 @@ EOF
 
   [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
 
-  $SUDOAS usermod -s $(which zsh) $USER
+  $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y

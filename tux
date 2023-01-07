@@ -223,8 +223,8 @@ ALPINE_SETUP()
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
     util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
 
-  for i in dbus alsa elogind; do
-    $SUDOAS rc-update add $i
+  for n in dbus alsa elogind; do
+    $SUDOAS rc-update add $n
   done
 
   $SUDOAS rc-update add local default
@@ -251,8 +251,8 @@ ALPINE_SETUP()
   [device]
   wifi.backend=iwd" | $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf
 
-  for GROUPS in plugdev qemu kvm libvirt; do
-    $SUDOAS adduser $USER $GROUPS
+  for n in plugdev qemu kvm libvirt; do
+    $SUDOAS adduser $USER $n
   done
 }
 
@@ -491,14 +491,14 @@ CONFIGURE_HOME()
     pip install --user adblock
   fi
 
-  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
-  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
-  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
+  for n in dwm-6.4 dmenu-5.2 st0.9; do
+    cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
+  done
 
   if [ $RELEASE != NixOS ]; then
-    for $SUCKLESS in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
+    for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
       [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-      make -C $HOME/.config/suckless/$SUCKLESS install clean
+      make -C $HOME/.config/suckless/$n install clean
     done
   fi
 

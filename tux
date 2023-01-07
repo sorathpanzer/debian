@@ -182,10 +182,12 @@ ALMALINUX_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $SUDOAS dnf update -y
-  $SUDOAS dnf install -y epel-release
+  $SUDOAS dnf install -y epel-release tar grubby
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
   $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm
+  $SUDOAS dnf install -y https://zfsonlinux.org/epel/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
   $SUDOAS dnf config-manager --set-enabled crb
-  $SUDOAS dnf install -y tar grubby
+  $SUDOAS dnf install -y zfs
 
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
@@ -203,17 +205,11 @@ max_parallel_downloads=10
 deltarpm=True
 defaultyes=True
 EOF
-
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
-
-  $SUDOAS dnf install -y https://zfsonlinux.org/epel/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
-  $SUDOAS dnf install -y zfs
 }
 
 ALPINE_SETUP()
 {
   echo "" | $SUDOAS tee /etc/motd
-
   $SUDOAS setup-xorg-base
 
   echo '#!/bin/sh
@@ -227,10 +223,11 @@ ALPINE_SETUP()
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
     util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
 
-  $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
-  $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
-  $SUDOAS rc-service local start; $SUDOAS rc-update add local default
-  $SUDOAS rc-service elogind start; $SUDOAS rc-update add elogind
+  for i in dbus alsa elogind; do
+    $SUDOAS rc-update add $i
+  done
+
+  $SUDOAS rc-update add local default
   $SUDOAS rc-update del networking boot
   $SUDOAS rc-update del wpa_supplicant boot
   $SUDOAS rc-update add iwd boot
@@ -249,11 +246,14 @@ ALPINE_SETUP()
   nameserver 8.8.8.8" | $SUDOAS tee /etc/resolv.conf
 
   echo "dns=none
+  echo " " | $SUDOAS tee /etc/network/interfaces
 
   [device]
   wifi.backend=iwd" | $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf
 
-  echo " " | $SUDOAS tee /etc/network/interfaces
+  for GROUPS in plugdev qemu kvm libvirt; do
+    $SUDOAS adduser $USER $GROUPS
+  done
 }
 
 ARCH_SETUP()
@@ -271,9 +271,6 @@ ARCH_SETUP()
   curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
 
   $SUDOAS tee -a /etc/pacman.conf << EOF
-
-#[archzfs-testing]
-#Include = /etc/pacman.d/mirrorlist-archzfs
 
 [archzfs]
 Include = /etc/pacman.d/mirrorlist-archzfs
@@ -499,12 +496,10 @@ CONFIGURE_HOME()
   cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
 
   if [ $RELEASE != NixOS ]; then
-    make -C $HOME/.config/suckless/dwmblocks install clean
-    make -C $HOME/.config/suckless/sxiv install clean
-    make -C $HOME/.config/suckless/dwm-6.4 install clean
-    make -C $HOME/.config/suckless/dmenu-5.2 install clean
-    [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-    make -C $HOME/.config/suckless/st-0.9 install clean
+    for $SUCKLESS in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
+      [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+      make -C $HOME/.config/suckless/$SUCKLESS install clean
+    done
   fi
 
   if [ $RELEASE != FreeBSD ]; then
@@ -530,13 +525,6 @@ CONFIGURE_HOME()
 
 CONFIGURE_SYSTEM()
 {
-  if [ $RELEASE = Alpine ]; then
-    $SUDOAS adduser $USER plugdev
-    $SUDOAS adduser $USER qemu
-    $SUDOAS adduser $USER kvm
-    $SUDOAS adduser $USER libvirt
-  fi
-
   $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
   $SUDOAS grub-mkconfig -o /boot/$(ls /boot | grep grub)/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow

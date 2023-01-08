@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.4.7
+# Version= 0.5
 
 # TODO: Improvements in the script
 # In OpenSuse there is no android-tools lf trash-cli light by default

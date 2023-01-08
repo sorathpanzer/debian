@@ -1,59 +1,58 @@
 #!/usr/bin/env bash
 
-# Version= 0.4.7
+# Version= 0.5
 
 # TODO: Improvements in the script
-# -> autologin in Devuan
-# In OpenSuse there is no android-tools lf trash-cli light by default (problema cc ST terminal)
+# In OpenSuse there is no android-tools lf trash-cli light by default
 # MicrOS: git, stow, make (useradd -m, and visudo)
 # In OpenBSD install qutebrowser separatily
-# NixOS put setleds in sudoers >> if !NixOS in suckless, and copy mk files in NIXOS_SETUP
+# NixOS put setleds in sudoers
+# Artix Linux is still with problems Grub & archzfs key
 
 # TODO: Before running this script you must install:
-# FreeBSD -> doas, curl bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
-# Void -> doas >>>>>>>> "permit $USER persist as root" to doas.conf
-# OpenBSD -> bash
-# Alpine -> bash
+# FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
+# OpenBSD|Alpine -> bash
 
-exec &> >(tee -a "install.log") 2>install.error
+exec 1> >(tee "install.log") 2> >(tee "install.error")
 
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+DOTFILES="http://192.168.1.108:3000/sorath/dotgit.git"
+#DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {
-  RELEASE=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+  RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
   UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
   NA=" "
   # DISTRO=(      Debian/Devuan             Fedora                AlmaLinux/Rocky/CentOS  Arch                Artix               Void                Alpine              OpenSuse                    FreeBSD               OpenBSD             )
-  #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
-  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         python-adblock              py39-adblock          py3-adblock         )
+  #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------)
+  ADBLOCK=(       "$NA"                     "$NA"                 "$NA"                   python-adblock      python-adblock      python3-adblock     py3-adblock         "$NA"                       py39-adblock          py3-adblock         )
   ANDROIDTOOLS=(  android-tools-adb         android-tools         "$NA"                   android-tools       "$NA"               android-tools       android-tools       "$NA"                       android-tools         "$NA"               )
   BTRFSPROGS=(    btrfs-progs               btrfs-progs           "$NA"                   btrfs-progs         btrfs-progs         btrfs-progs         btrfs-progs         btrfsprogs                  "$NA"                 "$NA"               )
   CRONTABS=(      python3-crontab           crontabs              crontabs                "$NA"               "$NA"               "$NA"               "$NA"               python3-crontab             py39-python-crontab   "$NA"               )
   DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11                dbus                dbus                dbus-x11            dbus-x11            dbus-1-x11                  dbus                  dbus                )
-  DOAS=(          "$NA"                     opendoas              "$NA"                   opendoas            opendoas            opendoas            doas                opendoas                    doas                  "$NA"               )
+  DOAS=(          "$NA"                     "$NA"                 "$NA"                   "$NA"               "$NA"               "$NA"               doas                "$NA"                       doas                  "$NA"               )
   DUNST=(         dunst                     dunst                 "$NA"                   dunst               dunst               dunst               dunst               dunst                       dunst                 dunst               )
-  EMACSNX=(	      emacs-nox		              emacs-nox		          emacs-nox		            emacs-nox	          emacs-nox	          emacs		            emacs-nox	          emacs-nox		                emacs-nox	            emacs-nosx          )
+  EMACSNX=(       emacs-nox                 emacs-nox             emacs-nox               emacs-nox           emacs-nox           emacs               emacs-nox           emacs-nox                   emacs-nox             emacs-nosx          )
   FEH=(           feh                       feh                   "$NA"                   feh                 feh                 feh                 feh                 feh                         feh                   feh                 )
   FFTHUMBNAILER=( ffmpegthumbnailer         ffmpegthumbnailer     "$NA"                   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer   ffmpegthumbnailer           ffmpegthumbnailer     ffmpegthumbnailer   )
   FIREFOX=(       firefox-esr               firefox               firefox                 firefox             firefox             firefox             firefox             MozillaFirefox              firefox-esr           firefox-esr         )
-  FLATPAK=(       flatpak                   flatpak               flatpak                 flatpak             flatpak             flatpak             flatpak             flatpak                     "$NA"                 "$NA"               )
+  FLATPAK=(       flatpak                   "$NA"                 flatpak                 flatpak             flatpak             flatpak             flatpak             flatpak                     "$NA"                 "$NA"               )
   FZF=(           fzf                       fzf                   "$NA"                   fzf                 fzf                 fzf                 fzf                 fzf                         fzf                   fzf                 )
-  GCC=(           gcc                       gcc                   gcc                     gcc                 gcc                 gcc                 gcc                 gcc                         gcc                   gcc%11              )
-  GIFLIB=(        libgif-dev                giflib-devel          giflib-devel            giflib              giflib              giflib-devel        giflib-dev          giflib-devel                giflib                giflib              )
-  GRUBBY=(        "$NA"                     grubby                grubby                  "$NA"               "$NA"               "$NA"               "$NA"               grubby                      "$NA"                 "$NA"               )
+  GCC=(           gcc                       "$NA"                 gcc                     gcc                 gcc                 "$NA"               gcc                 gcc                         gcc                   gcc%11              )
+  GIFLIB=(        libgif-dev                "$NA"                 giflib-devel            giflib              giflib              giflib-devel        giflib-dev          giflib-devel                giflib                giflib              )
+  GIT=(           git                       "$NA"                 git                     git                 git                 git                 git                 git                         git                   git                 )
   IMAGEMAGICK=(   imagemagick               ImageMagick           ImageMagick             imagemagick         imagemagick         ImageMagick         imagemagick         ImageMagick                 ImageMagick7-nox11    ImageMagick         )
-  IMLIB2=(        libimlib2-dev             imlib2-devel          imlib2-devel            imlib2              imlib2              imlib2-devel        imlib2-dev          imlib2-devel                imlib2                imlib2              )
+  IMLIB2=(        libimlib2-dev             "$NA"                 imlib2-devel            imlib2              imlib2              imlib2-devel        imlib2-dev          imlib2-devel                imlib2                imlib2              )
   LF=(            "$NA"                     "$NA"                 "$NA"                   lf                  "$NA"               lf                  lf                  "$NA"                       lf                    lf                  )
-  LIBEXIF=(       libexif-dev               libexif-devel         libexif-devel           libexif             libexif             libexif-devel       libexif-dev         libexif-devel               libexif               libexif             )
+  LIBEXIF=(       libexif-dev               "$NA"                 libexif-devel           libexif             libexif             libexif-devel       libexif-dev         libexif-devel               libexif               libexif             )
   LIBREOFFICE=(   libreoffice-calc          libreoffice-calc      libreoffice-calc        libreoffice-still   "$NA"               libreoffice-calc    "$NA"               libreoffice-calc            libreoffice           libreoffice         )
-  LIBX11=(        libx11-dev                libX11-devel          libX11-devel            libx11              libx11              libX11-devel        libx11-dev          libX11-devel                libX11                "$NA"               )
-  LIBXFT=(        libxft-dev                libXft-devel          libXft-devel            libxft              libxft              libXft-devel        libxft-dev          libXft-devel                libXft                "$NA"               )
-  LIBXINERAMA=(   libxinerama-dev           libXinerama-devel     libXinerama-devel       libxinerama         libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel           libXinerama           "$NA"               )
+  LIBX11=(        libx11-dev                "$NA"                 libX11-devel            libx11              libx11              libX11-devel        libx11-dev          libX11-devel                libX11                "$NA"               )
+  LIBXFT=(        libxft-dev                "$NA"                 libXft-devel            libxft              libxft              libXft-devel        libxft-dev          libXft-devel                libXft                "$NA"               )
+  LIBXINERAMA=(   libxinerama-dev           "$NA"                 libXinerama-devel       libxinerama         libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel           libXinerama           "$NA"               )
   LIBXRESDEV=(    libxres-dev               libXres-devel         libXres-devel           libxres             libxres             libXres-devel       libxres-dev         libXres-devel               libXres               "$NA"               )
   LIGHT=(         light                     light                 "$NA"                   light               "$NA"               light               light               "$NA"                       "$NA"                 "$NA"               )
   LMSENSORS=(     lm-sensors                lm_sensors            lm_sensors              lm_sensors          lm_sensors          lm_sensors          lm-sensors          sensors                     "$NA"                 "$NA"               )
@@ -66,13 +65,13 @@ CONFIGURE_PACKAGES()
   POPPLERUTILS=(  poppler-utils             poppler-utils         poppler                 poppler             poppler             poppler-utils       poppler-utils       poppler-tools               poppler-utils         poppler-utils       )
   PAUTILS=(       pulseaudio-utils          pulseaudio-utils      pulseaudio-utils        "$NA"               "$NA"               pulseaudio-utils    pulseaudio-utils    pulseaudio-utils            "$NA"                 pulseaudio          )
   PYTHON=(        "$NA"                     python3-devel         python3-devel           "$NA"               "$NA"               python3-devel       python3-dev         python3-devel               python311             python3             )
-  PYTHON3PIP=(    python3-pip               python3-pip           python-pip              python-pip          python-pip          python3-pip         py3-pip             python3-pip                 py39-pip              py3-pip             )
+  PYTHON3PIP=(    python3-pip               "$NA"                 python-pip              python-pip          python-pip          python3-pip         py3-pip             python3-pip                 py39-pip              py3-pip             )
   PYTHON3SIX=(    python3-six               python3-six           python-six              python-six          python-six          python3-six         py3-six             python3-six                 py39-six              py3-six             )
-  QEMU=(          qemu                      qemu                  qemu-img                qemu-base           qemu-base           qemu                qemu-system-x86_64  qemu                        qemu                  qemu                )
+  QEMU=(          qemu                      "$NA"                  qemu-img                qemu-base           qemu-base           qemu                qemu-system-x86_64  qemu                        qemu                  qemu                )
   QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                   qutebrowser         qutebrowser         qutebrowser         qutebrowser         qutebrowser                 qutebrowser           qutebrowser         )
   SCROT=(         scrot                     scrot                 "$NA"                   scrot               scrot               scrot               scrot               scrot                       scrot                 scrot               )
   SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
-  STOW=(          stow                      stow                  stow                    stow                "$NA"               stow                stow                stow                        stow                  stow                )
+  STOW=(          stow                      "$NA"                 stow                    stow                "$NA"               stow                stow                stow                        stow                  stow                )
   TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                   telegram-desktop    "$NA"               telegram-desktop    telegram-desktop    telegram-desktop            telegram-desktop      "$NA"               )
   TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 "$NA"                       tig                   tig                 )
   TRASHCLI=(      trash-cli                 trash-cli             "$NA"                   trash-cli           "$NA"               trash-cli           trash-cli           "$NA"                       "$NA"                 "$NA"               )
@@ -93,55 +92,40 @@ CONFIGURE_PACKAGES()
 
   case "${RELEASE}" in
     "")                  echo "$RELEASE is not supported!"; exit 1 ;;
-    Debian|Devuan)	POS="0"
+    Debian|Devuan)	        POS="0"
       MK="tux"
       PKGINSTALL="sudo apt-get -y install" ;;
-    Fedora)               POS="1"
+    Fedora)                 POS="1"
       MK="tux"
       PKGINSTALL="sudo rpm-ostree install" ;;
-    AlmaLinux|Rocky|CentOS)  POS="2"
+    AlmaLinux|Rocky|CentOS) POS="2"
       MK="tux"
       PKGINSTALL="sudo dnf install -y" ;;
-    Arch)               POS="3"
+    Arch)                   POS="3"
       MK="tux"
       PKGINSTALL="sudo pacman --noconfirm -S" ;;
-    Artix)               POS="4"
+    Artix)                  POS="4"
       MK="tux"
       PKGINSTALL="sudo pacman --noconfirm -S" ;;
-    Void)               POS="5"
+    Void)                   POS="5"
       MK="tux"
-      PKGINSTALL="doas xbps-install -Sy" ;;
-    Alpine)             POS="6"
+      PKGINSTALL="sudo xbps-install -Sy" ;;
+    Alpine)                 POS="6"
       MK="tux"
       PKGINSTALL="doas apk add" ;;
-    openSUSE)           POS="7"
+    openSUSE)               POS="7"
       MK="tux"
       PKGINSTALL="sudo zypper install -y" ;;
-    FreeBSD)            POS="8"
+    FreeBSD)                POS="8"
       MK="bsd"
       PKGINSTALL="doas pkg install -y" ;;
-    OpenBSD)            POS="9"
+    OpenBSD)                POS="9"
       MK="bsd"
       PKGINSTALL="doas pkg_add -i" ;;
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = NixOS ]; then
-    sudo sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
-    sudo sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
-
-    sudo sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' /etc/nixos/configuration.nix
-    sudo tee -a /etc/nixos/configuration.nix << EOF
-security.sudo.configFile = ''
-  Defaults:$USER timestamp_timeout=60
-'';
-}
-EOF
-
-sudo nixos-rebuild switch
-  fi
-
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
     SUDOAS="sudo"
@@ -157,16 +141,26 @@ sudo nixos-rebuild switch
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     $SUDOAS tee $DOASCONF << EOF
 permit persist $USER as root
-permit nopass $USER as root cmd wg-quick
-permit nopass $USER cmd wg
 permit nopass $USER cmd reboot
 permit nopass $USER cmd poweroff
 permit nopass $USER cmd mount
 permit nopass $USER cmd setleds
-permit nopass $USER cmd rc-service
-permit nopass $USER cmd pacman
-permit nopass $USER cmd apk
 EOF
+  fi
+
+  if [ $RELEASE = NixOS ]; then
+    $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
+    $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+
+    $SUDOAS sed -i '$d' /etc/nixos/configuration.nix
+    $SUDOAS tee -a /etc/nixos/configuration.nix << EOF
+security.sudo.configFile = ''
+  Defaults:$USER timestamp_timeout=60
+'';
+}
+EOF
+
+    $SUDOAS nixos-rebuild switch
   fi
 }
 
@@ -174,10 +168,12 @@ ALMALINUX_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $SUDOAS dnf update -y
-  $SUDOAS dnf install -y epel-release
-  $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+  $SUDOAS dnf install -y epel-release tar grubby
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
+  $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm
+  $SUDOAS dnf install -y https://zfsonlinux.org/epel/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
   $SUDOAS dnf config-manager --set-enabled crb
-  $SUDOAS dnf install -y tar
+  $SUDOAS dnf install -y zfs
 
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
@@ -195,19 +191,12 @@ max_parallel_downloads=10
 deltarpm=True
 defaultyes=True
 EOF
-
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
-
-  $SUDOAS dnf install https://zfsonlinux.org/epel/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
-  $SUDOAS dnf install -y zfs
 }
 
 ALPINE_SETUP()
 {
   echo "" | $SUDOAS tee /etc/motd
-
-  echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-  http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" | $SUDOAS tee /etc/apk/repositories
+  $SUDOAS setup-xorg-base
 
   echo '#!/bin/sh
 
@@ -220,62 +209,62 @@ ALPINE_SETUP()
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
     util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
 
-  $SUDOAS rc-service dbus start; $SUDOAS rc-update add dbus
-  $SUDOAS rc-service alsa start; $SUDOAS rc-update add alsa
-  $SUDOAS rc-service local start; $SUDOAS rc-update add local default
-  $SUDOAS rc-service elogind start; $SUDOAS rc-update add elogind
+  for n in dbus alsa elogind; do
+    $SUDOAS rc-update add $n
+  done
+
+  $SUDOAS rc-update add local default
   $SUDOAS rc-update del networking boot
-  $SUDOAS rc-update del wpa_supplicant boot
   $SUDOAS rc-update add iwd boot
   $SUDOAS rc-update add networkmanager boot
-  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
   $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
   $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
-  $SUDOAS grub-mkconfig -o /boot/grub/grub.cfg
 
-  $SUDOAS setup-xorg-base
-  $SUDOAS rm -r /media/${cdrom,usb}
+  $SUDOAS rm -r /media/{cdrom,usb}
   $SUDOAS mkdir -p /media/Vault
 
   $SUDOAS mkdir /etc/udhcpc
   echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
 
-  echo "nameserver 84.200.69.80
-  nameserver 84.200.70.40" | $SUDOAS tee /etc/resolv.conf
+  echo "nameserver 1.1.1.1
+  nameserver 8.8.8.8" | $SUDOAS tee /etc/resolv.conf
 
   echo "dns=none
+  echo " " | $SUDOAS tee /etc/network/interfaces
 
   [device]
   wifi.backend=iwd" | $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf
 
-  echo " " | $SUDOAS tee /etc/network/interfaces
+  for n in plugdev qemu kvm libvirt; do
+    $SUDOAS adduser $USER $n
+  done
 }
 
 ARCH_SETUP()
 {
-  $SUDOAS $PKGINSTALL --needed base-devel git
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  $PKGINSTALL --needed base-devel git
   git clone https://aur.archlinux.org/trizen.git
-  cd trizen
-  makepkg -si
-  cd ..
-  rm -R trizen
+  cd trizen || exit
+  makepkg -si --noconfirm
+  cd || exit
+  $SUDOAS rm -R trizen
 
   curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
-  $SUDOAS pacman-key --lsign-key $(curl -L https://git.io/JsfVS)
+  $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
   curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
+  $SUDOAS pacman-key -r DDF7DB817396A49B2A2723F7403BD972F75D9D76
+  $SUDOAS pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
 
   $SUDOAS tee -a /etc/pacman.conf << EOF
-
-#[archzfs-testing]
-#Include = /etc/pacman.d/mirrorlist-archzfs
 
 [archzfs]
 Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
 
   $SUDOAS pacman --noconfirm -Syu
-  $SUDOAS $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
+  $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
 }
 
 ARTIX_SETUP()
@@ -290,7 +279,7 @@ ARTIX_SETUP()
   nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
   . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  $SUDOAS sed -i 's/agetty.*/agetty --autologin $USER --noclear tty1 38400 linux' /etc/dinit.d/getty.d/tty1
+  $SUDOAS sed -i "s/agetty.*/agetty --autologin \$USER --noclear tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
 }
 
 CENTOS_SETUP()
@@ -300,39 +289,49 @@ CENTOS_SETUP()
 
 DEBIAN_SETUP()
 {
-  $SUDOAS apt update; $SUDOAS apt upgrade -y
-  $SUDOAS apt install -y pulseaudio pulsemixer man2html
-  systemctl --user --now enable pulseaudio
-  systemctl --user --now enable pipewire.service pipewire-pulse
-  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS /etc/apt/sources.list.d/bullseye-backports.list
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  $PKGINSTALL pulseaudio pulsemixer man2html
+  [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
+  [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
+  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
   $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
 Package: src:zfs-linux
 Pin: release n=bullseye-backports
 Pin-Priority: 990
 EOF
 
-$SUDOAS apt update
-$SUDOAS apt install dpkg-dev linux-headers-generic linux-image-generic
-$SUDOAS DEBIAN_FRONTEND=noninteractive apt install zfs-dkms zfsutils-linux
+  $SUDOAS apt-get update; $SUDOAS apt upgrade -y
+  $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
 }
 
 DEVUAN_SETUP()
 {
+  INIT="$(which rc-status | which sv)"
+  if [ "$INIT" = "/usr/bin/sv" ]; then
+    $SUDOAS sed -i '$d' /etc/service/getty-tty1/run
+    echo "exec chpst -P getty --autologin $USER 38400 tty1 linux" | $SUDOAS tee -a /etc/service/getty-tty1/run
+  fi
+
+  if [ "$INIT" = "/bin/rc-status" ] || [ -z "$INIT" ]; then
+    $SUDOAS sed -i "s/noclear/autologin $USER/g" /etc/inittab
+  fi
+
   DEBIAN_SETUP
 }
 
 FEDORA_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
   deltarpm=True
   defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
 
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
-  $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+  $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm
+  [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel qemu-img qemu-system-x86
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-  $SUDOAS sed -i '2s/\/bin\/bash/\/usr\/bin\/zsh/g' /etc/passwd
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
 
   $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
@@ -352,9 +351,10 @@ EOF
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 
-  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2$(rpm --eval "%{dist}").noarch.rpm
-  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y kernel-devel
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install kernel-devel git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel
   [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y zfs
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 FREEBSD_SETUP()
@@ -372,10 +372,10 @@ linux_enable=YES
 #rpc_statd_enable="YES""
 EOF
 
+  DWMBLOCKS="$HOME/.config/suckless/dwmblocks"
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
-  cd $HOME/.config/suckless/dwmblocks; cp Makefile.bsd Makefile; $SUDOAS make install clean
-  #cd $HOME/.config/suckless/sxiv; $SUDOAS make install clean
-  cd $HOME
+  cp $DWMBLOCKS/Makefile.bsd $DWMBLOCKS/Makefile; $SUDOAS make $DWMBLOCKS install clean
+  #$SUDOAS make -C $HOME/.config/suckless/sxiv install clean
 }
 
 NIXOS_SETUP()
@@ -383,7 +383,12 @@ NIXOS_SETUP()
   mkdir .config
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
   #sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-  sed -i s/HOSTID/$(head -c 8 /etc/machine-id)/g configuration.nix
+  sed -i s/HOSTID/"$(head -c 8 /etc/machine-id)"/g configuration.nix
+
+  if [ ! -f "/crypto_keyfile.bin" ]; then
+    sed -i '/initrd.secrets /s//#initrd.secrets/' configuration.nix
+  fi
+
   $SUDOAS cp configuration.nix /etc/nixos/configuration.nix
   $SUDOAS nixos-rebuild boot
 }
@@ -396,30 +401,20 @@ OPENBSD_SETUP()
 OPENSUSE_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
-  $SUDOAS touch /.root.key
-  $SUDOAS chmod 600 /.root.key
-  $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
-  echo "ENTER THE PASSPHRASE OF THE DEVICE"
-  $SUDOAS cryptsetup luksAddKey /dev/nvme0n1p2 /.root.key
-  $SUDOAS sed -i 's/none/\/.root.key/g' /etc/crypttab
-  echo -e 'install_items+=" /.root.key "' | $SUDOAS tee --append /etc/dracut.conf.d/99-root-key.conf > /dev/null
-  echo "/boot/ root:root 700" | $SUDOAS tee -a /etc/permissions.local
-  $SUDOAS chkstat --system --set
-  $SUDOAS dracut -f
-  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  $SUDOAS grub2-mkconfig -o /boot/grub2/grub.cfg
 
-  $PKGINSTALL make ncurses-devel posix_cc
+  [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDOAS rm /etc/zypp/repos.d/openSUSE*
+  $PKGINSTALL make ncurses-devel posix_cc grubby
 
-  TUMBLEWEED=$(cat /etc/os-release | grep ^NAME= | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
+  TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
-    $SUDOAS zypper install -y android-tools
+    $PKGINSTALL android-tools python310-adblock
     $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
   else
-    zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
+    $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
   $SUDOAS zypper refresh
-  $SUDOAS zypper install zfs
+  $PKGINSTALL zfs
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 
 ROCKY_SETUP()
@@ -429,8 +424,9 @@ ROCKY_SETUP()
 
 VOID_SETUP()
 {
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $SUDOAS xbps-install -Syu
-  $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils
+  $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils opendoas
 
   $SUDOAS snapper -c root create-config /
   $SUDOAS btrfs subvolume delete /.snapshots
@@ -443,31 +439,19 @@ VOID_SETUP()
 
   $SUDOAS ln -s /etc/sv/pipewire /var/service
   $SUDOAS ln -s /etc/sv/acpid /var/service
-  $SUDOAS xbps-remove -y sudo base-system
 }
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg gcc git groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
+  $PKGINSTALL ffmpeg groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
-    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${GRUBBY[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
-    ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} \
-    ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} \
+    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
+    ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} ${GIT[$POS]} \
+    ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} ${GCC[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} \
-    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]}
+    ${XRDB[$POS]} ${XSET[$POS]} ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]} ${EMACSNX[$POS]} ${ZFS[$POS]} ${DOAS[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-
-  if [ $RELEASE = Fedora ] || [ $RELEASE = openSUSE ]; then
-    $SUDOAS grubby --update-kernel=ALL --args=quiet
-  fi
-
-  if [ $RELEASE = Alpine ]; then
-    $SUDOAS adduser $USER plugdev
-    $SUDOAS adduser $USER qemu
-    $SUDOAS adduser $USER kvm
-    $SUDOAS adduser $USER libvirt
-  fi
 }
 
 CONFIGURE_HOME()
@@ -480,7 +464,7 @@ CONFIGURE_HOME()
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
   echo "Cloning my dotfiles..."
-  git clone $DOTFILES /home/$USER/.config/dotgit
+  git clone --progress $DOTFILES /home/$USER/.config/dotgit
   git config --global credential.helper store
   mkdir -p /home/$USER/.cache/zsh
   touch /home/$USER/.cache/zsh/history
@@ -490,30 +474,26 @@ CONFIGURE_HOME()
     pip install --user adblock
   fi
 
-  cp $HOME/.config/suckless/dwm-6.4/config.$MK $HOME/.config/suckless/dwm-6.4/config.mk
-  cp $HOME/.config/suckless/dmenu-5.2/config.$MK $HOME/.config/suckless/dmenu-5.2/config.mk
-  cp $HOME/.config/suckless/st-0.9/config.$MK $HOME/.config/suckless/st-0.9/config.mk
+  for n in dwm-6.4 dmenu-5.2 st-0.9; do
+    cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
+  done
 
   if [ $RELEASE != NixOS ]; then
-    cd $HOME/.config/suckless/dwmblocks; make install clean
-    cd $HOME/.config/suckless/sxiv; make install clean
-    cd $HOME/.config/suckless/dwm-6.4; make install clean
-    cd $HOME/.config/suckless/dmenu-5.2; make install clean
-    [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-    cd $HOME/.config/suckless/st-0.9; make install clean
-    cd
+    for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
+      [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+      make -C $HOME/.config/suckless/$n install clean
+    done
   fi
 
   if [ $RELEASE != FreeBSD ]; then
-    NVME=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
-    SDA=$(lsblk -l | grep sda | head -n 1 | awk '{print $1}')
 
-    if [ ! -z $LVM_PASSWORD ]; then
+    if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
-      mkdir Vault
-      echo -n "$LVM_PASSWORD" | $SUDOAS cryptsetup open --type luks /dev/sda1 Vault
-      $SUDOAS mount /dev/mapper/Vault Vault
-      rsync -avrop Vault/Documentos/BackHome/ /home/$USER
+      mkdir /media/Vault
+      $SUDOAS modprobe zfs
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media/Vault Legion
+      $SUDOAS zfs mount Legion/Vault
+      rsync -avrop /media/Vault/BackHome/ /home/$USER
     fi
   fi
 
@@ -528,11 +508,14 @@ CONFIGURE_HOME()
 
 CONFIGURE_SYSTEM()
 {
+  $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
+  [ -d /boot/grub* ] && $SUDOAS "$(ls /usr/sbin | grep mkconfig)" -o /boot/"$(ls /boot | grep grub)"/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 
-  $SUDOAS mkdir /etc/X11/xorg.conf.d
-  $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
+  if [ -z "$($SUDOAS dmesg | grep Hypervisor)" ]; then
+    $SUDOAS mkdir /etc/X11/xorg.conf.d
+    $SUDOAS tee /etc/X11/xorg.conf.d/20-intel.conf << EOF
 Section "Device"
 Identifier "Intel Graphics"
 Driver "intel"
@@ -540,6 +523,7 @@ Option "TearFree" "true"
 Option "DRI" "False"
 EndSection
 EOF
+  fi
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
   $SUDOAS tee /etc/polkit-1/rules.d/49-nopasswd_global.rules << EOF
@@ -553,26 +537,22 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-  if [ $RELEASE != NixOS ]; then
-    echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
-  fi
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
 
-  $SUDOAS usermod -s /bin/zsh $USER
+  $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
   [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 
-  if ! [[ $RELEASE = Arch || $RELEASE = Void || $RELEASE = AlmaLinux ]]; then
-    git clone https://github.com/sorathpanzer/ueberzug.git && cd ueberzug
-    pip install --user -e .
-    cd
-    $SUDOAS rm -R ueberzug
-  fi
+  [ ! -x "$(command -v ueberzug)" ] && git clone https://github.com/sorathpanzer/ueberzug.git
+  [ ! -x "$(command -v ueberzug)" ] && pip install --user ./ueberzug
+  [ -d ./ueberzug ] && $SUDOAS rm -R ueberzug
 
-  if ! [[ $RELEASE = Void || $RELEASE = Alpine || $RELEASE = Artix ]]; then
-    $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
+  [ -x "$(command -v sudo)" ] &&  echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
+
+  [ -x "$(command -v systemctl)" ] && $SUDOAS tee /etc/systemd/system/suspend@.service << EOF
 [Unit]
 Description=Lock X session using i3lock for user %i
 Before=sleep.target
@@ -586,16 +566,15 @@ ExecStartPre=/usr/bin/i3lock -c 000000
 WantedBy=sleep.target"
 EOF
 
-    $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
-    $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
-    echo '[Service]
-    ExecStart=
-    ExecStart=-/usr/sbin/agetty --autologin sorath --noclear %I $TERM' | $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf ### Change username
-
-    $SUDOAS systemctl enable suspend@$USER.service
-    $SUDOAS touch /etc/sudoers.d/$USER
-    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/wg-quick,/usr/bin/wg,/usr/sbin/reboot,/usr/sbin/poweroff,/usr/bin/setleds" | $SUDOAS tee /etc/sudoers.d/$USER
-  fi
+  [ -x "$(command -v systemctl)" ] && $SUDOAS mkdir -p /etc/systemd/system/getty@tty1.service.d/
+  [ -x "$(command -v systemctl)" ] && $SUDOAS touch /etc/systemd/system/getty@tty1.service.d/override.conf
+  [ -x "$(command -v systemctl)" ] && $SUDOAS tee /etc/systemd/system/getty@tty1.service.d/override.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/usr/sbin/agetty --autologin $USER --noclear %I \$TERM
+EOF
+  [ -x "$(command -v systemctl)" ] && $SUDOAS systemctl enable suspend@$USER.service
+  [ $RELEASE = Void ] && $SUDOAS xbps-remove -y sudo base-system
 }
 
 CONFIGURE_PACKAGES
@@ -615,4 +594,4 @@ case "${RELEASE}" in
     NIXOS_SETUP ;;
 esac
 
-cat install.error | grep error
+grep error install.error

@@ -246,9 +246,9 @@ ARCH_SETUP()
   $PKGINSTALL --needed base-devel git
   git clone https://aur.archlinux.org/trizen.git
   cd trizen || exit
-  makepkg -si
+  makepkg -si --noconfirm
   cd || exit
-  rm -R trizen
+  $SUDOAS rm -R trizen
 
   curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
   $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"

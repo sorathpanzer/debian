@@ -124,21 +124,6 @@ CONFIGURE_PACKAGES()
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = NixOS ]; then
-    sudo sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
-    sudo sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
-
-    sudo sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' /etc/nixos/configuration.nix
-    sudo tee -a /etc/nixos/configuration.nix << EOF
-security.sudo.configFile = ''
-  Defaults:$USER timestamp_timeout=60
-'';
-}
-EOF
-
-sudo nixos-rebuild switch
-  fi
-
   if [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
     SUDOAS="doas"
   else
@@ -166,7 +151,7 @@ EOF
     $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
     $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
 
-    $SUDOAS sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' /etc/nixos/configuration.nix
+    $SUDOAS sed -i '$d' /etc/nixos/configuration.nix
     $SUDOAS tee -a /etc/nixos/configuration.nix << EOF
 security.sudo.configFile = ''
   Defaults:$USER timestamp_timeout=60
@@ -174,7 +159,7 @@ security.sudo.configFile = ''
 }
 EOF
 
-sudo nixos-rebuild switch
+    $SUDOAS nixos-rebuild switch
   fi
 }
 

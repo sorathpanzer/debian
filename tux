@@ -515,7 +515,7 @@ CONFIGURE_HOME()
 CONFIGURE_SYSTEM()
 {
   $SUDOAS sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' /etc/default/grub
-  $SUDOAS "$(ls /usr/sbin | grep mkconfig)" -o /boot/"$(ls /boot | grep grub)"/grub.cfg
+  [ -d /boot/grub* ] && $SUDOAS "$(ls /usr/sbin | grep mkconfig)" -o /boot/"$(ls /boot | grep grub)"/grub.cfg
   echo "$USER" | $SUDOAS tee -a /etc/shutdown.allow
   echo "blacklist ideapad_laptop" | $SUDOAS tee /etc/modprobe.d/blacklist.conf
 

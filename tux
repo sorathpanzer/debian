@@ -400,6 +400,7 @@ OPENBSD_SETUP()
 OPENSUSE_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+
   $SUDOAS touch /.root.key
   $SUDOAS chmod 600 /.root.key
   $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
@@ -411,6 +412,7 @@ OPENSUSE_SETUP()
   $SUDOAS chkstat --system --set
   $SUDOAS dracut -f
 
+  [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDOAS rm /etc/zypp/repos.d/openSUSE*
   $PKGINSTALL make ncurses-devel posix_cc grubby
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')

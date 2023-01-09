@@ -245,11 +245,14 @@ ARCH_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL --needed base-devel git
-  git clone https://aur.archlinux.org/trizen.git
-  cd trizen || exit
-  makepkg -si --noconfirm
-  cd || exit
-  $SUDOAS rm -R trizen
+
+  if [ $RELEASE = Arch ]; then
+    git clone https://aur.archlinux.org/trizen.git
+    cd trizen || exit
+    makepkg -si --noconfirm
+    cd || exit
+    $SUDOAS rm -R trizen
+  fi
 
   $SUDOAS tee -a /etc/pacman.conf << EOF
 
@@ -268,6 +271,8 @@ EOF
 ARTIX_SETUP()
 {
   ARCH_SETUP
+
+  $PKGINSTALL trizen
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
   . $HOME/.nix-profile/etc/profile.d/nix.sh

@@ -259,7 +259,7 @@ EOF
 
   curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
   #$SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
-  #curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
+  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
   #$SUDOAS pacman-key -r DDF7DB817396A49B2A2723F7403BD972F75D9D76
   #$SUDOAS pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
 

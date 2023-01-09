@@ -254,15 +254,27 @@ ARCH_SETUP()
     $SUDOAS rm -R trizen
   fi
 
-  $SUDOAS tee -a /etc/pacman.conf << EOF
+  #$SUDOAS tee -a /etc/pacman.conf << EOF
+
+#[archzfs]
+#Include = /etc/pacman.d/mirrorlist-archzfs
+#EOF
+
+  #curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
+  #curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
+  #$SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
+  $SUDOAS tee -a /etc/pacman.conf <<-'EOF'
 
 [archzfs]
-Include = /etc/pacman.d/mirrorlist-archzfs
+Server = https://archzfs.com/$repo/$arch
+Server = https://mirror.sum7.eu/archlinux/archzfs/$repo/$arch
+Server = https://mirror.biocrafting.net/archlinux/archzfs/$repo/$arch
+Server = https://mirror.in.themindsmaze.com/archzfs/$repo/$arch
 EOF
 
-  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
-  curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
-  $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
+  curl -O https://archzfs.com/archzfs.gpg
+  $SUDOAS pacman-key -a archzfs.gpg
+  $SUDOAS pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
 
   $SUDOAS pacman --noconfirm -Syu
   $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils

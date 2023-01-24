@@ -18,8 +18,8 @@ exec 1> >(tee "install.log") 2> >(tee "install.error")
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-#DOTFILES="http://192.168.1.103:3000/sorath/dotgit.git"
-DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
+#DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {
@@ -462,7 +462,6 @@ CONFIGURE_HOME()
   [ -e .profile ] && rm .profile
   mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
   mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-  $SUDOAS mkdir -p /media/Bunker
   touch /home/$USER/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
@@ -540,7 +539,9 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+  [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Xfiles}
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Xfiles	/media/Bunker/Xfiles	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
 
   $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

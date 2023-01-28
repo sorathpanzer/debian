@@ -497,11 +497,12 @@ CONFIGURE_HOME()
       $SUDOAS zfs mount Legion/Vault
       rsync -avrop /media/Vault/BackHome/ /home/$USER
     else
-      [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
-      [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-      [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-      $SUDOAS mount /media/Bunker/Vault/
-      rsync -avrop /media/Bunker/Vault/BackHome/ /home/$USER
+      #[ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
+      #[ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
+      #[ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
+      #$SUDOAS mount /media/Bunker/Vault/
+      #rsync -avrop /media/Bunker/Vault/BackHome/ /home/$USER
+      rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome /home/$USER
     fi
   fi
 

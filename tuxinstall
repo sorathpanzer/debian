@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.5
+# Version= 0.5.5
 
 # TODO: Improvements in the script
 # In OpenSuse there is no android-tools lf trash-cli light by default
@@ -18,7 +18,7 @@ exec 1> >(tee "install.log") 2> >(tee "install.error")
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-DOTFILES="http://192.168.1.108:3000/sorath/dotgit.git"
+DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
 #DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
@@ -245,23 +245,24 @@ ARCH_SETUP()
 {
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL --needed base-devel git
-  git clone https://aur.archlinux.org/trizen.git
-  cd trizen || exit
-  makepkg -si --noconfirm
-  cd || exit
-  $SUDOAS rm -R trizen
 
-  curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
-  $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
-  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
-  $SUDOAS pacman-key -r DDF7DB817396A49B2A2723F7403BD972F75D9D76
-  $SUDOAS pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
+  if [ $RELEASE = Arch ]; then
+    git clone https://aur.archlinux.org/trizen.git
+    cd trizen || exit
+    makepkg -si --noconfirm
+    cd || exit
+    $SUDOAS rm -R trizen
+  fi
 
   $SUDOAS tee -a /etc/pacman.conf << EOF
 
 [archzfs]
 Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
+
+  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
+  curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
+  $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
 
   $SUDOAS pacman --noconfirm -Syu
   $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
@@ -270,6 +271,8 @@ EOF
 ARTIX_SETUP()
 {
   ARCH_SETUP
+
+  $PKGINSTALL trizen
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
   sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
   . $HOME/.nix-profile/etc/profile.d/nix.sh
@@ -279,7 +282,7 @@ ARTIX_SETUP()
   nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
   . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  $SUDOAS sed -i "s/agetty.*/agetty --autologin \$USER --noclear tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
+  $SUDOAS sed -i "s/agetty.*/agetty --autologin $USER tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
 }
 
 CENTOS_SETUP()
@@ -459,7 +462,6 @@ CONFIGURE_HOME()
   [ -e .profile ] && rm .profile
   mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
   mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-  $SUDOAS mkdir -p /media/Bunker
   touch /home/$USER/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
@@ -537,7 +539,9 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker	nfs	defaults,user,exec,noauto,vers=4	0 0" | $SUDOAS tee -a /etc/fstab
+  [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
 
   $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

@@ -497,7 +497,7 @@ CONFIGURE_HOME()
       $SUDOAS zfs mount Legion/Vault
       rsync -avrop /media/Vault/BackHome/ /home/$USER
     else
-      rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome /home/$USER
+      rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
     fi
   fi
 

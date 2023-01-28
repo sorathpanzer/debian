@@ -162,12 +162,6 @@ EOF
 
     $SUDOAS nixos-rebuild switch
   fi
-
-  $PKGINSTALL ${NFSUTILS[$POS]}
-  [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-  $SUDOAS mount /media/Bunker/Vault/
 }
 
 ALMALINUX_SETUP()
@@ -505,6 +499,11 @@ CONFIGURE_HOME()
     #fi
   #fi
 
+  $PKGINSTALL ${NFSUTILS[$POS]}
+  [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
+  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
+  $SUDOAS mount /media/Bunker/Vault/
   rsync -avrop /media/Bunker/Vault/ /home/$USER
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
@@ -547,10 +546,6 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-  #[ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
-  #[ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-  #[ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576,noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-
   $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
@@ -591,19 +586,19 @@ EOF
 
 CONFIGURE_PACKAGES
 
-#case "${RELEASE}" in
-#  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Artix|Void|Alpine|openSUSE)
-#    ${UPPERCASE}_SETUP
-#    INSTALL_PACKAGES
-#    CONFIGURE_HOME
-#    CONFIGURE_SYSTEM ;;
-#  FreeBSD|OpenBSD)
-#    INSTALL_PACKAGES
-#    CONFIGURE_HOME
-#    ${UPPERCASE}_SETUP ;;
-#  NixOS)
-#    CONFIGURE_HOME
-#    NIXOS_SETUP ;;
-#esac
+case "${RELEASE}" in
+  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Artix|Void|Alpine|openSUSE)
+    ${UPPERCASE}_SETUP
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    CONFIGURE_SYSTEM ;;
+  FreeBSD|OpenBSD)
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    ${UPPERCASE}_SETUP ;;
+  NixOS)
+    CONFIGURE_HOME
+    NIXOS_SETUP ;;
+esac
 
 grep error install.error

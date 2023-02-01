@@ -217,13 +217,13 @@ ALPINE_SETUP()
   $SUDOAS rc-update add local default
   $SUDOAS rc-update del networking boot
   $SUDOAS rc-update add iwd boot
+  $SUDOAS rc-update add sshd
   $SUDOAS rc-update add networkmanager boot
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
   $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
   $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
 
   $SUDOAS rm -r /media/{cdrom,usb}
-  $SUDOAS mkdir -p /media/Vault
 
   $SUDOAS mkdir /etc/udhcpc
   echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
@@ -496,10 +496,8 @@ CONFIGURE_HOME()
 
     if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
-      mkdir /media/Vault
       $SUDOAS modprobe zfs
-      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media/Vault Legion
-      $SUDOAS zfs mount Legion/Vault
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media Legion
       rsync -avrop /media/Vault/BackHome/ /home/$USER
     else
       rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER

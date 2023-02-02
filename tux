@@ -146,6 +146,8 @@ permit nopass $USER cmd reboot
 permit nopass $USER cmd poweroff
 permit nopass $USER cmd mount
 permit nopass $USER cmd setleds
+permit nopass $USER cmd zfs
+permit nopass $USER cmd zpool
 EOF
   fi
 

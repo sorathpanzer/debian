@@ -74,7 +74,7 @@ CONFIGURE_PACKAGES()
   SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
   STOW=(          stow                      "$NA"                 stow                    stow                "$NA"               stow                stow                stow                        stow                  stow                )
   TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                   telegram-desktop    "$NA"               telegram-desktop    telegram-desktop    telegram-desktop            telegram-desktop      "$NA"               )
-  TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 "$NA"                       tig                   tig                 )
+  TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 tig                         tig                   tig                 )
   TRASHCLI=(      trash-cli                 trash-cli             "$NA"                   trash-cli           "$NA"               trash-cli           trash-cli           "$NA"                       "$NA"                 "$NA"               )
   UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                   ueberzug            "$NA"               ueberzug            "$NA"               "$NA"                       py39-ueberzug         "$NA"               )
   UDISKIE=(       udiskie                   udiskie               "$NA"                   udiskie             udiskie             udiskie             udiskie             udiskie                     "$NA"                 "$NA"               )
@@ -422,6 +422,7 @@ OPENSUSE_SETUP()
   fi
   $SUDOAS zypper refresh
   $PKGINSTALL zfs
+  $SUDOAS pip install trash-cli
   $SUDOAS grubby --update-kernel=ALL --args=quiet
 }
 

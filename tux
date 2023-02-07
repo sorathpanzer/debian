@@ -411,7 +411,7 @@ OPENSUSE_SETUP()
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
 
   [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDOAS rm /etc/zypp/repos.d/openSUSE*
-  $PKGINSTALL make ncurses-devel posix_cc grubby
+  $PKGINSTALL make ncurses-devel posix_cc grubby opi
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
@@ -435,6 +435,8 @@ OPENSUSE_SETUP()
     $SUDOAS chkstat --system --set
     $SUDOAS dracut -f
   fi
+
+  opi codecs
 }
 
 ROCKY_SETUP()

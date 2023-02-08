@@ -500,8 +500,8 @@ CONFIGURE_HOME()
     if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
       $SUDOAS modprobe zfs
-      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media Legion
-      rsync -avrop /media/Vault/BackHome/ /home/$USER
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -lf -R /media Legion
+      rsync -avrop /media/Legion/Crypta/BackHome/ /home/$USER
     else
       rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
     fi

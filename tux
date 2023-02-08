@@ -18,8 +18,8 @@ exec 1> >(tee "install.log") 2> >(tee "install.error")
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-#DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
-DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
+#DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {
@@ -74,7 +74,7 @@ CONFIGURE_PACKAGES()
   SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
   STOW=(          stow                      "$NA"                 stow                    stow                "$NA"               stow                stow                stow                        stow                  stow                )
   TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                   telegram-desktop    "$NA"               telegram-desktop    telegram-desktop    telegram-desktop            telegram-desktop      "$NA"               )
-  TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 tig                         tig                   tig                 )
+  TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 "$NA"                       tig                   tig                 )
   TRASHCLI=(      trash-cli                 trash-cli             "$NA"                   trash-cli           "$NA"               trash-cli           trash-cli           "$NA"                       "$NA"                 "$NA"               )
   UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                   ueberzug            "$NA"               ueberzug            "$NA"               "$NA"                       py39-ueberzug         "$NA"               )
   UDISKIE=(       udiskie                   udiskie               "$NA"                   udiskie             udiskie             udiskie             udiskie             udiskie                     "$NA"                 "$NA"               )
@@ -299,7 +299,7 @@ DEBIAN_SETUP()
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
-  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
+  echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-free" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
   $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
 Package: src:zfs-linux
 Pin: release n=bullseye-backports
@@ -307,8 +307,9 @@ Pin-Priority: 990
 EOF
 
   $SUDOAS apt-get update; $SUDOAS apt upgrade -y
-  $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
-  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
+  #$PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
+  #$SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
+  $PKGINSTALL linux-headers-amd64;sudo apt install -t bullseye-backports zfsutils-linux
 }
 
 DEVUAN_SETUP()
@@ -411,7 +412,7 @@ OPENSUSE_SETUP()
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
 
   [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDOAS rm /etc/zypp/repos.d/openSUSE*
-  $PKGINSTALL make ncurses-devel posix_cc grubby opi
+  $PKGINSTALL make ncurses-devel posix_cc grubby
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
@@ -422,21 +423,7 @@ OPENSUSE_SETUP()
   fi
   $SUDOAS zypper refresh
   $PKGINSTALL zfs
-  $SUDOAS pip install trash-cli
   $SUDOAS grubby --update-kernel=ALL --args=quiet
-
-  if [ -e /dev/nvme0n1p3 ]; then
-    $SUDOAS touch /.root.key
-    $SUDOAS chmod 600 /.root.key
-    $SUDOAS dd if=/dev/urandom of=/.root.key bs=1024 count=1
-    $SUDOAS cryptsetup luksAddKey /dev/nvme0n1p3 /.root.key
-    $SUDOAS sed -i '/cr_swap /s/$/ \/.root.key/g' /etc/crypttab
-    echo -e 'install_items+=" /.root.key "' | sudo tee --append /etc/dracut.conf.d/99-root-key.conf > /dev/null
-    $SUDOAS chkstat --system --set
-    $SUDOAS dracut -f
-  fi
-
-  opi codecs
 }
 
 ROCKY_SETUP()
@@ -513,8 +500,8 @@ CONFIGURE_HOME()
     if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
       $SUDOAS modprobe zfs
-      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -lf -R /media Legion
-      rsync -avrop /media/Legion/Crypta/BackHome/ /home/$USER
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media Legion
+      rsync -avrop /media/Vault/BackHome/ /home/$USER
     else
       rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
     fi

@@ -366,7 +366,7 @@ EOF
 
 FREEBSD_SETUP()
 {
-  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv setxkbmap opendircolors
+  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv setxkbmap opendircolors xorg
 
   $SUDOAS tee -a /etc/rc.conf << EOF
 dbus_enable=YES

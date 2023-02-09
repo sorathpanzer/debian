@@ -18,8 +18,8 @@ exec 1> >(tee "install.log") 2> >(tee "install.error")
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
-#DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+#DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
+DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {

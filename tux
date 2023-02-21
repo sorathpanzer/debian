@@ -385,13 +385,6 @@ EOF
   #$SUDOAS make -C $HOME/.config/suckless/sxiv install clean
   chsh -s zsh
   setxkbmap pt
-
-  $SUDOAS tee -a /boot/device.hints << EOF
-hint.hdaa.1.nid20.config="as=1 seq=0"
-hint.hdaa.1.nid33.config="as=1 seq=15"
-#hint.hdaa.1.nid21.config="as=1 seq=15 device=Headphones"
-EOF
-
 }
 
 NIXOS_SETUP()
@@ -406,6 +399,8 @@ NIXOS_SETUP()
 
   $SUDOAS cp configuration.nix /etc/nixos/configuration.nix
   $SUDOAS nixos-rebuild boot
+  nmcli con mod Virus404 ipv4.dns "1.1.1.2 1.0.0.2"
+  sudo systemctl restart NetworkManager
 }
 
 OPENBSD_SETUP()

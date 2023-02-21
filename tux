@@ -233,9 +233,6 @@ ALPINE_SETUP()
   echo "nameserver 1.1.1.1
   nameserver 8.8.8.8" | $SUDOAS tee /etc/resolv.conf
 
-  #echo "dns=none"
-  #echo " " | $SUDOAS tee /etc/network/interfaces
-
   $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf << EOF
 dns=none
 

@@ -402,7 +402,7 @@ NIXOS_SETUP()
   fi
 
   $SUDOAS cp configuration.nix /etc/nixos/configuration.nix
-  $SUDOAS nixos-rebuild boot
+  $SUDOAS nixos-rebuild switch
   nmcli con mod Virus404 ipv4.dns "1.1.1.2 1.0.0.2"
   sudo systemctl restart NetworkManager
 }

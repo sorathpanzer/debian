@@ -359,6 +359,30 @@ skip_if_unavailable=True
 cost=10000 # default is 1000'
 EOF
 
+  $SUDOAS tee /usr/local/bin/copr << EOF
+#!/bin/bash
+pushd /tmp
+
+author="$(echo $2 | cut -d '/' -f1)"
+reponame="$(echo $2 | cut -d '/' -f2)"
+
+if [ ! $3 ]; then
+ releasever="$(rpm -E %fedora)"
+else
+ releasever=$3
+fi
+
+if [[ "$1" == "enable" ]]; then
+ echo "$author/$reponame -> $releasever"
+ curl -fsSL https://copr.fedorainfracloud.org/coprs/$author/$reponame/repo/fedora-$releasever/$author-$reponame-fedora-.repo | sudo tee /etc/yum.repos.d/$author-$reponame.repo
+elif [[ "$1" == "remove" ]]; then
+ sudo rm /etc/yum.repos.d/$author-$reponame.repo
+fi
+EOF
+
+  $SUDOAS chmod +x /usr/local/bin/copr
+  sudo copr enable solopasha/hyprland
+
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 

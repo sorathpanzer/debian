@@ -303,17 +303,15 @@ DEBIAN_SETUP()
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
-  echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-free" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
-  $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
-Package: src:zfs-linux
-Pin: release n=bullseye-backports
-Pin-Priority: 990
-EOF
+  #echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-free" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
+  #$SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
+#Package: src:zfs-linux
+#Pin: release n=bullseye-backports
+#Pin-Priority: 990
+#EOF
 
   $SUDOAS apt-get update; $SUDOAS apt upgrade -y
-  #$PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
-  #$SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
-  $PKGINSTALL linux-headers-amd64;sudo apt install -t bullseye-backports zfsutils-linux
+  #$PKGINSTALL linux-headers-amd64;sudo apt install -t bullseye-backports zfsutils-linux
 }
 
 DEVUAN_SETUP()

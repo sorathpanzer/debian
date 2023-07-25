@@ -306,7 +306,7 @@ DEBIAN_SETUP()
   $SUDOAS sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
 
   $SUDOAS apt-get update; $SUDOAS apt-get upgrade -y
-  $PKGINSTALL zfsutils-linux #linux-headers-amd64 zfs-zed
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt-get install -y zfsutils-linux
 }
 
 DEVUAN_SETUP()

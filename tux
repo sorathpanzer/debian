@@ -305,8 +305,8 @@ DEBIAN_SETUP()
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
   $SUDOAS sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
 
-  $SUDOAS apt-get update; $SUDOAS apt upgrade -y
-  #$PKGINSTALL linux-headers-amd64;sudo apt install -t bullseye-backports zfsutils-linux
+  $SUDOAS apt-get update; $SUDOAS apt-get upgrade -y
+  $PKGINSTALL zfsutils-linux #linux-headers-amd64 zfs-zed
 }
 
 DEVUAN_SETUP()

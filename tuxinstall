@@ -18,8 +18,8 @@ exec 1> >(tee "install.log") 2> >(tee "install.error")
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
-DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
-#DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+#DOTFILES="http://192.168.1.110:3000/sorath/dotgit.git"
+DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
 
 CONFIGURE_PACKAGES()
 {
@@ -59,6 +59,7 @@ CONFIGURE_PACKAGES()
   NFSUTILS=(      nfs-common                nfs-utils             nfs-utils               nfs-utils           nfs-utils           nfs-utils           nfs-utils           nfs-utils                   "$NA"                 "$NA"               )
   NMTUI=(         "$NA"                     NetworkManager-tui    NetworkManager-tui      "$NA"               "$NA"               "$NA"               networkmanager-tui  "$NA"                       "$NA"                 networkmanager-tui  )
   NTFS3G=(        ntfs-3g                   ntfs-3g               ntfs-3g                 ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g             ntfs-3g                     fusefs-ntfs           ntfs_3g             )
+  OPENSSH=(       openssh-client            "$NA"                 openssh                 openssh             openssh             openssh             openssh             openssh                     "$NA"                 "$NA"               )
   OVMF=(          ovmf                      edk2-ovmf             edk2-ovmf               edk2-ovmf           edk2-ovmf           "$NA"               ovmf                ovmf                        "$NA"                 "$NA"               )
   PANDOCPDF=(     pandoc                    pandoc-pdf            pandoc-pdf              pandoc              pandoc              pandoc              "$NA"               pandoc                      "$NA"                 pandoc              )
   PICOM=(         picom                     picom                 "$NA"                   picom               picom               picom               picom               picom                       picom                 picom               )
@@ -67,7 +68,7 @@ CONFIGURE_PACKAGES()
   PYTHON=(        "$NA"                     python3-devel         python3-devel           "$NA"               "$NA"               python3-devel       python3-dev         python3-devel               python311             python3             )
   PYTHON3PIP=(    python3-pip               "$NA"                 python-pip              python-pip          python-pip          python3-pip         py3-pip             python3-pip                 py39-pip              py3-pip             )
   PYTHON3SIX=(    python3-six               python3-six           python-six              python-six          python-six          python3-six         py3-six             python3-six                 py39-six              py3-six             )
-  QEMU=(          qemu                      "$NA"                  qemu-img                qemu-base           qemu-base           qemu                qemu-system-x86_64  qemu                        qemu                  qemu                )
+  QEMU=(          qemu-system               "$NA"                 qemu-img                qemu-base           qemu-base           qemu                qemu-system-x86_64  qemu                        qemu                  qemu                )
   QUTEBROWSER=(   qutebrowser               qutebrowser           "$NA"                   qutebrowser         qutebrowser         qutebrowser         qutebrowser         qutebrowser                 qutebrowser           qutebrowser         )
   SCROT=(         scrot                     scrot                 "$NA"                   scrot               scrot               scrot               scrot               scrot                       scrot                 scrot               )
   SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
@@ -145,12 +146,14 @@ permit nopass $USER cmd reboot
 permit nopass $USER cmd poweroff
 permit nopass $USER cmd mount
 permit nopass $USER cmd setleds
+permit nopass $USER cmd zfs
+permit nopass $USER cmd zpool
 EOF
   fi
 
   if [ $RELEASE = NixOS ]; then
     $SUDOAS sed -i 's/#  vim/git/' /etc/nixos/configuration.nix
-    $SUDOAS sed -i 's/#  wget/stow/' /etc/nixos/configuration.nix
+    $SUDOAS sed -i 's/#  wget/stow zfs/' /etc/nixos/configuration.nix
 
     $SUDOAS sed -i '$d' /etc/nixos/configuration.nix
     $SUDOAS tee -a /etc/nixos/configuration.nix << EOF
@@ -214,15 +217,15 @@ ALPINE_SETUP()
   done
 
   $SUDOAS rc-update add local default
-  $SUDOAS rc-update del networking boot
+  $SUDOAS rc-update del wpa_supplicant boot
   $SUDOAS rc-update add iwd boot
+  $SUDOAS rc-update add sshd
   $SUDOAS rc-update add networkmanager boot
   $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
   $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
   $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
 
   $SUDOAS rm -r /media/{cdrom,usb}
-  $SUDOAS mkdir -p /media/Vault
 
   $SUDOAS mkdir /etc/udhcpc
   echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
@@ -230,11 +233,15 @@ ALPINE_SETUP()
   echo "nameserver 1.1.1.1
   nameserver 8.8.8.8" | $SUDOAS tee /etc/resolv.conf
 
-  echo "dns=none
-  echo " " | $SUDOAS tee /etc/network/interfaces
+  $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf << EOF
+dns=none
 
-  [device]
-  wifi.backend=iwd" | $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf
+[ifupdown]
+managed=true
+
+[device]
+wifi.backend=iwd
+EOF
 
   for n in plugdev qemu kvm libvirt; do
     $SUDOAS adduser $USER $n
@@ -296,16 +303,10 @@ DEBIAN_SETUP()
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
-  echo "deb http://deb.debian.org/debian bullseye-backports main contrib" | $SUDOAS tee /etc/apt/sources.list.d/bullseye-backports.list
-  $SUDOAS tee /etc/apt/preferences.d/90_zfs << EOF
-Package: src:zfs-linux
-Pin: release n=bullseye-backports
-Pin-Priority: 990
-EOF
+  $SUDOAS sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
 
-  $SUDOAS apt-get update; $SUDOAS apt upgrade -y
-  $PKGINSTALL dpkg-dev linux-headers-generic linux-image-generic
-  $SUDOAS DEBIAN_FRONTEND=noninteractive apt install -y zfs-dkms zfsutils-linux
+  $SUDOAS apt-get update; $SUDOAS apt-get upgrade -y
+  $SUDOAS DEBIAN_FRONTEND=noninteractive apt-get install -y zfsutils-linux
 }
 
 DEVUAN_SETUP()
@@ -351,6 +352,30 @@ skip_if_unavailable=True
 cost=10000 # default is 1000'
 EOF
 
+  $SUDOAS tee /usr/local/bin/copr << EOF
+#!/bin/bash
+pushd /tmp
+
+author="$(echo $2 | cut -d '/' -f1)"
+reponame="$(echo $2 | cut -d '/' -f2)"
+
+if [ ! $3 ]; then
+ releasever="$(rpm -E %fedora)"
+else
+ releasever=$3
+fi
+
+if [[ "$1" == "enable" ]]; then
+ echo "$author/$reponame -> $releasever"
+ curl -fsSL https://copr.fedorainfracloud.org/coprs/$author/$reponame/repo/fedora-$releasever/$author-$reponame-fedora-.repo | sudo tee /etc/yum.repos.d/$author-$reponame.repo
+elif [[ "$1" == "remove" ]]; then
+ sudo rm /etc/yum.repos.d/$author-$reponame.repo
+fi
+EOF
+
+  $SUDOAS chmod +x /usr/local/bin/copr
+  sudo copr enable solopasha/hyprland
+
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
   [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
 
@@ -362,7 +387,7 @@ EOF
 
 FREEBSD_SETUP()
 {
-  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv
+  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv setxkbmap opendircolors xorg
 
   $SUDOAS tee -a /etc/rc.conf << EOF
 dbus_enable=YES
@@ -379,21 +404,24 @@ EOF
   echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
   cp $DWMBLOCKS/Makefile.bsd $DWMBLOCKS/Makefile; $SUDOAS make $DWMBLOCKS install clean
   #$SUDOAS make -C $HOME/.config/suckless/sxiv install clean
+  chsh -s zsh
+  setxkbmap pt
 }
 
 NIXOS_SETUP()
 {
   mkdir .config
   curl -L https://raw.githubusercontent.com/sorathpanzer/nixos/main/configuration.nix > configuration.nix
-  #sed -i s/luks-/$(lsblk -l | grep luks | awk '{print $1}')/g configuration.nix
-  sed -i s/HOSTID/"$(head -c 8 /etc/machine-id)"/g configuration.nix
+  $SUDOAS sed "s/hostId =.*/hostId = \""$(head -c 8 /etc/machine-id)"\"/g" /etc/nixos/configuration.nix
 
   if [ ! -f "/crypto_keyfile.bin" ]; then
-    sed -i '/initrd.secrets /s//#initrd.secrets/' configuration.nix
+    $SUDOAS sed -i '/initrd.secrets /s//#initrd.secrets/' configuration.nix
   fi
 
   $SUDOAS cp configuration.nix /etc/nixos/configuration.nix
-  $SUDOAS nixos-rebuild boot
+  $SUDOAS nixos-rebuild switch
+  nmcli con mod Virus404 ipv4.dns "1.1.1.2 1.0.0.2"
+  $SUDOAS systemctl restart NetworkManager
 }
 
 OPENBSD_SETUP()
@@ -446,9 +474,9 @@ VOID_SETUP()
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL ffmpeg groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
+  $PKGINSTALL bzip2 ffmpeg groff i3lock keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xclip xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} \
-    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} \
+    ${FLATPAK[$POS]} ${FZF[$POS]} ${GIFLIB[$POS]} ${IMAGEMAGICK[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} ${OPENSSH[$POS]} \
     ${LIGHT[$POS]} ${LIBEXIF[$POS]} ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${PICOM[$POS]} ${POPPLERUTILS[$POS]} ${GIT[$POS]} \
     ${PAUTILS[$POS]} ${PYTHON[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${QEMU[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${STOW[$POS]} ${TIG[$POS]} ${TRASHCLI[$POS]} ${GCC[$POS]} \
     ${TELEGRAM[$POS]} ${UDISKIE[$POS]} ${UEBERZUG[$POS]} ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XF86INTEL[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} \
@@ -483,21 +511,22 @@ CONFIGURE_HOME()
   if [ $RELEASE != NixOS ]; then
     for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
       [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
-      make -C $HOME/.config/suckless/$n install clean
+      if [ $RELEASE = FreeBSD ]; then
+        $SUDOAS make -C $HOME/.config/suckless/$n install clean
+      else
+        make -C $HOME/.config/suckless/$n install clean
+      fi
     done
   fi
 
-  if [ $RELEASE != FreeBSD ]; then
-
     if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
-      mkdir /media/Vault
       $SUDOAS modprobe zfs
-      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -l -R /media/Vault Legion
-      $SUDOAS zfs mount Legion/Vault
-      rsync -avrop /media/Vault/BackHome/ /home/$USER
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -lf -R /media Legion
+      rsync -avrop /media/Legion/Crypta/BackHome/ /home/$USER
+    else
+      rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
     fi
-  fi
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
     $SUDOAS mkdir -p /usr/share/edk2/ovmf
@@ -538,10 +567,6 @@ polkit.addRule(function(action, subject) {
   }
 });
 EOF
-
-  [ $RELEASE != NixOS ] && $SUDOAS mkdir -p /media/Bunker/{Vault,Crypta}
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Vault	/media/Bunker/Vault	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
-  [ $RELEASE != NixOS ] && echo "192.168.1.104:/mnt/Bunker/Crypta	/media/Bunker/Crypta	nfs	user,proto=tcp,rw,rsize=1048576,wsize=1048576noauto,sync,vers=4.2	0 0" | $SUDOAS tee -a /etc/fstab
 
   $SUDOAS usermod -s "$(which zsh)" $USER
   $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

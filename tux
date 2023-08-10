@@ -625,6 +625,10 @@ Option "TearFree" "true"
 Option "DRI" "False"
 EndSection
 EOF
+
+    $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
+    [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   fi
 
   $SUDOAS mkdir -p /etc/polkit-1/rules.d/
@@ -640,9 +644,6 @@ polkit.addRule(function(action, subject) {
 EOF
 
   $SUDOAS usermod -s "$(which zsh)" $USER
-  $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
-  [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   $SUDOAS mkdir -p /etc/modules-load.d
   echo zfs | $SUDOAS tee /etc/modules-load.d/zfs.conf
 

@@ -73,6 +73,7 @@ CONFIGURE_PACKAGES()
   SCROT=(         scrot                     scrot                 "$NA"                   scrot               scrot               scrot               scrot               scrot                       scrot                 scrot               )
   SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
   STOW=(          stow                      "$NA"                 stow                    stow                "$NA"               stow                stow                stow                        stow                  stow                )
+  SWWW=(          "$NA"                     swww                  swww                    swww                swww                swww                swww                swww                        swww                  swww                )
   TELEGRAM=(      telegram-desktop          telegram-desktop      "$NA"                   telegram-desktop    "$NA"               telegram-desktop    telegram-desktop    telegram-desktop            telegram-desktop      "$NA"               )
   TIG=(           tig                       tig                   tig                     tig                 "$NA"               tig                 tig                 "$NA"                       tig                   tig                 )
   TRASHCLI=(      trash-cli                 trash-cli             "$NA"                   trash-cli           "$NA"               trash-cli           trash-cli           "$NA"                       "$NA"                 "$NA"               )
@@ -297,9 +298,9 @@ CENTOS_SETUP()
   ALMALINUX_SETUP
 }
 
-HYPRLAND()
+HYPRLAND_COMPILE()
 {
-  mkdir HyprSource
+mkdir HyprSource
 cd HyprSource
 
 wget https://github.com/hyprwm/Hyprland/releases/download/v0.24.1/source-v0.24.1.tar.gz
@@ -373,8 +374,14 @@ DEBIAN_SETUP()
 
   # To Build Hyprland
   $SUDOAS apt-get install -y xwayland libwlroots-dev libliftoff-dev hwdata git jq libgbm-dev libpango1.0-dev nala meson wget build-essential ninja-build cmake-extras cmake gettext gettext-base fontconfig libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev seatd libxcb-dri3-dev libvulkan-dev libvulkan-volk-dev  vulkan-validationlayers-dev libvkfft-dev libgulkan-dev libegl-dev libgles2 libegl1-mesa-dev glslang-tools libinput-bin libinput-dev libxcb-composite0-dev libavutil-dev libavcodec-dev libavformat-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-xinput-dev xdg-desktop-portal-wlr
-  HYPRLAND
+  HYPRLAND_COMPILE
   $SUDOAS apt-get autoremove -y xwayland libwlroots-dev libliftoff-dev hwdata libgbm-dev libpango1.0-dev nala meson wget ninja-build cmake-extras gettext libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev libxcb-dri3-dev libvulkan-dev libvulkan-volk-dev  vulkan-validationlayers-dev libvkfft-dev libgulkan-dev glslang-tools libavutil-dev libavcodec-dev libavformat-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-xinput-dev xdg-desktop-portal-wlr
+
+  #To build swww
+  $SUDO apt-get install cargo
+  https://github.com/Horus645/swww.git
+  cd swww
+  cargo build --release
 }
 
 DEVUAN_SETUP()
@@ -542,12 +549,13 @@ VOID_SETUP()
 
 INSTALL_PACKAGES()
 {
+  HYPRLAND="foot caja waybar ydotool tofi alacritty wl-clipboard grim slurp libnotify-bin ${SWWW}"
 
   DWM="i3lock xclip ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${GIFLIB[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBEXIF[$POS]} \
     ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${PICOM[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${UEBERZUG[$POS]} \
     ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} ${XRDB[$POS]} ${XSET[$POS]}"
 
-  $PKGINSTALL bzip2 ffmpeg groff keepassxc neovim mpv pipewire rsync syncthing unzip usbutils w3m wireguard-tools xdg-user-dirs zsh ripgrep \
+  $PKGINSTALL $HYPRLAND bzip2 ffmpeg groff keepassxc neovim mpv pipewire rsync sanoid syncthing unzip usbutils w3m wireguard-tools xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} ${DOAS[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${IMAGEMAGICK[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} ${OPENSSH[$POS]} ${UDISKIE[$POS]} \
     ${LIGHT[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${POPPLERUTILS[$POS]} ${GIT[$POS]} ${XF86INTEL[$POS]} \

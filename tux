@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Version= 0.5.5
+# Version= 0.5.6
 
 # TODO: Improvements in the script
 # In OpenSuse there is no android-tools lf trash-cli light by default
@@ -543,7 +543,7 @@ VOID_SETUP()
 INSTALL_PACKAGES()
 {
 
-  DWM = "i3lock xclip ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${GIFLIB[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBEXIF[$POS]} \
+  DWM="i3lock xclip ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${GIFLIB[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBEXIF[$POS]} \
     ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${PICOM[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${UEBERZUG[$POS]} \
     ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} ${XRDB[$POS]} ${XSET[$POS]}"
 
@@ -607,6 +607,10 @@ CONFIGURE_HOME()
 
   git clone --depth 1 https://github.com/wbthomason/packer.nvim\
     ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+  if [ -n "$($SUDOAS dmesg | grep Hypervisor)" ]; then
+    sed -i s/SUPER/ALT/ $HOME/.config/hypr/hyprland.conf
+  fi
 }
 
 CONFIGURE_SYSTEM()

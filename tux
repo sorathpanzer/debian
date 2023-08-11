@@ -166,6 +166,9 @@ EOF
 
     $SUDOAS nixos-rebuild switch
   fi
+
+  sh <(curl -L https://nixos.org/nix/install) --daemon
+  nix-channel --update
 }
 
 ALMALINUX_SETUP()
@@ -377,11 +380,7 @@ DEBIAN_SETUP()
   HYPRLAND_COMPILE
   $SUDOAS apt-get autoremove -y xwayland libwlroots-dev libliftoff-dev hwdata libgbm-dev libpango1.0-dev nala meson wget ninja-build cmake-extras gettext libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev libxcb-dri3-dev libvulkan-dev libvulkan-volk-dev  vulkan-validationlayers-dev libvkfft-dev libgulkan-dev glslang-tools libavutil-dev libavcodec-dev libavformat-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-xinput-dev xdg-desktop-portal-wlr
 
-  #To build swww
-  $SUDO apt-get install cargo
-  https://github.com/Horus645/swww.git
-  cd swww
-  cargo build --release
+  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop
 }
 
 DEVUAN_SETUP()
@@ -640,7 +639,7 @@ EndSection
 EOF
 
     $SUDOAS flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    $SUDOAS flatpak install org.signal.Signal org.qutebrowser.qutebrowser org.telegram.desktop com.github.qarmin.czkawka -y
+    $SUDOAS flatpak install com.github.qarmin.czkawka -y
     [ $RELEASE = "Alpine" ] && $SUDOAS flatpak install org.libreoffice.LibreOffice -y
   fi
 

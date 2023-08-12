@@ -365,8 +365,9 @@ DEBIAN_SETUP()
 {
   $PKGINSTALL xz-utils
   sh <(curl -L https://nixos.org/nix/install) --daemon
-  bash -c "nix-channel --update"
-  bash -c "nix-env -iA nixpkgs.swww nixpkgs.signal-desktop"
+  source /etc/profile.d/nix.sh
+  nix-channel --update
+  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop
 
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html

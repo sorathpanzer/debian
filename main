@@ -21,7 +21,7 @@ source_files() {
     fi
 }
 
-source_files Distro
+source_files Distros
 source_files Scripts
 
 LVM_PASSWORD=""

@@ -8,8 +8,12 @@
 
 exec 1> >(tee "install.log") 2> >(tee "install.error")
 
-#source <(cat Distros/*)
-#source <(cat Scripts/*)
+LVM_PASSWORD=""
+GIT_USERNAME="${USER}panzer"
+GIT_EMAIL="$GIT_USERNAME"
+DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
 source_files() {
     local dir="$1"
@@ -23,14 +27,6 @@ source_files() {
 
 source_files Distros
 source_files Scripts
-
-LVM_PASSWORD=""
-GIT_USERNAME="${USER}panzer"
-GIT_EMAIL="$GIT_USERNAME"
-DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
-RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
-UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
-
 
 CONFIGURE_PACKAGES
 

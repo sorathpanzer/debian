@@ -8,8 +8,21 @@
 
 exec 1> >(tee "install.log") 2> >(tee "install.error")
 
-source Distros/*
-source Scripts/*
+#source <(cat Distros/*)
+#source <(cat Scripts/*)
+
+source_files() {
+    local dir="$1"
+
+    if [[ -d "$dir" && -r "$dir" && -x "$dir" ]]; then
+        for file in "$dir"/*; do
+           [[ -f "$file" && -r "$file" ]] && . "$file"
+        done
+    fi
+}
+
+source_files Distro
+source_files Scripts
 
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"

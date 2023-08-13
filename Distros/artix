@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ARTIX_SETUP()
+{
+  ARCH_SETUP
+
+  $PKGINSTALL trizen
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
+  nix-channel --update
+
+  nix-env -iA nixpkgs.nix nixpkgs.cacert
+  nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+  $SUDOAS sed -i "s/agetty.*/agetty --autologin $USER tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+OPENBSD_SETUP()
+{
+  $SUDOAS pkg_add -i gcc%11 keepassxc-- rsync-- unzip-- w3m--
+}

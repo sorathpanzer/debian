@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Version= 0.5.6
+
+# TODO: Before running this script you must install:
+# FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
+# OpenBSD|Alpine -> bash
+
+exec 1> >(tee "install.log") 2> >(tee "install.error")
+
+source Distros/*
+source Scripts/*
+
+LVM_PASSWORD=""
+GIT_USERNAME="${USER}panzer"
+GIT_EMAIL="$GIT_USERNAME"
+DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
+UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
+
+
+CONFIGURE_PACKAGES
+
+case "${RELEASE}" in
+  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Artix|Void|Alpine|openSUSE)
+    ${UPPERCASE}_SETUP
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    CONFIGURE_SYSTEM ;;
+  FreeBSD|OpenBSD)
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    ${UPPERCASE}_SETUP ;;
+  NixOS)
+    CONFIGURE_HOME
+    NIXOS_SETUP ;;
+esac
+
+grep error install.error

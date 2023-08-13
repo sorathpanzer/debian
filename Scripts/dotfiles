@@ -1,0 +1,57 @@
+#!/bin/bash
+
+CONFIGURE_HOME()
+{
+  [ -e .profile ] && rm .profile
+  mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
+  mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  touch /home/$USER/.local/recently-used.xbel
+  git config --global user.name "$GIT_USERNAME"
+  git config --global user.email "$GIT_EMAIL"
+  echo "Cloning my dotfiles..."
+  git clone --progress $DOTFILES /home/$USER/.config/dotgit
+  git config --global credential.helper store
+  mkdir -p /home/$USER/.cache/zsh
+  touch /home/$USER/.cache/zsh/history
+  sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
+
+  if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then
+    pip install --user adblock
+  fi
+
+  for n in dwm-6.4 dmenu-5.2 st-0.9; do
+    cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
+  done
+
+  if [ $RELEASE != NixOS ]; then
+    for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
+      [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+      if [ $RELEASE = FreeBSD ]; then
+        $SUDOAS make -C $HOME/.config/suckless/$n install clean
+      else
+        make -C $HOME/.config/suckless/$n install clean
+      fi
+    done
+  fi
+
+    if [ -n "$LVM_PASSWORD" ]; then
+      echo "Open vault password:"
+      $SUDOAS modprobe zfs
+      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -lf -R /media Legion
+      rsync -avrop /media/Legion/Crypta/BackHome/ /home/$USER
+    else
+      rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
+    fi
+
+  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
+    $SUDOAS mkdir -p /usr/share/edk2/ovmf
+    $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+  fi
+
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+    ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+  if [ -n "$($SUDOAS dmesg | grep Hypervisor)" ]; then
+    sed -i s/SUPER/ALT/ $HOME/.config/hypr/hyprland.conf
+  fi
+}

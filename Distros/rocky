@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ROCKY_SETUP()
+{
+  ALMALINUX_SETUP
+}

@@ -87,7 +87,7 @@ CONFIGURE_PACKAGES()
   XRANDR=(        x11-xserver-utils         xrandr                xrandr                  xorg-xrandr         xorg-xrandr         xrandr              xrandr              xrandr                      xrandr                "$NA"               )
   XRDB=(          x11-xserver-utils         xrdb                  xrdb                    xorg-xrdb           xorg-xrdb           xrdb                xrdb                xrdb                        xrdb                  "$NA"               )
   XSET=(          x11-xserver-utils         xset                  xset                    xorg-xset           xorg-xset           xset                xset                xset                        xset                  "$NA"               )
-  YOUTUBEDL=(     youtube-dl                youtube-dl            youtube-dl              youtube-dl          youtube-dl          youtube-dl          youtube-dl          youtube-dl                  youtube_dl            youtube-dl          )
+  YOUTUBEDL=(     yt-dlp                    youtube-dl            youtube-dl              youtube-dl          youtube-dl          youtube-dl          youtube-dl          youtube-dl                  youtube_dl            youtube-dl          )
   ZATHURA=(       zathura                   zathura               zathura                 zathura             zathura             zathura             zathura             zathura                     zathura               zathura             )
   ZATHURAPDF=(    zathura-pdf-poppler       zathura-pdf-poppler   zathura-pdf-poppler     zathura-pdf-poppler "$NA"               zathura-pdf-poppler zathura-pdf-poppler zathura-plugin-pdf-poppler  zathura-pdf-poppler   zathura-pdf-poppler )
   ZFS=(           zfsutils-linux            "$NA"                 "$NA"                   "zfs-utils"         "$NA"               zfs                 zfs                 "$NA"                       "$NA"                 "$NA"               )
@@ -367,7 +367,7 @@ DEBIAN_SETUP()
   sh <(curl -L https://nixos.org/nix/install) --daemon
   source /etc/profile.d/nix.sh
   nix-channel --update
-  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop
+  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop nixpkgs.fragments nixpkgs.logseq nixpkgs.dua
 
   echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html

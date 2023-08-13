@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CENTOS_SETUP()
+{
+  ALMALINUX_SETUP
+}

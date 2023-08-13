@@ -1,0 +1,30 @@
+#!/bin/bash
+
+ALMALINUX_SETUP()
+{
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  $SUDOAS dnf update -y
+  $SUDOAS dnf install -y epel-release tar grubby
+  $SUDOAS grubby --update-kernel=ALL --args=quiet
+  $SUDOAS dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm
+  $SUDOAS dnf install -y https://zfsonlinux.org/epel/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
+  $SUDOAS dnf config-manager --set-enabled crb
+  $SUDOAS dnf install -y zfs
+
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+  sed -i 's/nixpkgs-unstable/nixos-22.11/g' .nix-channels
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
+  nix-channel --update
+
+  nix-env -iA nixpkgs.nix nixpkgs.cacert
+  nix-env -iA nixpkgs.android-tools nixpkgs.ffmpegthumbnailer nixpkgs.fzf nixpkgs.scrot nixpkgs.btrfs-progs nixpkgs.dunst nixpkgs.feh \
+    nixpkgs.trash-cli nixpkgs.transmission-gtk nixpkgs.light \
+    nixpkgs.picom nixpkgs.udiskie nixpkgs.python310Packages.adblock nixpkgs.ueberzug
+      . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+      $SUDOAS tee -a /etc/dnf/dnf.conf << EOF
+max_parallel_downloads=10
+deltarpm=True
+defaultyes=True
+EOF
+}

@@ -15,7 +15,7 @@ CONFIGURE_HOME()
   touch $HOME/.cache/zsh/history
   sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
-  if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then
+  if [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then
     pip install --user adblock
   fi
 

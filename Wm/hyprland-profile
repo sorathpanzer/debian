@@ -1,8 +1,11 @@
 #!/bin/bash
 
+HYPRLAND_COMPILE()
+{
 if [ $WM = Hyprland ]; then
   SWWW=(          "$NA"                     swww                  swww                    swww                swww                swww                swww                swww                        swww                  swww                )
 
   $PKGINSTALL foot caja waybar ydotool tofi alacritty wl-clipboard grim slurp libnotify-bin ${SWWW}
 fi
+}
 

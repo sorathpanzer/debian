@@ -2,7 +2,7 @@
 
 DEBIAN_SETUP()
 {
-  PKGINSTALL="$SUDO apt-get -y install" ;;
+  PKGINSTALL="$SUDO apt-get -y install"
 
   $PKGINSTALL xz-utils
   printf "n\n" | printf "y\n" | printf "y\n" | sh <(curl -L https://nixos.org/nix/install) --daemon

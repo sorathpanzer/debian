@@ -14,5 +14,5 @@ ARTIX_SETUP()
   nix-env -iA nixpkgs.android-tools nixpkgs.trash-cli nixpkgs.light nixpkgs.lf nixpkgs.stow nixpkgs.tig
   . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  $SUDOAS sed -i "s/agetty.*/agetty --autologin $USER tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
+  $SUDO sed -i "s/agetty.*/agetty --autologin $USER tty1 38400 linux/" /etc/dinit.d/getty.d/tty1
 }

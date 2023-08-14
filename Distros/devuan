@@ -4,12 +4,12 @@ DEVUAN_SETUP()
 {
   INIT="$(which rc-status | which sv)"
   if [ "$INIT" = "/usr/bin/sv" ]; then
-    $SUDOAS sed -i '$d' /etc/service/getty-tty1/run
-    echo "exec chpst -P getty --autologin $USER 38400 tty1 linux" | $SUDOAS tee -a /etc/service/getty-tty1/run
+    $SUDO sed -i '$d' /etc/service/getty-tty1/run
+    echo "exec chpst -P getty --autologin $USER 38400 tty1 linux" | $SUDO tee -a /etc/service/getty-tty1/run
   fi
 
   if [ "$INIT" = "/bin/rc-status" ] || [ -z "$INIT" ]; then
-    $SUDOAS sed -i "s/noclear/autologin $USER/g" /etc/inittab
+    $SUDO sed -i "s/noclear/autologin $USER/g" /etc/inittab
   fi
 
   DEBIAN_SETUP

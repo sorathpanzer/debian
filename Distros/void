@@ -2,19 +2,19 @@
 
 VOID_SETUP()
 {
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
-  $SUDOAS xbps-install -Syu
-  $SUDOAS xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils opendoas
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
+  $SUDO xbps-install -Syu
+  $SUDO xbps-install -Sy make pkg-config snapper setxkbmap pulseaudio xdg-utils opendoas
 
-  $SUDOAS snapper -c root create-config /
-  $SUDOAS btrfs subvolume delete /.snapshots
-  $SUDOAS mkdir /.snapshots
-  $SUDOAS sed -i '/@snapshots/s/^#//' /etc/fstab
+  $SUDO snapper -c root create-config /
+  $SUDO btrfs subvolume delete /.snapshots
+  $SUDO mkdir /.snapshots
+  $SUDO sed -i '/@snapshots/s/^#//' /etc/fstab
 
   echo "GETTY_ARGS=\"--autologin $USER --noclear\"
   BAUD_RATE=38400
-  TERM_NAME=linux" | $SUDOAS tee /etc/sv/agetty-tty1/conf
+  TERM_NAME=linux" | $SUDO tee /etc/sv/agetty-tty1/conf
 
-  $SUDOAS ln -s /etc/sv/pipewire /var/service
-  $SUDOAS ln -s /etc/sv/acpid /var/service
+  $SUDO ln -s /etc/sv/pipewire /var/service
+  $SUDO ln -s /etc/sv/acpid /var/service
 }

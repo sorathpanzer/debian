@@ -2,19 +2,19 @@
 
 OPENSUSE_SETUP()
 {
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
 
-  [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDOAS rm /etc/zypp/repos.d/openSUSE*
+  [ -f /etc/zypp/repos.d/openSUSE* ] && $SUDO rm /etc/zypp/repos.d/openSUSE*
   $PKGINSTALL make ncurses-devel posix_cc grubby
 
   TUMBLEWEED=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $2}' | tr -d '"')
   if [ $TUMBLEWEED = Tumbleweed ]; then
     $PKGINSTALL android-tools python310-adblock
-    $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
+    $SUDO zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
   else
-    $SUDOAS zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
+    $SUDO zypper addrepo https://download.opensuse.org/repositories/filesystems/15.4/filesystems.repo
   fi
-  $SUDOAS zypper refresh
+  $SUDO zypper refresh
   $PKGINSTALL zfs
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
+  $SUDO grubby --update-kernel=ALL --args=quiet
 }

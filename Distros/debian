@@ -2,19 +2,21 @@
 
 DEBIAN_SETUP()
 {
+  PKGINSTALL="$SUDO apt-get -y install" ;;
+
   $PKGINSTALL xz-utils
   printf "n\n" | printf "y\n" | printf "y\n" | sh <(curl -L https://nixos.org/nix/install) --daemon
   source /etc/profile.d/nix.sh
   nix-env -iA nixpkgs.swww nixpkgs.signal-desktop nixpkgs.fragments nixpkgs.logseq nixpkgs.dua
 
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
-  $SUDOAS sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
+  $SUDO sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
 
-  $SUDOAS apt-get update; $SUDOAS apt-get upgrade -y
-  $SUDOAS DEBIAN_FRONTEND=noninteractive apt-get install -y zfsutils-linux
+  $SUDO apt-get update; $SUDOAS apt-get upgrade -y
+  $SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y zfsutils-linux
 
   # To Build Hyprland
   HYPRDEPS="xwayland libwlroots-dev libliftoff-dev hwdata libgbm-dev libpango1.0-dev nala meson wget ninja-build cmake-extras gettext libfontconfig-dev \
@@ -22,7 +24,7 @@ DEBIAN_SETUP()
     libvulkan-dev libvulkan-volk-dev  vulkan-validationlayers-dev libvkfft-dev libgulkan-dev glslang-tools libavutil-dev libavcodec-dev libavformat-dev \
     libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-xinput-dev xdg-desktop-portal-wlr"
 
-  $SUDOAS apt-get install -y $HYPRDEPS jq cmake gettext-base fontconfig seatd libegl-dev libgles2 libegl1-mesa-dev libinput-bin libinput-dev libxcb-composite0-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-res0-dev
+  $PKGINSTALL $HYPRDEPS jq cmake gettext-base fontconfig seatd libegl-dev libgles2 libegl1-mesa-dev libinput-bin libinput-dev libxcb-composite0-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-res0-dev
   HYPRLAND_COMPILE
-  $SUDOAS apt-get autoremove -y $HYPRDEPS
+  $SUDO apt-get autoremove -y $HYPRDEPS
 }

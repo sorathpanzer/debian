@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ $WM = dwm ]; then
+  DBUSX11=(       dbus-x11                  dbus-x11              dbus-x11                dbus                dbus                dbus-x11            dbus-x11            dbus-1-x11                  dbus                  dbus                )
+  DUNST=(         dunst                     dunst                 "$NA"                   dunst               dunst               dunst               dunst               dunst                       dunst                 dunst               )
+  FEH=(           feh                       feh                   "$NA"                   feh                 feh                 feh                 feh                 feh                         feh                   feh                 )
+  GIFLIB=(        libgif-dev                "$NA"                 giflib-devel            giflib              giflib              giflib-devel        giflib-dev          giflib-devel                giflib                giflib              )
+  IMLIB2=(        libimlib2-dev             "$NA"                 imlib2-devel            imlib2              imlib2              imlib2-devel        imlib2-dev          imlib2-devel                imlib2                imlib2              )
+  LIBEXIF=(       libexif-dev               "$NA"                 libexif-devel           libexif             libexif             libexif-devel       libexif-dev         libexif-devel               libexif               libexif             )
+  LIBXFT=(        libxft-dev                "$NA"                 libXft-devel            libxft              libxft              libXft-devel        libxft-dev          libXft-devel                libXft                "$NA"               )
+  LIBX11=(        libx11-dev                "$NA"                 libX11-devel            libx11              libx11              libX11-devel        libx11-dev          libX11-devel                libX11                "$NA"               )
+  LIBXINERAMA=(   libxinerama-dev           "$NA"                 libXinerama-devel       libxinerama         libxinerama         libXinerama-devel   libxinerama-dev     libXinerama-devel           libXinerama           "$NA"               )
+  LIBXRESDEV=(    libxres-dev               libXres-devel         libXres-devel           libxres             libxres             libXres-devel       libxres-dev         libXres-devel               libXres               "$NA"               )
+  PICOM=(         picom                     picom                 "$NA"                   picom               picom               picom               picom               picom                       picom                 picom               )
+  PYTHON3PIP=(    python3-pip               "$NA"                 python-pip              python-pip          python-pip          python3-pip         py3-pip             python3-pip                 py39-pip              py3-pip             )
+  PYTHON3SIX=(    python3-six               python3-six           python-six              python-six          python-six          python3-six         py3-six             python3-six                 py39-six              py3-six             )
+  SCROT=(         scrot                     scrot                 "$NA"                   scrot               scrot               scrot               scrot               scrot                       scrot                 scrot               )
+  SOX=(           sox                       sox                   sox                     sox                 sox                 sox                 sox                 sox                         sox                   sox                 )
+  UEBERZUG=(      "$NA"                     "$NA"                 "$NA"                   ueberzug            "$NA"               ueberzug            "$NA"               "$NA"                       py39-ueberzug         "$NA"               )
+  XDOTOOL=(       xdotool                   xdotool               xdotool                 xdotool             xdotool             xdotool             xdotool             xdotool                     xdotool               xdotool             )
+  XINIT=(         xinit                     xorg-x11-xinit        xorg-x11-xinit          xorg-xinit          xorg-xinit          xinit               xinit               xinit                       xinit                 "$NA"               )
+  XINPUT=(        xinput                    xinput                xinput                  xorg-xinput         xorg-xinput         xinput              xinput              xinput                      xinput                "$NA"               )
+  XORGSERVER=(    xserver-xorg              xorg-x11-server-Xorg  xorg-x11-server-Xorg    xorg-server         xorg-server         xorg-minimal        xorg-server         xorg-x11-server             xorg-minimal          "$NA"               )
+  XRANDR=(        x11-xserver-utils         xrandr                xrandr                  xorg-xrandr         xorg-xrandr         xrandr              xrandr              xrandr                      xrandr                "$NA"               )
+  XRDB=(          x11-xserver-utils         xrdb                  xrdb                    xorg-xrdb           xorg-xrdb           xrdb                xrdb                xrdb                        xrdb                  "$NA"               )
+  XSET=(          x11-xserver-utils         xset                  xset                    xorg-xset           xorg-xset           xset                xset                xset                        xset                  "$NA"               )
+
+  $PKGINSTALL i3lock xclip ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${GIFLIB[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBEXIF[$POS]} \
+    ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${PICOM[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${UEBERZUG[$POS]} \
+    ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} ${XRDB[$POS]} ${XSET[$POS]}
+
+

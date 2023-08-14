@@ -2,7 +2,7 @@
 
 ARCH_SETUP()
 {
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
   $PKGINSTALL --needed base-devel git
 
   if [ $RELEASE = Arch ]; then
@@ -10,19 +10,19 @@ ARCH_SETUP()
     cd trizen || exit
     makepkg -si --noconfirm
     cd || exit
-    $SUDOAS rm -R trizen
+    $SUDO rm -R trizen
   fi
 
-  $SUDOAS tee -a /etc/pacman.conf << EOF
+  $SUDO tee -a /etc/pacman.conf << EOF
 
 [archzfs]
 Include = /etc/pacman.d/mirrorlist-archzfs
 EOF
 
-  curl -L https://git.io/Jsfw2 | $SUDOAS tee /etc/pacman.d/mirrorlist-archzfs
-  curl -L https://archzfs.com/archzfs.gpg | $SUDOAS pacman-key -a -
-  $SUDOAS pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
+  curl -L https://git.io/Jsfw2 | $SUDO tee /etc/pacman.d/mirrorlist-archzfs
+  curl -L https://archzfs.com/archzfs.gpg | $SUDO pacman-key -a -
+  $SUDO pacman-key --lsign-key "$(curl -L https://git.io/JsfVS)"
 
-  $SUDOAS pacman --noconfirm -Syu
+  $SUDO pacman --noconfirm -Syu
   $PKGINSTALL linux-lts-headers zfs-dkms zfs-utils
 }

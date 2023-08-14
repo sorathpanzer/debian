@@ -2,9 +2,9 @@
 
 FREEBSD_SETUP()
 {
-  $SUDOAS pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv setxkbmap opendircolors xorg
+  $SUDO pkg install -y ncurses dsbmd fusefs-lkl portmaster nsxiv setxkbmap opendircolors xorg
 
-  $SUDOAS tee -a /etc/rc.conf << EOF
+  $SUDO tee -a /etc/rc.conf << EOF
 dbus_enable=YES
 openntpd_enable=YES
 hald_enable=YES
@@ -16,9 +16,9 @@ linux_enable=YES
 EOF
 
   DWMBLOCKS="$HOME/.config/suckless/dwmblocks"
-  echo "kern.evdev.rcpt_mask=3" | $SUDOAS tee -a /etc/sysctl.conf
-  cp $DWMBLOCKS/Makefile.bsd $DWMBLOCKS/Makefile; $SUDOAS make $DWMBLOCKS install clean
-  #$SUDOAS make -C $HOME/.config/suckless/sxiv install clean
+  echo "kern.evdev.rcpt_mask=3" | $SUDO tee -a /etc/sysctl.conf
+  cp $DWMBLOCKS/Makefile.bsd $DWMBLOCKS/Makefile; $SUDO make $DWMBLOCKS install clean
+  #$SUDO make -C $HOME/.config/suckless/sxiv install clean
   chsh -s zsh
   setxkbmap pt
 }

@@ -2,42 +2,42 @@
 
 ALPINE_SETUP()
 {
-  echo "" | $SUDOAS tee /etc/motd
-  $SUDOAS setup-xorg-base
+  echo "" | $SUDO tee /etc/motd
+  $SUDO setup-xorg-base
 
   echo '#!/bin/sh
 
-  echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | $SUDOAS tee /etc/local.d/cpufreq.start
-  $SUDOAS chmod +x /etc/local.d/cpufreq.start
+  echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor' | $SUDO tee /etc/local.d/cpufreq.start
+  $SUDO chmod +x /etc/local.d/cpufreq.start
 
-  $SUDOAS adduser $USER input
-  $SUDOAS apk -U upgrade
-  $SUDOAS apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
+  $SUDO adduser $USER input
+  $SUDO apk -U upgrade
+  $SUDO apk add lsblk make musl-dev ncurses xorg-server-common xorg-server-dev xproto xorgxrdp xorgxrdp-dev setxkbmap zzz ttf-dejavu \
     mesa-dri-gallium libva-intel-driver alsa-utils alsa-utils-doc alsa-lib alsaconf alsa-ucm-conf pulseaudio pulseaudio-alsa alsa-plugins-pulse \
     util-linux elogind polkit-elogind qemu-img qemu-ui-sdl qemu-hw-display-virtio-vga-gl libvirt-qemu qemu-hw-display-virtio-vga coreutils iwd networkmanager-wifi
 
   for n in dbus alsa elogind; do
-    $SUDOAS rc-update add $n
+    $SUDO rc-update add $n
   done
 
-  $SUDOAS rc-update add local default
-  $SUDOAS rc-update del wpa_supplicant boot
-  $SUDOAS rc-update add iwd boot
-  $SUDOAS rc-update add sshd
-  $SUDOAS rc-update add networkmanager boot
-  $SUDOAS sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
-  $SUDOAS sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
-  $SUDOAS sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
+  $SUDO rc-update add local default
+  $SUDO rc-update del wpa_supplicant boot
+  $SUDO rc-update add iwd boot
+  $SUDO rc-update add sshd
+  $SUDO rc-update add networkmanager boot
+  $SUDO sed -i 's/#rc_parallel=\"NO\"/rc_parallel=\"YES\"/g' /etc/rc.conf
+  $SUDO sed -i 's/root:\/bin\/ash/root:\/sbin\/nologin/g' /etc/passwd
+  $SUDO sed -i "s/sbin\/getty 38400 tty1/bin\/login -f $USER/g" /etc/inittab
 
-  $SUDOAS rm -r /media/{cdrom,usb}
+  $SUDO rm -r /media/{cdrom,usb}
 
-  $SUDOAS mkdir /etc/udhcpc
-  echo 'RESOLV_CONF="no"' | $SUDOAS tee /etc/udhcpc/udhcpc.conf
+  $SUDO mkdir /etc/udhcpc
+  echo 'RESOLV_CONF="no"' | $SUDO tee /etc/udhcpc/udhcpc.conf
 
   echo "nameserver 1.1.1.1
-  nameserver 8.8.8.8" | $SUDOAS tee /etc/resolv.conf
+  nameserver 8.8.8.8" | $SUDO tee /etc/resolv.conf
 
-  $SUDOAS tee -a /etc/NetworkManager/NetworkManager.conf << EOF
+  $SUDO tee -a /etc/NetworkManager/NetworkManager.conf << EOF
 dns=none
 
 [ifupdown]
@@ -48,6 +48,6 @@ wifi.backend=iwd
 EOF
 
   for n in plugdev qemu kvm libvirt; do
-    $SUDOAS adduser $USER $n
+    $SUDO adduser $USER $n
   done
 }

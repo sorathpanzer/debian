@@ -2,19 +2,19 @@
 
 FEDORA_SETUP()
 {
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDOAS tee /etc/sudoers.d/$USER
+  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
   [ ! -x "$(command -v rpm-ostree)" ] && echo "max_parallel_downloads=10
   deltarpm=True
-  defaultyes=True" | $SUDOAS tee -a /etc/dnf/dnf.conf
+  defaultyes=True" | $SUDO tee -a /etc/dnf/dnf.conf
 
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree override remove zezere-ignition ignition dbus-parsec
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree override remove zezere-ignition ignition dbus-parsec
   $PKGINSTALL https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm
   [ -x "$(command -v rpm-ostree)" ] && $PKGINSTALL git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel qemu-img qemu-system-x86
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS rpm-ostree ex apply-live --allow-replacement
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO sed -i 's/none/stage/g' /etc/rpm-ostreed.conf
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO systemctl enable rpm-ostreed-automatic.timer
 
-  $SUDOAS tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
+  $SUDO tee /etc/yum.repos.d/fedora-updates-archive.repo << EOF
 [updates-archive]
 name=Fedora \$releasever - \$basearch - Updates Archive
 baseurl=https://fedoraproject-updates-archive.fedoraproject.org/fedora/\$releasever/\$basearch/
@@ -28,7 +28,7 @@ skip_if_unavailable=True
 cost=10000 # default is 1000'
 EOF
 
-  $SUDOAS tee /usr/local/bin/copr << EOF
+  $SUDO tee /usr/local/bin/copr << EOF
 #!/bin/bash
 pushd /tmp
 
@@ -49,14 +49,14 @@ elif [[ "$1" == "remove" ]]; then
 fi
 EOF
 
-  $SUDOAS chmod +x /usr/local/bin/copr
+  $SUDO chmod +x /usr/local/bin/copr
   sudo copr enable solopasha/hyprland
 
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
-  [ -x "$(command -v rpm-ostree)" ] && $SUDOAS systemctl enable rpm-ostreed-automatic.timer --now
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO sed -i 's/#Auto/Auto/g' /etc/rpm-ostreed.conf
+  [ -x "$(command -v rpm-ostree)" ] && $SUDO systemctl enable rpm-ostreed-automatic.timer --now
 
-  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
-  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install kernel-devel git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel
-  [ ! -x "$(command -v rpm-ostree)" ] && $SUDOAS dnf install -y zfs
-  $SUDOAS grubby --update-kernel=ALL --args=quiet
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDO dnf install -y https://zfsonlinux.org/fedora/zfs-release-2-2"$(rpm --eval "%{dist}")".noarch.rpm
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDO dnf install kernel-devel git make python3-pip grubby stow gcc libX11-devel imlib2-devel flatpak libXft-devel libXinerama-devel freetype-devel libexif-devel giflib-devel
+  [ ! -x "$(command -v rpm-ostree)" ] && $SUDO dnf install -y zfs
+  $SUDO grubby --update-kernel=ALL --args=quiet
 }

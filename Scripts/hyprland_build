@@ -60,5 +60,5 @@ cd ../../
 sudo make install
 
 cd
-$SUDOAS rm -r HyprSource
+$SUDO rm -r HyprSource
 }

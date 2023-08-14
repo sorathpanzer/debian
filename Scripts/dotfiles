@@ -25,9 +25,9 @@ CONFIGURE_HOME()
 
   if [ $RELEASE != NixOS ]; then
     for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
-      [ -x "$(command -v zypper)" ] && $SUDOAS sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+      [ -x "$(command -v zypper)" ] && $SUDO sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
       if [ $RELEASE = FreeBSD ]; then
-        $SUDOAS make -C $HOME/.config/suckless/$n install clean
+        $SUDO make -C $HOME/.config/suckless/$n install clean
       else
         make -C $HOME/.config/suckless/$n install clean
       fi
@@ -36,22 +36,22 @@ CONFIGURE_HOME()
 
     if [ -n "$LVM_PASSWORD" ]; then
       echo "Open vault password:"
-      $SUDOAS modprobe zfs
-      echo -n "$LVM_PASSWORD" | $SUDOAS zpool import -lf -R /media Legion
+      $SUDO modprobe zfs
+      echo -n "$LVM_PASSWORD" | $SUDO zpool import -lf -R /media Legion
       rsync -avrop /media/Legion/Crypta/BackHome/ /home/$USER
     else
       rsync -av --info=progress2 root@192.168.1.104:/mnt/Bunker/Vault/BackHome/ /home/$USER
     fi
 
   if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ]; then
-    $SUDOAS mkdir -p /usr/share/edk2/ovmf
-    $SUDOAS cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
+    $SUDO mkdir -p /usr/share/edk2/ovmf
+    $SUDO cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
   fi
 
   git clone --depth 1 https://github.com/wbthomason/packer.nvim\
     ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-  if [ -n "$($SUDOAS dmesg | grep Hypervisor)" ]; then
+  if [ -n "$($SUDO dmesg | grep Hypervisor)" ]; then
     sed -i s/SUPER/ALT/ $HOME/.config/hypr/hyprland.conf
   fi
 }

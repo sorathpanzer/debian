@@ -12,6 +12,8 @@ LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
 GIT_EMAIL="$GIT_USERNAME"
 DOTFILES="https://gitea.com/sorathpanzer/dotgit.git"
+WM="Hyprland"
+SUDO="sudo"
 RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
@@ -27,15 +29,11 @@ source_files() {
 
 source_files Distros
 source_files Scripts
+source_files Wm
 
 CONFIGURE_PACKAGES
 
 case "${RELEASE}" in
-  Debian|Devuan|Fedora|AlmaLinux|Rocky|CentOS|Arch|Artix|Void|Alpine|openSUSE)
-    ${UPPERCASE}_SETUP
-    INSTALL_PACKAGES
-    CONFIGURE_HOME
-    CONFIGURE_SYSTEM ;;
   FreeBSD|OpenBSD)
     INSTALL_PACKAGES
     CONFIGURE_HOME
@@ -43,6 +41,11 @@ case "${RELEASE}" in
   NixOS)
     CONFIGURE_HOME
     NIXOS_SETUP ;;
+  *)
+    ${UPPERCASE}_SETUP
+    INSTALL_PACKAGES
+    CONFIGURE_HOME
+    CONFIGURE_SYSTEM ;;
 esac
 
 grep error install.error

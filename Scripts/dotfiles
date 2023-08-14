@@ -2,17 +2,17 @@
 
 CONFIGURE_HOME()
 {
-  [ -e .profile ] && rm .profile
-  mkdir -p /home/$USER/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
-  mkdir -p /home/$USER/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
-  touch /home/$USER/.local/recently-used.xbel
+  [ -e $HOME/.profile ] && rm $HOME/.profile
+  mkdir -p $HOME/{Transferências,Documentos,Música,Imagens/Screenshots,Vídeos,.config,.cache/{lf,transmission}}
+  mkdir -p $HOME/.local/share/{backgrounds,gvfs-metadata,icc,keyrings,nvim,sounds,Trash,xorg}
+  touch $HOME/.local/recently-used.xbel
   git config --global user.name "$GIT_USERNAME"
   git config --global user.email "$GIT_EMAIL"
   echo "Cloning my dotfiles..."
-  git clone --progress $DOTFILES /home/$USER/.config/dotgit
+  git clone --progress $DOTFILES $HOME/.config/dotgit
   git config --global credential.helper store
-  mkdir -p /home/$USER/.cache/zsh
-  touch /home/$USER/.cache/zsh/history
+  mkdir -p $HOME/.cache/zsh
+  touch $HOME/.cache/zsh/history
   sh -c "cd /home/$USER/.config/dotgit; stow -vt ~ dotfiles"
 
   if [ $RELEASE = Debian ] || [ $RELEASE = Devuan ] || [ $RELEASE = Fedora ] || [ $RELEASE = AlmaLinux ] || [ $RELEASE = Rocky ] || [ $RELEASE = CentOS ]; then

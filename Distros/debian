@@ -13,7 +13,7 @@ DEBIAN_SETUP()
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse
   $SUDO sed -r -i 's/^deb(.*)$/deb\1 contrib/g' /etc/apt/sources.list
 
-  $SUDO apt-get update; $SUDOAS apt-get upgrade -y
+  $SUDO apt-get update; $SUDO apt-get upgrade -y
   $SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y zfsutils-linux
 
   # To Build Hyprland

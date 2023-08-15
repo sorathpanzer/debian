@@ -45,7 +45,7 @@
 CONFIGURE_PACKAGES()
 {
   case "${RELEASE}" in
-    "")                  echo "$RELEASE is not supported!"; exit 1 ;;
+    "")                     echo "$RELEASE is not supported!"; exit 1 ;;
     Debian|Devuan)	        POS="0"
       MK="tux"
       PKGINSTALL="$SUDO apt-get -y install" ;;

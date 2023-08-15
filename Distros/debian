@@ -26,6 +26,5 @@ DEBIAN_SETUP()
     $PKGINSTALL $HYPRDEPS jq cmake gettext-base fontconfig seatd libegl-dev libgles2 libegl1-mesa-dev libinput-bin libinput-dev libxcb-composite0-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-res0-dev
     HYPRLAND_COMPILE
     $SUDO apt-get autoremove -y $HYPRDEPS
-    HYPR_PACKAGES
   fi
 }

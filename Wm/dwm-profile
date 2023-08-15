@@ -29,4 +29,19 @@ DWM_PACKAGES()
   $PKGINSTALL i3lock xclip ${DBUSX11[$POS]} ${DUNST[$POS]} ${FEH[$POS]} ${GIFLIB[$POS]} ${LIBXFT[$POS]} ${IMLIB2[$POS]} ${LIBEXIF[$POS]} \
     ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${PICOM[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${UEBERZUG[$POS]} \
     ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} ${XRDB[$POS]} ${XSET[$POS]}
+
+  for n in dwm-6.4 dmenu-5.2 st-0.9; do
+    cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
+  done
+
+  if [ $RELEASE != NixOS ]; then
+    for n in dwmblocks sxiv dwm-6.4 dmenu-5.2 st-0.9; do
+      [ -x "$(command -v zypper)" ] && $SUDO sed -i 's/#CC/CC/g' ~/.config/suckless/st-0.9/config.mk
+      if [ $RELEASE = FreeBSD ]; then
+        $SUDO make -C $HOME/.config/suckless/$n install clean
+      else
+        make -C $HOME/.config/suckless/$n install clean
+      fi
+    done
+  fi
 }

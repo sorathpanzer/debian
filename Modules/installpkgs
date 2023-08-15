@@ -116,7 +116,7 @@ EOF
 
 INSTALL_PACKAGES()
 {
-  $PKGINSTALL $HYPRLAND bzip2 ffmpeg groff keepassxc neovim mpv pipewire rsync sanoid syncthing unzip usbutils w3m wireguard-tools xdg-user-dirs zsh ripgrep \
+  $PKGINSTALL bzip2 ffmpeg groff keepassxc neovim mpv pipewire rsync sanoid syncthing unzip usbutils w3m wireguard-tools xdg-user-dirs zsh ripgrep \
     ${ADBLOCK[$POS]} ${ANDROIDTOOLS[$POS]} ${BTRFSPROGS[$POS]} ${CRONTABS[$POS]} ${FFTHUMBNAILER[$POS]} ${FIREFOX[$POS]} ${DOAS[$POS]} \
     ${FLATPAK[$POS]} ${FZF[$POS]} ${IMAGEMAGICK[$POS]} ${LIBREOFFICE[$POS]} ${LF[$POS]} ${NFSUTILS[$POS]} ${OPENSSH[$POS]} ${UDISKIE[$POS]} \
     ${LIGHT[$POS]} ${LMSENSORS[$POS]} ${NTFS3G[$POS]} ${PANDOCPDF[$POS]} ${POPPLERUTILS[$POS]} ${GIT[$POS]} ${XF86INTEL[$POS]} \
@@ -124,4 +124,12 @@ INSTALL_PACKAGES()
     ${YOUTUBEDL[$POS]} ${ZATHURA[$POS]} ${ZATHURAPDF[$POS]} ${OVMF[$POS]} ${NMTUI[$POS]} ${QUTEBROWSER[$POS]}
 
   [ -x "$(command -v rpm-ostree)" ] && $SUDO rpm-ostree ex apply-live --allow-replacement
+
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+    ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+  case "${WM}" in
+    Hyprland|hyprland)  HYPR_PACKAGES ;;
+    dwm)                DWM_PACKAGES ;;
+  esac
 }

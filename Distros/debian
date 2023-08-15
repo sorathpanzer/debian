@@ -5,7 +5,7 @@ DEBIAN_SETUP()
   $PKGINSTALL xz-utils
   printf "n\n" | printf "y\n" | printf "y\n" | sh <(curl -L https://nixos.org/nix/install) --daemon
   source /etc/profile.d/nix.sh
-  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop nixpkgs.fragments nixpkgs.logseq nixpkgs.dua nixpkgs.python311Packages.adblock
+  nix-env -iA nixpkgs.swww nixpkgs.signal-desktop nixpkgs.fragments nixpkgs.logseq nixpkgs.dua nixpkgs.python311Packages.adblock nixpkgs.qutebrowser
 
   echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html

@@ -30,6 +30,10 @@ DWM_PACKAGES()
     ${LIBX11[$POS]} ${LIBXINERAMA[$POS]} ${PICOM[$POS]} ${PYTHON3PIP[$POS]} ${PYTHON3SIX[$POS]} ${SCROT[$POS]} ${SOX[$POS]} ${UEBERZUG[$POS]} \
     ${XDOTOOL[$POS]} ${XINPUT[$POS]} ${XORGSERVER[$POS]} ${XINIT[$POS]} ${XRANDR[$POS]} ${LIBXRESDEV[$POS]} ${XRDB[$POS]} ${XSET[$POS]}
 
+  [ ! -x "$(command -v ueberzug)" ] && git clone https://github.com/sorathpanzer/ueberzug.git
+  [ ! -x "$(command -v ueberzug)" ] && pip install --user ./ueberzug
+  [ -d ./ueberzug ] && $SUDO rm -R ueberzug
+
   for n in dwm-6.4 dmenu-5.2 st-0.9; do
     cp $HOME/.config/suckless/$n/config.$MK $HOME/.config/suckless/$n/config.mk
   done
@@ -44,4 +48,18 @@ DWM_PACKAGES()
       fi
     done
   fi
+
+    [ -x "$(command -v systemctl)" ] && $SUDO tee /etc/systemd/system/suspend@.service << EOF
+[Unit]
+Description=Lock X session using i3lock for user %i
+Before=sleep.target
+[Service]
+User=%i
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/xset dpms force suspend
+ExecStartPre=/usr/bin/i3lock -c 000000
+[Install]
+WantedBy=sleep.target"
+EOF
 }

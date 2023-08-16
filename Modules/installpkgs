@@ -48,7 +48,6 @@ CONFIGURE_PACKAGES()
     "")                     echo "$RELEASE is not supported!"; exit 1 ;;
     Debian|Devuan)	        POS="0"
       MK="tux"
-      PKGINSTALL="$SUDO apt-get -y install" ;;
     Fedora)                 POS="1"
       MK="tux"
       PKGINSTALL="$SUDO rpm-ostree install" ;;
@@ -79,14 +78,13 @@ CONFIGURE_PACKAGES()
     NixOS)  MK="nixos" ;;
   esac
 
-  if [ $RELEASE = Alpine ]; then
-    mkdir -p /etc/doas.d
-    DOASCONF="/etc/doas.d/doas.conf"
-  else
-    DOASCONF="/etc/doas.conf"
-  fi
-
-  if [ $RELEASE = Void ] || [ $RELEASE = Alpine ] || [ $RELEASE = FreeBSD ] || [ $RELEASE = OpenBSD ]; then
+  if [ $SUDO = doas ]; then
+    if [ $RELEASE = Alpine ]; then
+      mkdir -p /etc/doas.d
+      DOASCONF="/etc/doas.d/doas.conf"
+    else
+      DOASCONF="/etc/doas.conf"
+    fi
     $SUDO tee $DOASCONF << EOF
 permit persist $USER as root
 permit nopass $USER cmd reboot

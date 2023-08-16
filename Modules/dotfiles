@@ -28,4 +28,9 @@ CONFIGURE_HOME()
     $SUDO mkdir -p /usr/share/edk2/ovmf
     $SUDO cp .config/suckless/ovmf/OVMF_CODE.fd /usr/share/edk2/ovmf
   fi
+
+  if [ -n "$($SUDO dmesg | grep Hypervisor)" ]; then
+    hyprconf="$HOME/.config/hypr/hyprland.conf"
+    [ -e $hyprconf ] && sed -i s/SUPER/ALT/ $hyprconf
+  fi
 }

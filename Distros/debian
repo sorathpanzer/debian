@@ -1,13 +1,21 @@
 #!/bin/bash
 
+PKGINSTALL="$SUDO apt-get -y install"
+
 DEBIAN_SETUP()
 {
+  if [ $SUDO = sudo ]; then
+    echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
+  else
+    sudo apt-get install -y doas
+    sudo apt-get autoremove -y sudo
+  fi
+
   $PKGINSTALL xz-utils
   printf "n\n" | printf "y\n" | printf "y\n" | sh <(curl -L https://nixos.org/nix/install) --daemon
   source /etc/profile.d/nix.sh
   nix-env -iA nixpkgs.swww nixpkgs.signal-desktop nixpkgs.fragments nixpkgs.logseq nixpkgs.dua nixpkgs.python311Packages.adblock nixpkgs.qutebrowser
 
-  echo "Defaults:$USER timestamp_timeout=60" | $SUDO tee /etc/sudoers.d/$USER
   $PKGINSTALL pulseaudio pulsemixer man2html
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pulseaudio
   [[ $RELEASE = Debian ]] && systemctl --user --now enable pipewire.service pipewire-pulse

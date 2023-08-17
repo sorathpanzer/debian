@@ -31,6 +31,6 @@ CONFIGURE_HOME()
 
   if [ -n "$($SUDO dmesg | grep Hypervisor)" ]; then
     hyprconf="$HOME/.config/hypr/hyprland.conf"
-    [ -e $hyprconf ] && sed -i s/SUPER/ALT/ $hyprconf
+    sed -i s/SUPER/ALT/ $hyprconf
   fi
 }

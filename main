@@ -6,7 +6,7 @@
 # FreeBSD -> doas, bash >>>>>>>> "permit nopass keepenv $USER as root" to doas.conf
 # OpenBSD|Alpine -> bash
 
-exec 1> >(tee "install.log") 2> >(tee "install.error")
+#exec 1> >(tee "$HOME/install.log") 2> >(tee "$HOME/install.error")
 
 LVM_PASSWORD=""
 GIT_USERNAME="${USER}panzer"
@@ -17,7 +17,7 @@ SUDO="sudo"
 RELEASE=$(grep ^NAME= /etc/os-release | cut -d '=' -f2 | awk '{print $1}' | tr -d '"')
 UPPERCASE=$(echo $RELEASE | tr '[:lower:]' '[:upper:]')
 
-source_files() {
+select_allsource_files() {
     local dir="$1"
 
     if [[ -d "$dir" && -r "$dir" && -x "$dir" ]]; then
@@ -48,4 +48,4 @@ case "${RELEASE}" in
     CONFIGURE_SYSTEM ;;
 esac
 
-grep error install.error
+grep error $HOME/install.error
